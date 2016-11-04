@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script id="shader-vs" type="x-shader/x-vertex">
+            attribute vec2 my_pos;
+
+            uniform mat4 perspective;
+            uniform mat4 model;
+			uniform vec3 color;
+
+			varying highp vec3 f_color;
+
+            void main() {
+                gl_Position = perspective * model * vec4(my_pos, 0.0, 1.0);
+				f_color = color;
+            }
+        </script>
+
+        <script id="shader-fs" type="x-shader/x-fragment">
+			varying highp vec3 f_color;
+
+            void main() {
+                gl_FragColor = vec4(f_color, 1.0);
+            }
+        </script>
+
+        <link href="style.css" rel="stylesheet">
+        <script src="sylvester.js"></script>
+        <script src="glUtils.js"></script>
+        <script src="wotb.js"></script>
+        <script src="color_table.js"></script>
+        <script src="vm.js"></script>
+    </head>
+    <body onload="start()">
+        <div style="text-align: center; padding-bottom: 5em; padding-top: 1em;">
+            <h1>MemoryVM</h1>
+            <button onclick="step()">Step</button>
+            <button onclick="pause()">Go/Stop</button>
+            <button onclick="reset()">Reset</button>
+            <button onclick="clear_board()">Clear</button>
+			<div>
+            	<br>
+				<div style="margin-bottom:-512px;">
+					<canvas id="glcanvas" width="512" height="512">NOT SUPPORT!</canvas>
+				</div>
+				<canvas id="text" width="512" height="512">NOT SUPPORT!</canvas>
+				<p id="reg-a">Register A: 0</p>
+			</div>
+			<div>
+				<h2>Instruction Key</h2>
+				<h4>Instructions are formatted [op][operand]</h4>
+				<table style="margin-left: auto; margin-right: auto;">
+					<tr><th>Value</th><th>Instruction</th><th>Description</th></tr>
+					<tr><th>0</th><th>NOP</th><th>Do nothing</th></tr>
+					<tr><th>1</th><th>JMP</th><th>Move program counter to block at operand value address</th></tr>
+					<tr><th>2</th><th>LOAD</th><th>Load operand value into register</th></tr>
+					<tr><th>3</th><th>STORE</th><th>Store operand value into operand value address</th></tr>
+					<tr><th>4</th><th>ADD</th><th>Add operand value to register</th></tr>
+					<tr><th>5</th><th>SUB</th><th>Subtract operand value from register value, store in register</th></tr>
+					<tr><th>6</th><th>JZ</th><th>Jump to operand address if register value is zero</th></tr>
+					<tr><th>7</th><th>JG</th><th>Jump to operand address if register value is greater than operand</th></tr>
+					<tr><th>8</th><th>JL</th><th>Jump to operand address if register value is less than operand</th></tr>
+					<tr><th>9</th><th>JE</th><th>Jump to operand address if register value is equal to operand</th></tr>
+					<tr><th>10</th><th>RELJMP</th><th>Jump to program counter plus operand value</th></tr>
+				</table>
+			</div>
+        </div>
+    </body>
+</html>
