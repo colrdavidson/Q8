@@ -181,6 +181,7 @@ function update_board() {
 	}
 
 	if (board_updated) {
+		window.location.hash = arrayToBase64(board);
 		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
 		for (var x = 0; x < 16; x++) {
 			for (var y = 0; y < 16; y++) {
@@ -202,6 +203,26 @@ function update_board() {
 function update(step) {
     update_board();
     window.requestAnimationFrame(update);
+}
+
+
+function arrayToBase64(array) {
+	var binary = '';
+	for (var i = 0; i < array.byteLength; i++) {
+		binary += String.fromCharCode(array[i]);
+	}
+	return window.btoa(binary);
+}
+
+function base64ToArray(b64_str) {
+	var binary_string = window.atob(b64_str.substring(1, b64_str.length));
+	console.log(binary_string);
+	var len = binary_string.length;
+	var bytes = new Uint8Array(16 * 16);
+	for (var i = 0; i < len; i++) {
+		bytes[i] = binary_string.charCodeAt(i);
+	}
+	return bytes;
 }
 
 function start() {
@@ -228,6 +249,9 @@ function start() {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
 
         board = new Uint8Array(16 * 16);
+		if (window.location.hash.includes("#")) {
+			board = base64ToArray(window.location.hash);
+		}
 
         canvas.onmousedown = mouse_clicked;
         document.onmouseup = mouse_released;
