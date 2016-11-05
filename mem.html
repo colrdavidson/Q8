@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script id="shader-vs" type="x-shader/x-vertex">
+            attribute vec2 my_pos;
+
+            uniform mat4 perspective;
+            uniform mat4 model;
+			uniform vec3 color;
+
+			varying highp vec3 f_color;
+
+            void main() {
+                gl_Position = perspective * model * vec4(my_pos, 0.0, 1.0);
+				f_color = color;
+            }
+        </script>
+
+        <script id="shader-fs" type="x-shader/x-fragment">
+			varying highp vec3 f_color;
+
+            void main() {
+                gl_FragColor = vec4(f_color, 1.0);
+            }
+        </script>
+
+        <link href="style.css" rel="stylesheet">
+        <script src="sylvester.js"></script>
+        <script src="glUtils.js"></script>
+        <script src="wotb.js"></script>
+        <script src="color_table.js"></script>
+        <script src="vm.js"></script>
+    </head>
+    <body onload="start_memvm()">
+        <div style="text-align: center; padding-bottom: 5em; padding-top: 1em;">
+            <h1>MemoryVM</h1>
+            <button onclick="step()">Step</button>
+            <button onclick="pause()">Go/Stop</button>
+            <button onclick="reset()">Reset</button>
+            <button onclick="clear_board()">Clear</button>
+			<div class="container">
+				<div>
+					<br>
+					<div style="margin-bottom:-512px;">
+						<canvas id="glcanvas" width="512" height="512">NOT SUPPORT!</canvas>
+					</div>
+					<canvas id="text" width="512" height="512">NOT SUPPORT!</canvas>
+					<p id="reg">Register A: 0 Register B: 0</p>
+					<h2>Input Modifiers</h2>
+					<table style="margin-left: auto; margin-right: auto; text-align: left;">
+						<tr><th>Key</th><th>Function</th></tr>
+						<tr><th>click</th><th>add 1 to tile</th></tr>
+						<tr><th>z-click</th><th>subtract 1 from tile</th></tr>
+						<tr><th>x-click</th><th>set tile to 0</th></tr>
+						<tr><th>alt/opt-click</th><th>add 16 to tile</th></tr>
+					</table>
+				</div>
+				<div>
+					<h2>Instruction Key</h2>
+					<h4>Instructions are formatted [op][operand]</h4>
+					<table style="margin-left: auto; margin-right: auto; text-align: left;">
+						<tr><th>Value</th><th>Instruction</th><th>Description</th></tr>
+						<tr><th>0</th><th>NOP</th><th>Do nothing; <em>Only 1 block, no operand</em></th></tr>
+						<tr><th>1</th><th>JMP</th><th>Move program counter to block at operand value address</th></tr>
+						<tr><th>2</th><th>LOAD A</th><th>Load operand value into register A</th></tr>
+						<tr><th>3</th><th>LOAD B</th><th>Load operand value into register B</th></tr>
+						<tr><th>4</th><th>STORE A</th><th>Store register A value into operand value address</th></tr>
+						<tr><th>5</th><th>STORE B</th><th>Store register B value into operand value address</th></tr>
+						<tr><th>6</th><th>ADD A</th><th>Add operand value to register A</th></tr>
+						<tr><th>7</th><th>ADD B</th><th>Add operand value to register B</th></tr>
+						<tr><th>8</th><th>SUB A</th><th>Subtract operand value from register A value, store in register A</th></tr>
+						<tr><th>9</th><th>SUB B</th><th>Subtract operand value from register B value, store in register B</th></tr>
+						<tr><th>10</th><th>JZ A</th><th>Jump to operand address if register A value is zero</th></tr>
+						<tr><th>11</th><th>JZ B</th><th>Jump to operand address if register B value is zero</th></tr>
+						<tr><th>12</th><th>JG A B</th><th>Jump to operand address if register A value is greater than register B value</th></tr>
+						<tr><th>13</th><th>JG B A</th><th>Jump to operand address if register value is greater than register A value</th></tr>
+						<tr><th>14</th><th>JL A B</th><th>Jump to operand address if register A value is less than register B value</th></tr>
+						<tr><th>15</th><th>JL B A</th><th>Jump to operand address if register B value is less than register A value</th></tr>
+						<tr><th>16</th><th>JE A B</th><th>Jump to operand address if register A value is equal to register B value</th></tr>
+						<tr><th>17</th><th>RELJMP</th><th>Jump to program counter plus operand value</th></tr>
+						<tr><th>18</th><th>NOT A</th><th>Bitwise not register A value into register A; <em>Only 1 block, no operand</em></th></tr>
+						<tr><th>19</th><th>NOT B</th><th>Bitwise not register B value into register B; <em>Only 1 block, no operand</em></th></tr>
+						<tr><th>20</th><th>AND A</th><th>Bitwise and register A value and operand value into register A</th></tr>
+						<tr><th>21</th><th>AND B</th><th>Bitwise and register B value and operand value into register B</th></tr>
+						<tr><th>22</th><th>OR A</th><th>Bitwise or register A value and operand value into register A</th></tr>
+						<tr><th>23</th><th>OR B</th><th>Bitwise or register B value and operand value into register B</th></tr>
+						<tr><th>24</th><th>XOR A</th><th>Bitwise xor register A value and operand value into register A</th></tr>
+						<tr><th>25</th><th>XOR B</th><th>Bitwise xor register B value and operand value into register B</th></tr>
+						<tr><th>26</th><th>SHL A</th><th>Shift register A value left 1 bit, operand value times</th></tr>
+						<tr><th>27</th><th>SHL B</th><th>Shift register B value left 1 bit, operand value times</th></tr>
+						<tr><th>28</th><th>SHR A</th><th>Shift register A value right 1 bit, operand value times, propagating 0</th></tr>
+						<tr><th>29</th><th>SHR B</th><th>Shift register B value right 1 bit, operand value times, propagating 0</th></tr>
+						<tr><th>30</th><th>SWP A B</th><th>Swap register A and B; <em>Only 1 block, no operand</em></th></tr>
+					</table>
+				</div>
+			</div>
+        </div>
+    </body>
+</html>
