@@ -15,7 +15,7 @@ var mouse_y;
 
 var board;
 var pc = 0;
-var reg_a = 0;
+var reg = new Uint8Array(2);
 var reg_updated = true;
 var board_updated = true;
 
@@ -40,11 +40,17 @@ function pause() {
 	board_updated = true;
 }
 
+function clear_reg() {
+	for (var i = 0; i < reg.length; i++) {
+		reg[i] = 0;
+	}
+}
+
 function reset() {
     pc = 0;
-    reg_a = 0;
+	clear_reg();
 	board = base64ToArray(window.location.hash);
-    document.getElementById("reg-a").innerHTML = "Register A: " + reg_a;
+    document.getElementById("reg").innerHTML = "Register A: " + reg[0] + " Register B: " + reg[1];
 	reg_updated = true;
 	board_updated = true;
 	running = false;
@@ -58,6 +64,8 @@ function clear_board() {
     }
 	window.location.hash = arrayToBase64(board);
 	board_updated = true;
+	grab_var = false;
+	grab_func = null;
 }
 
 function twod_to_oned(x, y, width) {
@@ -82,6 +90,8 @@ function mouse_clicked(event) {
 			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 16;
 		} else if (k_table[88] == true) {
 			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] = 0;
+		} else if (k_table[90] == true) {
+			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] -= 1;
 		} else {
 			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 1;
 		}
@@ -109,15 +119,35 @@ function tick() {
         grab_var = true;
         switch (board[pc]) {
             case 1: { grab_func = function() { op_jmp(board); }; } break;
-            case 2: { grab_func = function() { op_load(board); }; } break;
-            case 3: { grab_func = function() { op_store(board); }; } break;
-            case 4: { grab_func = function() { op_add(board); }; } break;
-            case 5: { grab_func = function() { op_sub(board); }; } break;
-            case 6: { grab_func = function() { op_jz(board); }; } break;
-            case 7: { grab_func = function() { op_jg(board); }; } break;
-            case 8: { grab_func = function() { op_jl(board); }; } break;
-            case 9: { grab_func = function() { op_je(board); }; } break;
-            case 10: { grab_func = function() { op_reljump(board); }; } break;
+            case 2: { grab_func = function() { op_load(board, 0); }; } break;
+            case 3: { grab_func = function() { op_load(board, 1); }; } break;
+            case 4: { grab_func = function() { op_store(board, 0); }; } break;
+            case 5: { grab_func = function() { op_store(board, 1); }; } break;
+            case 6: { grab_func = function() { op_add(board, 0); }; } break;
+            case 7: { grab_func = function() { op_add(board, 1); }; } break;
+            case 8: { grab_func = function() { op_sub(board, 0); }; } break;
+            case 9: { grab_func = function() { op_sub(board, 1); }; } break;
+            case 10: { grab_func = function() { op_jz(board, 0); }; } break;
+            case 11: { grab_func = function() { op_jz(board, 1); }; } break;
+            case 12: { grab_func = function() { op_jg(board, 0, 1); }; } break;
+            case 13: { grab_func = function() { op_jg(board, 1, 0); }; } break;
+            case 14: { grab_func = function() { op_jl(board, 0, 1); }; } break;
+            case 15: { grab_func = function() { op_jl(board, 1, 0); }; } break;
+            case 16: { grab_func = function() { op_je(board, 0, 1); }; } break;
+            case 17: { grab_func = function() { op_reljump(board); }; } break;
+            case 18: { op_not(0); grab_var = false; } break;
+            case 19: { op_not(1); grab_var = false; } break;
+            case 20: { grab_func = function() { op_and(board, 0); }; } break;
+            case 21: { grab_func = function() { op_and(board, 1); }; } break;
+            case 22: { grab_func = function() { op_or(board, 0); }; } break;
+            case 23: { grab_func = function() { op_or(board, 1); }; } break;
+            case 24: { grab_func = function() { op_xor(board, 0); }; } break;
+            case 25: { grab_func = function() { op_xor(board, 1); }; } break;
+            case 26: { grab_func = function() { op_shl(board, 0); }; } break;
+            case 27: { grab_func = function() { op_shl(board, 1); }; } break;
+            case 28: { grab_func = function() { op_shr(board, 0); }; } break;
+            case 29: { grab_func = function() { op_shr(board, 1); }; } break;
+            case 30: { op_swap(0, 1); grab_var = false; } break;
             default: { grab_var = false; }
         }
 		pc++;
@@ -203,7 +233,7 @@ function update_board() {
 		board_updated = false;
 	}
     if (reg_updated) {
-        document.getElementById("reg-a").innerHTML = "Register A: " + reg_a;
+        document.getElementById("reg").innerHTML = "Register A: " + reg[0] + " Register B: " + reg[1];
         reg_updated = false;
     }
 }
@@ -224,7 +254,6 @@ function arrayToBase64(array) {
 
 function base64ToArray(b64_str) {
 	var binary_string = window.atob(b64_str.substring(1, b64_str.length));
-	console.log(binary_string);
 	var len = binary_string.length;
 	var bytes = new Uint8Array(16 * 16);
 	for (var i = 0; i < len; i++) {
