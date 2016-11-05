@@ -54,5 +54,6 @@ function op_load(board) {
 
 function op_store(board) {
     board[board[pc]] = reg_a;
+	board_updated = true;
     pc++;
 }

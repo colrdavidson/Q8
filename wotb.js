@@ -52,6 +52,7 @@ function clear_board() {
     for (var i = 0; i < 16 * 16; i++) {
         board[i] = 0;
     }
+	window.location.hash = arrayToBase64(board);
 	board_updated = true;
 }
 
@@ -71,15 +72,19 @@ function key_released(event) {
 
 function mouse_clicked(event) {
     mouse_pressed = true;
-    if (k_table[18] == true) {
-        board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 16;
-    } else if (k_table[88] == true) {
-        board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] = 0;
-    } else {
-        board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 1;
-    }
 
-	board_updated = true;
+	if (!running) {
+		if (k_table[18] == true) {
+			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 16;
+		} else if (k_table[88] == true) {
+			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] = 0;
+		} else {
+			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 1;
+		}
+
+		window.location.hash = arrayToBase64(board);
+		board_updated = true;
+	}
 }
 
 function mouse_released(event) {
@@ -181,7 +186,6 @@ function update_board() {
 	}
 
 	if (board_updated) {
-		window.location.hash = arrayToBase64(board);
 		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
 		for (var x = 0; x < 16; x++) {
 			for (var y = 0; y < 16; y++) {
@@ -225,7 +229,7 @@ function base64ToArray(b64_str) {
 	return bytes;
 }
 
-function start() {
+function start_memvm() {
     var canvas = document.getElementById("glcanvas");
 	var text_canvas = document.getElementById("text");
 
