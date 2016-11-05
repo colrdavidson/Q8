@@ -94,6 +94,6 @@ function op_not(idx) {
 function op_swap(a_idx, b_idx) {
     var tmp = reg[a_idx];
 	reg[a_idx] = reg[b_idx];
-	reg[a_idx] = tmp;
+	reg[b_idx] = tmp;
 	reg_updated = true;
 }
