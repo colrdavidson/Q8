@@ -43,9 +43,13 @@ function pause() {
 function reset() {
     pc = 0;
     reg_a = 0;
+	board = base64ToArray(window.location.hash);
     document.getElementById("reg-a").innerHTML = "Register A: " + reg_a;
 	reg_updated = true;
 	board_updated = true;
+	running = false;
+	grab_var = false;
+	grab_func = null;
 }
 
 function clear_board() {
