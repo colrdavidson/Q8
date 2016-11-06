@@ -50,6 +50,12 @@ function op_load(board, idx) {
     pc++;
 }
 
+function op_load_ind(board, idx) {
+    reg[idx] = board[board[pc]];
+	reg_updated = true;
+    pc++;
+}
+
 function op_store(board, idx) {
     board[board[pc]] = reg[idx];
 	board_updated = true;

@@ -37,7 +37,9 @@
     </head>
     <body onload="start_memvm()">
         <div style="text-align: center; padding-bottom: 5em; padding-top: 1em;">
-            <h1>MemoryVM</h1>
+            <h1>MemoryVM v0.5</h1>
+			<h3>Best used with a keyboard and mouse</h3>
+			<p>Your URL is your saved program. Hold onto it, or share it with friends!</p>
             <button onclick="step()">Step</button>
             <button onclick="pause()">Go/Stop</button>
             <button onclick="reset()">Reset</button>
@@ -95,6 +97,8 @@
 						<tr><th>28</th><th>SHR A</th><th>Shift register A value right 1 bit, operand value times, propagating 0</th></tr>
 						<tr><th>29</th><th>SHR B</th><th>Shift register B value right 1 bit, operand value times, propagating 0</th></tr>
 						<tr><th>30</th><th>SWP A B</th><th>Swap register A and B; <em>Only 1 block, no operand</em></th></tr>
+						<tr><th>31</th><th>LOADI A</th><th>Load value at operand value address into register A</th></tr>
+						<tr><th>32</th><th>LOADI B</th><th>Load value at operand value address into register B</th></tr>
 					</table>
 				</div>
 			</div>

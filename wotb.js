@@ -148,6 +148,8 @@ function tick() {
             case 28: { grab_func = function() { op_shr(board, 0); }; } break;
             case 29: { grab_func = function() { op_shr(board, 1); }; } break;
             case 30: { op_swap(0, 1); grab_var = false; } break;
+            case 31: { grab_func = function() { op_load_ind(board, 0); }; } break;
+            case 32: { grab_func = function() { op_load_ind(board, 1); }; } break;
             default: { grab_var = false; }
         }
 		pc++;
