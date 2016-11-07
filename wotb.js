@@ -12,12 +12,15 @@ var grab_var = false;
 var grab_func = null;
 var mouse_x;
 var mouse_y;
+var selected_block = 0;
+var input_mode = false;
 
 var board;
 var pc = 0;
 var reg = new Uint8Array(2);
 var reg_updated = true;
 var board_updated = true;
+var entry_buffer = "";
 
 var verts = [
     0.0, 0.0,
@@ -74,27 +77,73 @@ function twod_to_oned(x, y, width) {
 
 var k_table = {};
 
+function valid_entry_buffer() {
+	var entry = parseInt(entry_buffer);
+	if (entry != NaN) {
+		if (entry > 0 && entry < 256) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+
 function key_pressed(event) {
     k_table[event.keyCode] = true;
 }
 
 function key_released(event) {
     k_table[event.keyCode] = false;
+
+	if (input_mode == true) {
+		if (event.keyCode == 13) { // Enter
+			entry_buffer = "";
+			input_mode = false;
+		} if (event.keyCode == 8) { // Backspace
+			entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
+			board[selected_block] = parseInt(entry_buffer);
+			board_updated = true;
+		} else {
+			entry_buffer += String.fromCharCode(event.keyCode);
+			if (valid_entry_buffer()) {
+				board[selected_block] = parseInt(entry_buffer);
+				board_updated = true;
+			} else {
+				entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
+				board_updated = true;
+			}
+		}
+		highlight_row(board[selected_block]);
+	}
+}
+
+function highlight_row(id) {
+    var table = document.getElementById('op_table');
+	var rows = table.getElementsByTagName('tr');
+
+    for (var i = 0; i < rows.length; i++) {
+		rows[i].classList.remove('selected');
+	}
+
+	if (id < rows.length - 1) {
+		rows[id + 1].className += " selected";
+	}
 }
 
 function mouse_clicked(event) {
     mouse_pressed = true;
 
 	if (!running) {
-		if (k_table[18] == true) {
-			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 16;
-		} else if (k_table[88] == true) {
-			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] = 0;
-		} else if (k_table[90] == true) {
-			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] -= 1;
+        var board_pos = twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16);
+		if (selected_block == board_pos) {
+			input_mode = true;
 		} else {
-			board[twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16)] += 1;
+			selected_block = board_pos;
+			highlight_row(board[selected_block]);
 		}
+		entry_buffer = "";
 
 		window.location.hash = arrayToBase64(board);
 		board_updated = true;
@@ -166,8 +215,8 @@ function render() {
 
     var persp = makeOrtho(0.0, 512.0, 512.0, 0.0, 0.0, 1.0);
 
+	// Draw program counter
     var model = loadIdentity();
-
     model = modelTranslate(model, [(pc % 16) * 32, (Math.floor(pc / 16)) * 32, 0.0]);
     model = modelScale(model, [32.0, 32.0, 1.0]);
 
@@ -176,14 +225,24 @@ function render() {
     var u_model = gl.getUniformLocation(shader, "model");
 
     gl.uniform3f(u_color, 1.0, 1.0, 1.0);
-
     gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
     gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
+	// Draw edit selector
+	model = loadIdentity();
+	model = modelTranslate(model, [(selected_block % 16) * 32, (Math.floor(selected_block / 16)) * 32, 0.0]);
+	model = modelScale(model, [32.0, 32.0, 1.0]);
+
+	gl.uniform3f(u_color, 1.0, 0.0, 0.0);
+	gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
+	gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
+	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+	// Draw grid
     for (var x = 0; x < 16; x++) {
     	for (var y = 0; y < 16; y++) {
-			var model = loadIdentity();
+			model = loadIdentity();
 			model = modelTranslate(model, [(x * 32) + 1.0, (y * 32) + 1.0, 0.0]);
             model = modelScale(model, [30.0, 30.0, 1.0]);
 
@@ -191,9 +250,12 @@ function render() {
             var u_persp = gl.getUniformLocation(shader, "perspective");
             var u_model = gl.getUniformLocation(shader, "model");
 
-            var i = board[twod_to_oned(x, y, 16)];
+			var pos = twod_to_oned(x, y, 16);
+            var i = board[pos];
 
-            if (i < 8) {
+			if (selected_block == pos && input_mode == true) {
+                gl.uniform3f(u_color, 1.0, 1.0, 1.0);
+			} else if (i < 8) {
                 var color = color_table[i];
                 var r = (color >> 16) & 255;
                 var g = (color >> 8) & 255;
@@ -244,7 +306,6 @@ function update(step) {
     update_board();
     window.requestAnimationFrame(update);
 }
-
 
 function arrayToBase64(array) {
 	var binary = '';

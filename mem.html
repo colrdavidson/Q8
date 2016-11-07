@@ -55,16 +55,15 @@
 					<h2>Input Modifiers</h2>
 					<table style="margin-left: auto; margin-right: auto; text-align: left;">
 						<tr><th>Key</th><th>Function</th></tr>
-						<tr><th>click</th><th>add 1 to tile</th></tr>
-						<tr><th>z-click</th><th>subtract 1 from tile</th></tr>
-						<tr><th>x-click</th><th>set tile to 0</th></tr>
-						<tr><th>alt/opt-click</th><th>add 16 to tile</th></tr>
+						<tr><th>click</th><th>select tile</th></tr>
+						<tr><th>double click</th><th>edit tile</th></tr>
+						<tr><th>enter</th><th>exit edit mode</th></tr>
 					</table>
 				</div>
 				<div>
 					<h2>Instruction Key</h2>
 					<h4>Instructions are formatted [op][operand]</h4>
-					<table style="margin-left: auto; margin-right: auto; text-align: left;">
+					<table id="op_table" style="margin-left: auto; margin-right: auto; text-align: left;">
 						<tr><th>Value</th><th>Instruction</th><th>Description</th></tr>
 						<tr><th>0</th><th>NOP</th><th>Do nothing; <em>Only 1 block, no operand</em></th></tr>
 						<tr><th>1</th><th>JMP</th><th>Move program counter to block at operand value address</th></tr>
