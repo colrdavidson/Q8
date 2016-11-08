@@ -275,7 +275,7 @@ function render() {
 
 			if (selected_block == pos && input_mode == true) {
                 gl.uniform3f(u_color, 1.0, 1.0, 1.0);
-			} else if (i < 8) {
+			} else if (i < 7) {
                 var color = color_table[i];
                 var r = (color >> 16) & 255;
                 var g = (color >> 8) & 255;
