@@ -96,6 +96,39 @@ function valid_entry_buffer() {
 
 function key_pressed(event) {
     k_table[event.keyCode] = true;
+
+	switch (event.keyCode) {
+		case 37: case 38: case 39: case 40: // Arrow keys
+		case 32: event.preventDefault(); break; // Space
+		default: break;
+	}
+
+	var hit_arrow = false;
+	if (event.keyCode == 37) {
+		selected_block -= 1;
+		hit_arrow = true;
+	} else if (event.keyCode == 38) {
+		selected_block -= 16;
+		hit_arrow = true;
+	} else if (event.keyCode == 40) {
+		selected_block += 16;
+		hit_arrow = true;
+	} else if (event.keyCode == 39) {
+		selected_block += 1;
+		hit_arrow = true;
+	}
+
+	if (hit_arrow) {
+		if (selected_block < 0) {
+			selected_block = 0;
+		} else if (selected_block > 255) {
+			selected_block = 255;
+		}
+		entry_buffer = "";
+		highlight_row(board[selected_block]);
+	}
+
+	board_updated = true;
 }
 
 function key_released(event) {
@@ -130,6 +163,12 @@ function key_released(event) {
 			}
 		}
 		highlight_row(board[selected_block]);
+	} else {
+		if (event.keyCode == 13) {
+			input_mode = true;
+			entry_buffer = "";
+			board_updated = true;
+		}
 	}
 }
 
