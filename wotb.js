@@ -49,16 +49,21 @@ function clear_reg() {
 	}
 }
 
-function reset() {
-    pc = 0;
+function clear_flags() {
 	clear_reg();
-	board = base64ToArray(window.location.hash);
-    document.getElementById("reg").innerHTML = "Register A: " + reg[0] + " Register B: " + reg[1];
+	grab_func = null;
+	grab_var = false;
+	pc = 0;
 	reg_updated = true;
 	board_updated = true;
+	input_mode = false;
+	entry_buffer = "";
+}
+
+function reset() {
+	board = base64ToArray(window.location.hash);
 	running = false;
-	grab_var = false;
-	grab_func = null;
+	clear_flags();
 }
 
 function clear_board() {
@@ -66,9 +71,8 @@ function clear_board() {
         board[i] = 0;
     }
 	window.location.hash = arrayToBase64(board);
-	board_updated = true;
-	grab_var = false;
-	grab_func = null;
+	clear_flags();
+	highlight_row(board[selected_block]);
 }
 
 function twod_to_oned(x, y, width) {
@@ -102,16 +106,26 @@ function key_released(event) {
 			entry_buffer = "";
 			input_mode = false;
 		} if (event.keyCode == 8) { // Backspace
-			entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
+			if (entry_buffer.length > 1) {
+				entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
+			} else {
+				entry_buffer = "";
+			}
 			board[selected_block] = parseInt(entry_buffer);
+			window.location.hash = arrayToBase64(board);
 			board_updated = true;
 		} else {
 			entry_buffer += String.fromCharCode(event.keyCode);
 			if (valid_entry_buffer()) {
 				board[selected_block] = parseInt(entry_buffer);
+				window.location.hash = arrayToBase64(board);
 				board_updated = true;
 			} else {
-				entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
+				if (entry_buffer.length > 1) {
+					entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
+				} else {
+					entry_buffer = "";
+				}
 				board_updated = true;
 			}
 		}
@@ -119,13 +133,20 @@ function key_released(event) {
 	}
 }
 
-function highlight_row(id) {
+function clear_highlights(table, rows) {
     var table = document.getElementById('op_table');
 	var rows = table.getElementsByTagName('tr');
 
     for (var i = 0; i < rows.length; i++) {
 		rows[i].classList.remove('selected');
 	}
+}
+
+function highlight_row(id) {
+    var table = document.getElementById('op_table');
+	var rows = table.getElementsByTagName('tr');
+
+	clear_highlights();
 
 	if (id < rows.length - 1) {
 		rows[id + 1].className += " selected";
@@ -137,15 +158,14 @@ function mouse_clicked(event) {
 
 	if (!running) {
         var board_pos = twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16);
+		entry_buffer = "";
 		if (selected_block == board_pos) {
 			input_mode = true;
 		} else {
 			selected_block = board_pos;
 			highlight_row(board[selected_block]);
 		}
-		entry_buffer = "";
 
-		window.location.hash = arrayToBase64(board);
 		board_updated = true;
 	}
 }
@@ -358,6 +378,7 @@ function start_memvm() {
         document.onkeyup = key_released;
         document.onkeydown = key_pressed;
         canvas.addEventListener('mousemove', function(evt) { mouse_moved(canvas, evt); }, false);
+		highlight_row(board[selected_block]);
 
         window.requestAnimationFrame(update);
     }
