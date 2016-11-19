@@ -349,10 +349,23 @@ function update_board() {
 
 	if (board_updated) {
 		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
+		text_ctx.font = "16px sans-serif";
+		text_ctx.fillStyle = 'rgba(0, 0, 0, 255)';
+		text_ctx.textAlign = "center";
 		for (var x = 0; x < 16; x++) {
 			for (var y = 0; y < 16; y++) {
-				text_ctx.fillText(board[twod_to_oned(x, y, 16)], (x * 32) + 17.0, (y * 32) + 14.0);
+				text_ctx.fillText(board[twod_to_oned(x, y, 16)], ((x + 1) * 32) + 17.0, (y * 32) + 46.0);
 			}
+		}
+
+		text_ctx.font = "16px sans-serif";
+		text_ctx.fillStyle = 'rgba(255, 255, 255, 255)';
+		text_ctx.textAlign = "middle";
+		for (var y = 0; y < 16; y++) {
+			text_ctx.fillText("x" + (y * 16).toString(16).toUpperCase(), 14, (y * 32) + 48);
+		}
+		for (var x = 0; x < 16; x++) {
+			text_ctx.fillText("x" + (x).toString(16).toUpperCase(), (x * 32) + 49, 18);
 		}
 
 		if (!running) {
