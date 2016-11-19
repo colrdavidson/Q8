@@ -32,16 +32,36 @@ function op_reljump(board) {
     pc = (board[pc] + pc) % 255;
 }
 
-function op_add(board, idx) {
+function op_add(a_idx, b_idx) {
+    reg[idx] = a_idx + b_idx;
+	reg_updated = true;
+}
+
+function op_addi(board, idx) {
     reg[idx] += board[pc];
 	reg_updated = true;
     pc++;
 }
 
-function op_sub(board) {
+function op_sub(a_idx, b_idx) {
+    reg[idx] = a_idx - b_idx;
+	reg_updated = true;
+}
+
+function op_subi(board, idx) {
     reg[idx] -= board[pc];
 	reg_updated = true;
     pc++;
+}
+
+function op_inc(idx) {
+    reg[idx] += 1;
+	reg_updated = true;
+}
+
+function op_dec(idx) {
+    reg[idx] -= 1;
+	reg_updated = true;
 }
 
 function op_load(board, idx) {

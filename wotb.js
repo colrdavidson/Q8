@@ -21,6 +21,7 @@ var reg = new Uint8Array(2);
 var reg_updated = true;
 var board_updated = true;
 var entry_buffer = "";
+var packed = "";
 
 var verts = [
     0.0, 0.0,
@@ -61,7 +62,7 @@ function clear_flags() {
 }
 
 function reset() {
-	board = base64ToArray(window.location.hash);
+	board = b64_to_array(window.location.hash);
 	running = false;
 	clear_flags();
 }
@@ -70,7 +71,7 @@ function clear_board() {
     for (var i = 0; i < 16 * 16; i++) {
         board[i] = 0;
     }
-	window.location.hash = arrayToBase64(board);
+	window.location.hash = array_to_b64(board);
 	clear_flags();
 	highlight_row(board[selected_block]);
 }
@@ -145,13 +146,13 @@ function key_released(event) {
 				entry_buffer = "";
 			}
 			board[selected_block] = parseInt(entry_buffer);
-			window.location.hash = arrayToBase64(board);
+			window.location.hash = array_to_b64(board);
 			board_updated = true;
 		} else {
 			entry_buffer += String.fromCharCode(event.keyCode);
 			if (valid_entry_buffer()) {
 				board[selected_block] = parseInt(entry_buffer);
-				window.location.hash = arrayToBase64(board);
+				window.location.hash = array_to_b64(board);
 				board_updated = true;
 			} else {
 				if (entry_buffer.length > 1) {
@@ -231,10 +232,10 @@ function tick() {
             case 3: { grab_func = function() { op_load(board, 1); }; } break;
             case 4: { grab_func = function() { op_store(board, 0); }; } break;
             case 5: { grab_func = function() { op_store(board, 1); }; } break;
-            case 6: { grab_func = function() { op_add(board, 0); }; } break;
-            case 7: { grab_func = function() { op_add(board, 1); }; } break;
-            case 8: { grab_func = function() { op_sub(board, 0); }; } break;
-            case 9: { grab_func = function() { op_sub(board, 1); }; } break;
+            case 6: { grab_func = function() { op_addi(board, 0); }; } break;
+            case 7: { grab_func = function() { op_addi(board, 1); }; } break;
+            case 8: { grab_func = function() { op_subi(board, 0); }; } break;
+            case 9: { grab_func = function() { op_subi(board, 1); }; } break;
             case 10: { grab_func = function() { op_jz(board, 0); }; } break;
             case 11: { grab_func = function() { op_jz(board, 1); }; } break;
             case 12: { grab_func = function() { op_jg(board, 0, 1); }; } break;
@@ -258,6 +259,14 @@ function tick() {
             case 30: { op_swap(0, 1); grab_var = false; } break;
             case 31: { grab_func = function() { op_load_ind(board, 0); }; } break;
             case 32: { grab_func = function() { op_load_ind(board, 1); }; } break;
+            case 33: { grab_func = function() { op_add(board, 0, 1); }; } break;
+            case 34: { grab_func = function() { op_sub(board, 0, 1); }; } break;
+            case 35: { grab_func = function() { op_sub(board, 1, 0); }; } break;
+            case 36: { op_inc(0); grab_var = false; } break;
+            case 37: { op_inc(1); grab_var = false; } break;
+            case 38: { op_dec(0); grab_var = false; } break;
+            case 39: { op_dec(1); grab_var = false; } break;
+			case 40: { running = false; grab_var = false; } break; //Halt op
             default: { grab_var = false; }
         }
 		pc++;
@@ -366,18 +375,67 @@ function update(step) {
     window.requestAnimationFrame(update);
 }
 
-function arrayToBase64(array) {
+function pack_string(str) {
+	var rle_str = '';
+	var occurance_counter = 0;
+	for (var i = 0; i < str.length; i++) {
+		if (i > 0) {
+			if ((str.charAt(i) == str.charAt(i - 1))) {
+				occurance_counter++;
+			} else {
+				occurance_counter++;
+				rle_str += occurance_counter + "" + str.charAt(i - 1);
+				occurance_counter = 0;
+			}
+		}
+	}
+
+	return rle_str;
+}
+
+function is_alpha(c) {
+	return c.toLowerCase() != c.toUpperCase();
+}
+
+function unpack_string(rle_str) {
+	rle_str = rle_str.slice(1);
+	var real_str = "";
+	for (var i = 0; i < rle_str.length; i++) {
+		var occurance_str = "";
+		var j = i;
+		for (; is_alpha(rle_str.charAt(j)) == false; j++) {
+			occurance_str += rle_str.charAt(j);
+		}
+		i = j;
+		var repeat_len = parseInt(occurance_str);
+		for (j = 0; j < repeat_len; j++) {
+			real_str += rle_str.charAt(i);
+		}
+	}
+
+	real_str += "==";
+	return real_str;
+}
+
+function array_to_b64(array) {
 	var binary = '';
+
 	for (var i = 0; i < array.byteLength; i++) {
 		binary += String.fromCharCode(array[i]);
 	}
-	return window.btoa(binary);
+
+	var b64_str = window.btoa(binary);
+	var packed = pack_string(b64_str);
+	return packed;
 }
 
-function base64ToArray(b64_str) {
-	var binary_string = window.atob(b64_str.substring(1, b64_str.length));
+function b64_to_array(b64_str) {
+	var unpacked = unpack_string(b64_str);
+
+	var binary_string = window.atob(unpacked);
 	var len = binary_string.length;
 	var bytes = new Uint8Array(16 * 16);
+
 	for (var i = 0; i < len; i++) {
 		bytes[i] = binary_string.charCodeAt(i);
 	}
@@ -392,7 +450,7 @@ function start_memvm() {
 	text_ctx = text_canvas.getContext("2d");
 
     if (gl && text_ctx) {
-		text_ctx.font = "16px serif";
+		text_ctx.font = "16px sans-serif";
 		text_ctx.textBaseline = "middle";
 		text_ctx.textAlign = "center";
 		text_ctx.fillStyle = 'rgba(0, 0, 0, 255)';
@@ -409,7 +467,7 @@ function start_memvm() {
 
         board = new Uint8Array(16 * 16);
 		if (window.location.hash.includes("#")) {
-			board = base64ToArray(window.location.hash);
+			board = b64_to_array(window.location.hash);
 		}
 
         canvas.onmousedown = mouse_clicked;

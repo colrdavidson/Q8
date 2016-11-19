@@ -1,9 +1,8 @@
 .container {
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
 	justify-content: space-around;
-	align-items: center;
+	align-items: flex-start;
 }
 
 #canvas {
@@ -19,7 +18,19 @@ tr.selected {
 	background-color: #606060;
 }
 
+th {
+	padding-right: 1em;
+}
+
+table {
+	border-collapse: collapse;
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 body {
     background-color: #0F0F0F;
     color: #F0F0F0;
+	font-family: sans-serif;
 }
