@@ -101,6 +101,7 @@ function key_pressed(event) {
 	switch (event.keyCode) {
 		case 37: case 38: case 39: case 40: // Arrow keys
 		case 32: event.preventDefault(); break; // Space
+		case 13: event.preventDefault(); break; // Enter
 		default: break;
 	}
 
@@ -199,13 +200,8 @@ function mouse_clicked(event) {
 	if (!running) {
         var board_pos = twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16);
 		entry_buffer = "";
-		if (selected_block == board_pos) {
-			input_mode = true;
-		} else {
-			selected_block = board_pos;
-			highlight_row(board[selected_block]);
-		}
-
+		selected_block = board_pos;
+		highlight_row(board[selected_block]);
 		board_updated = true;
 	}
 }
@@ -355,7 +351,7 @@ function update_board() {
 		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
 		for (var x = 0; x < 16; x++) {
 			for (var y = 0; y < 16; y++) {
-				text_ctx.fillText(board[twod_to_oned(x, y, 16)], (x * 32) + 18.0, (y * 32) + 14.0);
+				text_ctx.fillText(board[twod_to_oned(x, y, 16)], (x * 32) + 17.0, (y * 32) + 14.0);
 			}
 		}
 
@@ -365,7 +361,8 @@ function update_board() {
 		board_updated = false;
 	}
     if (reg_updated) {
-        document.getElementById("reg").innerHTML = "Register A: " + reg[0] + " Register B: " + reg[1];
+        document.getElementById("reg_a").innerHTML = reg[0];
+        document.getElementById("reg_b").innerHTML = reg[1];
         reg_updated = false;
     }
 }
@@ -477,6 +474,7 @@ function start_memvm() {
         canvas.addEventListener('mousemove', function(evt) { mouse_moved(canvas, evt); }, false);
 		highlight_row(board[selected_block]);
 
+		update();
         window.requestAnimationFrame(update);
     }
 }

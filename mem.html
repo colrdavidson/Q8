@@ -43,10 +43,10 @@
 			<div class="container">
 				<div>
 					<div style="padding-bottom: 1em">
-						<button onclick="step()">Step</button>
-						<button onclick="pause()">Go/Stop</button>
-						<button onclick="reset()">Reset</button>
-						<button onclick="clear_board()">Clear</button>
+						<button type="button" onclick="step()">Step</button>
+						<button type="button" onclick="pause()">Go/Stop</button>
+						<button type="button" onclick="reset()">Reset</button>
+						<button type="button" onclick="clear_board()">Clear</button>
 					</div>
 					<div>
 						<div style="margin-bottom:-512px;">
@@ -54,13 +54,18 @@
 						</div>
 						<canvas id="text" width="512" height="512">NOT SUPPORT!</canvas>
 					</div>
-					<p id="reg">Register A: 0 Register B: 0</p>
-						<table id="inputs">
-							<thead><tr><th>User Input</th><th>Function</th></tr></thead>
-							<tr><td>click</td><td>select tile</td></tr>
-							<tr><td>double click</td><td>edit tile</td></tr>
-							<tr><td>enter</td><td>exit edit mode</td></tr>
-						</table>
+					<table>
+						<tr>
+							<td>Register A: </td><td id="reg_a">0</td>
+							<td>Register B: </td><td id="reg_b">0</td>
+						</tr>
+					</table>
+					<br>
+					<table id="inputs">
+						<thead><tr><th>User Input</th><th>Function</th></tr></thead>
+						<tr><td>click</td><td>select tile</td></tr>
+						<tr><td>enter</td><td>toggle edit mode</td></tr>
+					</table>
 				</div>
 				<div>
 					<table id="op_table">
