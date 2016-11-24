@@ -385,45 +385,46 @@ function update(step) {
     window.requestAnimationFrame(update);
 }
 
+function is_number(c) {
+	  return !isNaN(parseFloat(c)) && isFinite(c);
+}
+
 function pack_string(str) {
+	str += ";";
+
 	var rle_str = '';
 	var occurance_counter = 0;
+	var cur_char = str.charAt(i);
 	for (var i = 0; i < str.length; i++) {
-		if (i > 0) {
-			if ((str.charAt(i) == str.charAt(i - 1))) {
-				occurance_counter++;
-			} else {
-				occurance_counter++;
-				rle_str += occurance_counter + "" + str.charAt(i - 1);
-				occurance_counter = 0;
-			}
+		if (cur_char != str.charAt(i)) {
+			rle_str += occurance_counter + "|" + cur_char + "|";
+			occurance_counter = 1;
+			cur_char = str.charAt(i);
+		} else {
+			occurance_counter++;
 		}
 	}
 
 	return rle_str;
 }
 
-function is_alpha(c) {
-	return c.toLowerCase() != c.toUpperCase();
-}
-
 function unpack_string(rle_str) {
-	rle_str = rle_str.slice(1);
 	var real_str = "";
 	for (var i = 0; i < rle_str.length; i++) {
 		var occurance_str = "";
 		var j = i;
-		for (; is_alpha(rle_str.charAt(j)) == false; j++) {
+		for (; rle_str.charAt(j) != '|'; j++) {
 			occurance_str += rle_str.charAt(j);
 		}
-		i = j;
+		i = j + 1;
 		var repeat_len = parseInt(occurance_str);
 		for (j = 0; j < repeat_len; j++) {
 			real_str += rle_str.charAt(i);
 		}
+		i += 1;
 	}
 
-	real_str += "==";
+	console.log(real_str);
 	return real_str;
 }
 
@@ -439,15 +440,16 @@ function array_to_b64(array) {
 	return packed;
 }
 
-function b64_to_array(b64_str) {
-	var unpacked = unpack_string(b64_str);
+function b64_to_array(hash) {
+	var packed = hash.slice(1);
+	var b64_str = unpack_string(packed);
+	var binary = window.atob(b64_str);
 
-	var binary_string = window.atob(unpacked);
-	var len = binary_string.length;
+	var len = binary.length;
 	var bytes = new Uint8Array(16 * 16);
 
 	for (var i = 0; i < len; i++) {
-		bytes[i] = binary_string.charCodeAt(i);
+		bytes[i] = binary.charCodeAt(i);
 	}
 	return bytes;
 }
@@ -487,7 +489,6 @@ function start_memvm() {
         canvas.addEventListener('mousemove', function(evt) { mouse_moved(canvas, evt); }, false);
 		highlight_row(board[selected_block]);
 
-		update();
         window.requestAnimationFrame(update);
     }
 }
