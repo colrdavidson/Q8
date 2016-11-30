@@ -18,7 +18,12 @@ var input_mode = false;
 var board;
 var pc = 0;
 var reg = new Uint8Array(2);
+var equal_flag = false;
+var greater_flag = false;
+var less_flag = false;
+var zero_flag = false;
 var reg_updated = true;
+
 var board_updated = true;
 var entry_buffer = "";
 var packed = "";
@@ -58,7 +63,6 @@ function update_debug() {
 		}
 
 		debug_string = "Reading instruction " + op_id + "<br><font color='#A0B0B0'>" + op_name + ': "' + op_desc + '"</font><br><br>';
-		op = false;
 	} else {
 		var table = document.getElementById('simple_text');
 		var rows = table.getElementsByTagName('tr');
@@ -75,7 +79,6 @@ function update_debug() {
 		simple_desc = simple_desc.replace("@B", reg[1]);
 		simple_desc = simple_desc.replace("@V", board[board[pc]]);
 		debug_string += simple_desc + "";
-		op = true;
 	}
 	if (debug_string === null) {
 		debug_string = "";
@@ -96,6 +99,10 @@ function clear_reg() {
 	for (var i = 0; i < reg.length; i++) {
 		reg[i] = 0;
 	}
+	zero_flag = false;
+	less_flag = false;
+	greater_flag = false;
+	equal_flag = false;
 }
 
 function clear_flags() {
@@ -271,54 +278,64 @@ function mouse_moved(canvas, evt) {
 function tick() {
     if (grab_var) {
         grab_var = false;
+		op = true;
         grab_func(board);
     } else {
         grab_var = true;
         switch (board[pc]) {
-            case 1: { grab_func = function() { op_jmp(board); }; } break;
-            case 2: { grab_func = function() { op_load(board, 0); }; } break;
-            case 3: { grab_func = function() { op_load(board, 1); }; } break;
-            case 4: { grab_func = function() { op_store(board, 0); }; } break;
-            case 5: { grab_func = function() { op_store(board, 1); }; } break;
-            case 6: { grab_func = function() { op_addi(board, 0); }; } break;
-            case 7: { grab_func = function() { op_addi(board, 1); }; } break;
-            case 8: { grab_func = function() { op_subi(board, 0); }; } break;
-            case 9: { grab_func = function() { op_subi(board, 1); }; } break;
-            case 10: { grab_func = function() { op_jz(board, 0); }; } break;
-            case 11: { grab_func = function() { op_jz(board, 1); }; } break;
-            case 12: { grab_func = function() { op_jg(board, 0, 1); }; } break;
-            case 13: { grab_func = function() { op_jg(board, 1, 0); }; } break;
-            case 14: { grab_func = function() { op_jl(board, 0, 1); }; } break;
-            case 15: { grab_func = function() { op_jl(board, 1, 0); }; } break;
-            case 16: { grab_func = function() { op_je(board, 0, 1); }; } break;
-            case 17: { grab_func = function() { op_reljump(board); }; } break;
-            case 18: { op_not(0); grab_var = false; } break;
-            case 19: { op_not(1); grab_var = false; } break;
-            case 20: { grab_func = function() { op_and(board, 0); }; } break;
-            case 21: { grab_func = function() { op_and(board, 1); }; } break;
-            case 22: { grab_func = function() { op_or(board, 0); }; } break;
-            case 23: { grab_func = function() { op_or(board, 1); }; } break;
-            case 24: { grab_func = function() { op_xor(board, 0); }; } break;
-            case 25: { grab_func = function() { op_xor(board, 1); }; } break;
-            case 26: { grab_func = function() { op_shl(board, 0); }; } break;
-            case 27: { grab_func = function() { op_shl(board, 1); }; } break;
-            case 28: { grab_func = function() { op_shr(board, 0); }; } break;
-            case 29: { grab_func = function() { op_shr(board, 1); }; } break;
-            case 30: { op_swap(0, 1); grab_var = false; } break;
-            case 31: { grab_func = function() { op_load_ind(board, 0); }; } break;
-            case 32: { grab_func = function() { op_load_ind(board, 1); }; } break;
-            case 33: { grab_func = function() { op_add(board, 0, 1); }; } break;
-            case 34: { grab_func = function() { op_sub(board, 0, 1); }; } break;
-            case 35: { grab_func = function() { op_sub(board, 1, 0); }; } break;
-            case 36: { op_inc(0); grab_var = false; } break;
-            case 37: { op_inc(1); grab_var = false; } break;
-            case 38: { op_dec(0); grab_var = false; } break;
-            case 39: { op_dec(1); grab_var = false; } break;
-			case 40: { running = false; grab_var = false; } break; //Halt op
+			case 0: { grab_var = false; } break; //NOP
+            case 1: { grab_func = function() { op_load(board, 0); }; } break;
+            case 2: { grab_func = function() { op_load(board, 1); }; } break;
+            case 3: { grab_func = function() { op_load_ind(board, 0); }; } break;
+            case 4: { grab_func = function() { op_load_ind(board, 1); }; } break;
+            case 5: { grab_func = function() { op_store(board, 0); }; } break;
+            case 6: { grab_func = function() { op_store(board, 1); }; } break;
+            case 7: { grab_func = function() { op_add(board, 0, 1); }; } break;
+            case 8: { grab_func = function() { op_addi(board, 0); }; } break;
+            case 9: { grab_func = function() { op_addi(board, 1); }; } break;
+            case 10: { grab_func = function() { op_sub(board, 0, 1); }; } break;
+            case 11: { grab_func = function() { op_sub(board, 1, 0); }; } break;
+            case 12: { grab_func = function() { op_subi(board, 0); }; } break;
+            case 13: { grab_func = function() { op_subi(board, 1); }; } break;
+            case 14: { op_inc(0); grab_var = false; } break;
+            case 15: { op_inc(1); grab_var = false; } break;
+            case 16: { op_dec(0); grab_var = false; } break;
+            case 17: { op_dec(1); grab_var = false; } break;
+            case 18: { op_cmp(0, 1); grab_var = false; } break;
+            case 19: { op_cmp(1, 0); grab_var = false; } break;
+            case 20: { op_iszero(0); grab_var = false; } break;
+            case 21: { op_iszero(1); grab_var = false; } break;
+            case 22: { grab_func = function() { op_jmp(board); }; } break;
+            case 23: { grab_func = function() { op_jmpi(board); }; } break;
+            case 24: { grab_func = function() { op_jz(board); }; } break;
+            case 25: { grab_func = function() { op_jzi(board); }; } break;
+            case 26: { grab_func = function() { op_jg(board); }; } break;
+            case 27: { grab_func = function() { op_jgi(board); }; } break;
+            case 28: { grab_func = function() { op_jl(board); }; } break;
+            case 29: { grab_func = function() { op_jli(board); }; } break;
+            case 30: { grab_func = function() { op_je(board); }; } break;
+            case 31: { grab_func = function() { op_jei(board); }; } break;
+            case 32: { grab_func = function() { op_reljump(board); }; } break;
+            case 33: { op_not(0); grab_var = false; } break;
+            case 34: { op_not(1); grab_var = false; } break;
+            case 35: { grab_func = function() { op_and(board, 0); }; } break;
+            case 36: { grab_func = function() { op_and(board, 1); }; } break;
+            case 37: { grab_func = function() { op_or(board, 0); }; } break;
+            case 38: { grab_func = function() { op_or(board, 1); }; } break;
+            case 39: { grab_func = function() { op_xor(board, 0); }; } break;
+            case 40: { grab_func = function() { op_xor(board, 1); }; } break;
+            case 41: { grab_func = function() { op_shl(board, 0); }; } break;
+            case 42: { grab_func = function() { op_shl(board, 1); }; } break;
+            case 43: { grab_func = function() { op_shr(board, 0); }; } break;
+            case 44: { grab_func = function() { op_shr(board, 1); }; } break;
+            case 45: { op_swap(0, 1); grab_var = false; } break;
+			case 46: { running = false; grab_var = false; pc--; } break; //Halt op
             default: { grab_var = false; }
         }
 		if (grab_var == false) {
 			op = true;
+		} else {
+			op = false;
 		}
 		pc++;
     }
@@ -374,15 +391,10 @@ function render() {
 
 			if (selected_block == pos && input_mode == true) {
                 gl.uniform3f(u_color, 1.0, 1.0, 1.0);
-			} else if (i < 7) {
-                var color = color_table[i];
-                var r = (color >> 16) & 255;
-                var g = (color >> 8) & 255;
-                var b = color & 255;
-
-    			gl.uniform3f(u_color, r / 256.0, g / 256.0, b / 256.0);
+            } else if (i != 0) {
+                gl.uniform3f(u_color, 0.7, 0.7, 0.7);
             } else {
-                gl.uniform3f(u_color, 0.3, 0.3, 0.3);
+                gl.uniform3f(u_color, 0.4, 0.4, 0.4);
             }
 
             gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
@@ -417,10 +429,10 @@ function update_board() {
 		text_ctx.fillStyle = 'rgba(255, 255, 255, 255)';
 		text_ctx.textAlign = "middle";
 		for (var y = 0; y < 16; y++) {
-			text_ctx.fillText("x" + (y * 16).toString(16).toUpperCase(), 14, (y * 32) + 48);
+			text_ctx.fillText((y * 16).toString(10), 14, (y * 32) + 48);
 		}
 		for (var x = 0; x < 16; x++) {
-			text_ctx.fillText("x" + (x).toString(16).toUpperCase(), (x * 32) + 49, 18);
+			text_ctx.fillText((x).toString(10), (x * 32) + 49, 18);
 		}
 
 		if (!running) {
@@ -431,6 +443,10 @@ function update_board() {
     if (reg_updated) {
         document.getElementById("reg_a").innerHTML = reg[0];
         document.getElementById("reg_b").innerHTML = reg[1];
+        document.getElementById("f_zero").innerHTML = zero_flag;
+        document.getElementById("f_eq").innerHTML = equal_flag;
+        document.getElementById("f_less").innerHTML = less_flag;
+        document.getElementById("f_great").innerHTML = greater_flag;
         reg_updated = false;
     }
 }
@@ -479,7 +495,6 @@ function unpack_string(rle_str) {
 		i += 1;
 	}
 
-	console.log(real_str);
 	return real_str;
 }
 

@@ -4,34 +4,98 @@ function op_jmp(board) {
     pc = board[pc];
 }
 
-function op_jz(board, idx) {
-    if (reg[idx] == 0) {
+function op_jmpi(board) {
+    pc = board[board[pc]];
+}
+
+function op_jz(board) {
+    if (zero_flag == true) {
         pc = board[pc];
     } else {
 		pc++;
 	}
 }
 
-function op_jg(board, a_idx, b_idx) {
+function op_jzi(board) {
+    if (zero_flag == true) {
+        pc = board[board[pc]];
+    } else {
+		pc++;
+	}
+}
+
+function op_jg(board) {
+	if (greater_flag == true) {
+		pc = board[pc];
+	} else {
+		pc++;
+	}
+}
+
+function op_jgi(board) {
+	if (greater_flag == true) {
+		pc = board[board[pc]];
+	} else {
+		pc++;
+	}
+}
+
+function op_je(board) {
+	if (equal_flag == true) {
+		pc = board[pc];
+    } else {
+		pc++;
+	}
+}
+
+function op_jei(board) {
+	if (equal_flag == true) {
+		pc = board[board[pc]];
+    } else {
+		pc++;
+	}
+}
+
+function op_jl(board) {
+	if (less_flag == true) {
+		pc = board[pc];
+    } else {
+		pc++;
+	}
+}
+
+function op_jli(board) {
+	if (less_flag == true) {
+		pc = board[board[pc]];
+    } else {
+		pc++;
+	}
+}
+
+
+function op_cmp(a_idx, b_idx) {
+	less_flag = false;
+	equal_flag = false;
+	zero_flag = false;
+	greater_flag = false;
+
+	console.log(" " + a_idx + " " + b_idx);
 	if (reg[a_idx] > reg[b_idx]) {
-		pc = board[pc];
+		greater_flag = true;
+	} else if (reg[a_idx] == reg[b_idx]) {
+		equal_flag = true;
+	} else {
+		less_flag = true;
 	}
+	reg_updated = true;
 }
 
-function op_jl(board, a_idx, b_idx) {
-	if (reg[a_idx] < reg[b_idx]) {
-		pc = board[pc];
-    } else {
-		pc++;
+function op_iszero(idx) {
+	zero_flag = false;
+	if (reg[idx] == 0) {
+		zero_flag = true;
 	}
-}
-
-function op_je(board, a_idx, b_idx) {
-	if (reg[a_idx] == reg[b_idx]) {
-		pc = board[pc];
-    } else {
-		pc++;
-	}
+	reg_updated = true;
 }
 
 function op_reljump(board) {

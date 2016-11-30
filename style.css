@@ -28,12 +28,11 @@ tr.selected {
 	text-align: left;
 }
 
-th {
+th, td {
 	padding-right: 1em;
 }
 
 table {
-	border-collapse: collapse;
 	text-align: left;
 	margin-left: auto;
 	margin-right: auto;
