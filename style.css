@@ -19,6 +19,15 @@ tr.selected {
 	background-color: #606060;
 }
 
+#debug {
+	background-color: #606060;
+	padding: 1em;
+	display: inline-block;
+	border: 1px solid #999;
+	width: 500px;
+	text-align: left;
+}
+
 th {
 	padding-right: 1em;
 }

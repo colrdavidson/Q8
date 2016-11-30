@@ -22,6 +22,9 @@ var reg_updated = true;
 var board_updated = true;
 var entry_buffer = "";
 var packed = "";
+var debug_string = "";
+var op = true;
+var op_id;
 
 var verts = [
     0.0, 0.0,
@@ -37,11 +40,56 @@ function step() {
     board_updated = true;
     running = false;
     update_board();
+	update_debug();
+}
+
+function update_debug() {
+	if (op) {
+		var table = document.getElementById('op_table');
+		var rows = table.getElementsByTagName('tr');
+
+		var op_name;
+		var op_desc;
+		op_id = board[pc];
+		if (op_id < rows.length - 1) {
+			var entries = rows[op_id + 1].getElementsByTagName('td');
+			op_name = entries[1].innerHTML;
+			op_desc = entries[2].innerHTML;
+		}
+
+		debug_string = "Reading instruction " + op_id + "<br><font color='#A0B0B0'>" + op_name + ': "' + op_desc + '"</font><br><br>';
+		op = false;
+	} else {
+		var table = document.getElementById('simple_text');
+		var rows = table.getElementsByTagName('tr');
+		var simple_desc;
+		if (op_id < rows.length - 1) {
+			var entries = rows[op_id].getElementsByTagName('td');
+			simple_desc = entries[0].innerHTML;
+		}
+
+		debug_string = debug_string.slice(0, debug_string.length - 2);
+		debug_string += "Reading operand " + board[pc] + "<br>";
+		simple_desc = simple_desc.replace("@O", board[pc]);
+		simple_desc = simple_desc.replace("@A", reg[0]);
+		simple_desc = simple_desc.replace("@B", reg[1]);
+		simple_desc = simple_desc.replace("@V", board[board[pc]]);
+		debug_string += simple_desc + "";
+		op = true;
+	}
+	if (debug_string === null) {
+		debug_string = "";
+	}
+	document.getElementById("debug").innerHTML = debug_string;
 }
 
 function pause() {
     running = !running;
 	board_updated = true;
+	if (running) {
+		debug_string = "Only available while stepping!<br><br><br>";
+		document.getElementById("debug").innerHTML = debug_string;
+	}
 }
 
 function clear_reg() {
@@ -65,6 +113,8 @@ function reset() {
 	board = b64_to_array(window.location.hash);
 	running = false;
 	clear_flags();
+	op = true;
+	update_debug();
 }
 
 function clear_board() {
@@ -74,6 +124,8 @@ function clear_board() {
 	window.location.hash = array_to_b64(board);
 	clear_flags();
 	highlight_row(board[selected_block]);
+	op = true;
+	update_debug();
 }
 
 function twod_to_oned(x, y, width) {
@@ -265,6 +317,9 @@ function tick() {
 			case 40: { running = false; grab_var = false; } break; //Halt op
             default: { grab_var = false; }
         }
+		if (grab_var == false) {
+			op = true;
+		}
 		pc++;
     }
 }
@@ -282,7 +337,7 @@ function render() {
 	// Draw program counter
     var model = loadIdentity();
     model = modelTranslate(model, [(pc % 16) * 32, (Math.floor(pc / 16)) * 32, 0.0]);
-    model = modelScale(model, [32.0, 32.0, 1.0]);
+    model = modelScale(model, [33.0, 33.0, 1.0]);
 
     var u_color = gl.getUniformLocation(shader, "color");
     var u_persp = gl.getUniformLocation(shader, "perspective");
@@ -296,9 +351,9 @@ function render() {
 	// Draw edit selector
 	model = loadIdentity();
 	model = modelTranslate(model, [(selected_block % 16) * 32, (Math.floor(selected_block / 16)) * 32, 0.0]);
-	model = modelScale(model, [32.0, 32.0, 1.0]);
+	model = modelScale(model, [33.0, 33.0, 1.0]);
 
-	gl.uniform3f(u_color, 1.0, 0.0, 0.0);
+	gl.uniform3f(u_color, 0.0, 1.0, 0.0);
 	gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 	gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -307,8 +362,8 @@ function render() {
     for (var x = 0; x < 16; x++) {
     	for (var y = 0; y < 16; y++) {
 			model = loadIdentity();
-			model = modelTranslate(model, [(x * 32) + 1.0, (y * 32) + 1.0, 0.0]);
-            model = modelScale(model, [30.0, 30.0, 1.0]);
+			model = modelTranslate(model, [(x * 32) + 2.0, (y * 32) + 2.0, 0.0]);
+            model = modelScale(model, [29.0, 29.0, 1.0]);
 
 			var u_color = gl.getUniformLocation(shader, "color");
             var u_persp = gl.getUniformLocation(shader, "perspective");
@@ -489,6 +544,7 @@ function start_memvm() {
         canvas.addEventListener('mousemove', function(evt) { mouse_moved(canvas, evt); }, false);
 		highlight_row(board[selected_block]);
 
+		update_debug();
         window.requestAnimationFrame(update);
     }
 }

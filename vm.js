@@ -33,7 +33,7 @@ function op_reljump(board) {
 }
 
 function op_add(a_idx, b_idx) {
-    reg[idx] = a_idx + b_idx;
+    reg[a_idx] = a_idx + b_idx;
 	reg_updated = true;
 }
 
@@ -44,7 +44,7 @@ function op_addi(board, idx) {
 }
 
 function op_sub(a_idx, b_idx) {
-    reg[idx] = a_idx - b_idx;
+    reg[a_idx] = a_idx - b_idx;
 	reg_updated = true;
 }
 

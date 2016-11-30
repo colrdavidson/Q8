@@ -54,14 +54,15 @@
 						</div>
 						<canvas id="text" width="544" height="544">NOT SUPPORT!</canvas>
 					</div>
-					<table>
+					<table style="margin-bottom: 5px;">
 						<tr>
 							<td>Register A: </td><td id="reg_a">0</td>
 							<td>Register B: </td><td id="reg_b">0</td>
 						</tr>
 					</table>
+					<p id="debug"></p>
 					<br>
-					<table id="inputs">
+					<table id="inputs" style="margin-top: -10px;">
 						<thead><tr><th>User Input</th><th>Function</th></tr></thead>
 						<tr><td>click</td><td>select tile</td></tr>
 						<tr><td>enter</td><td>toggle edit mode</td></tr>
@@ -116,5 +117,48 @@
 				</div>
 			</div>
         </div>
+		<table id="simple_text" style="display: none;">
+			<tr><td>Do nothing</td></tr>
+			<tr><td>Move the program counter to position @O</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register A</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register B</td></tr>
+			<tr><td>Copy Register A (@A) to position @O</td></tr>
+			<tr><td>Copy Register B (@B) to position @O</td></tr>
+			<tr><td>Register A = Register A (@A) + @O</td></tr>
+			<tr><td>Register B = Register B (@B) + @O</td></tr>
+			<tr><td>Register A = Register A (@A) - @O</td></tr>
+			<tr><td>Register B = Register B (@B) - @O</td></tr>
+			<tr><td>Move the program counter to @O if Register A (@A) is equal to 0</td></tr>
+			<tr><td>Move the program counter to @O if Register B (@B) is equal to 0</td></tr>
+			<tr><td>Move the program counter to @O if Register A (@A) is greater than Register B (@B)</td></tr>
+			<tr><td>Move the program counter to @O if Register B (@B) is greater than Register A (@A)</td></tr>
+			<tr><td>Move the program counter to @O if Register A (@A) is less than Register B (@B)</td></tr>
+			<tr><td>Move the program counter to @O if Register B (@B) is less than Register A (@A)</td></tr>
+			<tr><td>Move the program counter to @O if Register A (@A) is equal to Register B (@B)</td></tr>
+			<tr><td>Move the program counter to current position + offset @O</td></tr>
+			<tr><td>Register A = NOT Register A (@A)</td></tr>
+			<tr><td>Register B = NOT Register B (@B)</td></tr>
+			<tr><td>Register A = @O AND Register A (@A)</td></tr>
+			<tr><td>Register B = @O AND Register B (@B)</td></tr>
+			<tr><td>Register A = @O OR Register A (@A)</td></tr>
+			<tr><td>Register B = @O OR Register B (@B)</td></tr>
+			<tr><td>Register A = @O XOR Register A (@A)</td></tr>
+			<tr><td>Register B = @O XOR Register B (@B)</td></tr>
+			<tr><td>Register A = Register A (@A) &#x226A @O</td></tr>
+			<tr><td>Register B = Register B (@B) &#x226A @O</td></tr>
+			<tr><td>Register A = Register A (@A) &#x226B @O</td></tr>
+			<tr><td>Register B = Register B (@B) &#x226B @O</td></tr>
+			<tr><td>Swaps from Register A (@A), Register B (@B) to Register A (@B), Register B (@A)</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register A</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register B</td></tr>
+			<tr><td>Register A = Register A (@A) + Register B (@B)</td></tr>
+			<tr><td>Register A = Register A (@A) - Register B (@B)</td></tr>
+			<tr><td>Register A = Register B (@B) - Register A (@A)</td></tr>
+			<tr><td>Register A = Register A (@A) + 1</td></tr>
+			<tr><td>Register B = Register B (@B) + 1</td></tr>
+			<tr><td>Register A = Register A (@A) - 1</td></tr>
+			<tr><td>Register B = Register B (@B) - 1</td></tr>
+			<tr><td>Stop the running program</td></tr>
+		</table>
     </body>
 </html>
