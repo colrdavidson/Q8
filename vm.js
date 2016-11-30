@@ -7,7 +7,9 @@ function op_jmp(board) {
 function op_jz(board, idx) {
     if (reg[idx] == 0) {
         pc = board[pc];
-    }
+    } else {
+		pc++;
+	}
 }
 
 function op_jg(board, a_idx, b_idx) {
@@ -19,12 +21,16 @@ function op_jg(board, a_idx, b_idx) {
 function op_jl(board, a_idx, b_idx) {
 	if (reg[a_idx] < reg[b_idx]) {
 		pc = board[pc];
+    } else {
+		pc++;
 	}
 }
 
 function op_je(board, a_idx, b_idx) {
 	if (reg[a_idx] == reg[b_idx]) {
 		pc = board[pc];
+    } else {
+		pc++;
 	}
 }
 
