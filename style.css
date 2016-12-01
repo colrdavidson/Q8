@@ -36,11 +36,15 @@ tr.selected {
 #reg_a {
 	background-color: #C0C0C0;
 	color: #000;
+	width: 30px;
+	text-align: center;
 }
 
 #reg_b {
 	background-color: #C0C0C0;
 	color: #000;
+	width: 30px;
+	text-align: center;
 }
 
 th, td {
