@@ -73,7 +73,7 @@
 						<tr><td>arrow keys</td><td>move edit selection box</td></tr>
 					</table>
 				</div>
-				<div>
+				<div style="overflow-y: scroll; height: 850px">
 					<table id="op_table">
 						<thead><tr><th>Value</th><th>Instruction</th><th>Description</th></tr></thead>
 						<tr><td>0</td><td>NOP</td><td>Do nothing; <em>Only 1 block, no operand</em></td></tr>
@@ -81,48 +81,54 @@
 						<tr><td>2</td><td>LOAD B</td><td>Load operand value into register B</td></tr>
 						<tr><td>3</td><td>LOADI A</td><td>Load value at operand value address into register A</td></tr>
 						<tr><td>4</td><td>LOADI B</td><td>Load value at operand value address into register B</td></tr>
-						<tr><td>5</td><td>STORE A</td><td>Store register A value into operand value address</td></tr>
-						<tr><td>6</td><td>STORE B</td><td>Store register B value into operand value address</td></tr>
-						<tr><td>7</td><td>ADD A B</td><td>Add register A and register B, store in register A</td></tr>
-						<tr><td>8</td><td>ADDI A</td><td>Add operand value to register A</td></tr>
-						<tr><td>9</td><td>ADDI B</td><td>Add operand value to register B</td></tr>
-						<tr><td>10</td><td>SUB A B</td><td>Subtract register A from register B, store in register A</td></tr>
-						<tr><td>11</td><td>SUB B A</td><td>Subtract register B from register A, store in register B</td></tr>
-						<tr><td>12</td><td>SUBI A</td><td>Subtract operand value from register A value, store in register A</td></tr>
-						<tr><td>13</td><td>SUBI B</td><td>Subtract operand value from register B value, store in register B</td></tr>
-						<tr><td>14</td><td>INC A</td><td>Increment A; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>15</td><td>INC B</td><td>Increment B; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>16</td><td>DEC A</td><td>Decrement A; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>17</td><td>DEC B</td><td>Decrement B; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>18</td><td>CMP A B</td><td>clear flags; if A &gt; B, set G; flag; if A &lt; B, set L flag; if equal set E flag; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>19</td><td>CMP B A</td><td>clear flags; if B &gt; A, set G; flag; if B &lt; A, set L flag; if equal set E flag; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>20</td><td>ISZERO A</td><td>clear Z flag; if A == 0, set Z flag; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>21</td><td>ISZERO B</td><td>clear Z flag; if B == 0, set Z flag; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>22</td><td>JMP</td><td>Move program counter to operand value address</td></tr>
-						<tr><td>23</td><td>JMPI</td><td>Move program counter to address contained at operand value address</td></tr>
-						<tr><td>24</td><td>JZ</td><td>Jump program counter to operand value address if Z flag is true</td></tr>
-						<tr><td>25</td><td>JZI</td><td>Jump program counter to address contained at operand value address if Z flag is true</td></tr>
-						<tr><td>24</td><td>JG</td><td>Jump program counter to operand value address if G flag is true</td></tr>
-						<tr><td>25</td><td>JGI</td><td>Jump program counter to address contained at operand value address if G flag is true</td></tr>
-						<tr><td>24</td><td>JL</td><td>Jump program counter to operand value address if L flag is true</td></tr>
-						<tr><td>25</td><td>JLI</td><td>Jump program counter to address contained at operand value address if L flag is true</td></tr>
-						<tr><td>24</td><td>JE</td><td>Jump program counter to operand value address if E flag is true</td></tr>
-						<tr><td>25</td><td>JEI</td><td>Jump program counter to address contained at operand value address if E flag is true</td></tr>
-						<tr><td>32</td><td>RELJMP</td><td>Jump to program counter plus operand value</td></tr>
-						<tr><td>33</td><td>NOT A</td><td>Bitwise not register A value into register A; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>34</td><td>NOT B</td><td>Bitwise not register B value into register B; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>35</td><td>AND A</td><td>Bitwise and register A value and operand value into register A</td></tr>
-						<tr><td>36</td><td>AND B</td><td>Bitwise and register B value and operand value into register B</td></tr>
-						<tr><td>37</td><td>OR A</td><td>Bitwise or register A value and operand value into register A</td></tr>
-						<tr><td>38</td><td>OR B</td><td>Bitwise or register B value and operand value into register B</td></tr>
-						<tr><td>39</td><td>XOR A</td><td>Bitwise xor register A value and operand value into register A</td></tr>
-						<tr><td>40</td><td>XOR B</td><td>Bitwise xor register B value and operand value into register B</td></tr>
-						<tr><td>41</td><td>SHL A</td><td>Shift register A value left 1 bit, operand value times</td></tr>
-						<tr><td>42</td><td>SHL B</td><td>Shift register B value left 1 bit, operand value times</td></tr>
-						<tr><td>43</td><td>SHR A</td><td>Shift register A value right 1 bit, operand value times, propagating 0</td></tr>
-						<tr><td>44</td><td>SHR B</td><td>Shift register B value right 1 bit, operand value times, propagating 0</td></tr>
-						<tr><td>45</td><td>SWP A B</td><td>Swap register A and B; <em>Only 1 block, no operand</em></td></tr>
-						<tr><td>46</td><td>HALT</td><td>Halt the running program; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>5</td><td>LOAD2 A</td><td>Load value at address stored at operand value address into register A</td></tr>
+						<tr><td>6</td><td>LOAD2 B</td><td>Load value at address stored at operand value address into register B</td></tr>
+						<tr><td>7</td><td>STORE A</td><td>Store register A value into operand value address</td></tr>
+						<tr><td>8</td><td>STORE B</td><td>Store register B value into operand value address</td></tr>
+						<tr><td>9</td><td>STORE2 A</td><td>Store register A value into address stored at operand value address</td></tr>
+						<tr><td>10</td><td>STORE2 B</td><td>Store register B value into address stored at operand value address</td></tr>
+						<tr><td>11</td><td>ADD A B</td><td>Add register A and register B, store in register A</td></tr>
+						<tr><td>12</td><td>ADDI A</td><td>Add operand value to register A</td></tr>
+						<tr><td>13</td><td>ADDI B</td><td>Add operand value to register B</td></tr>
+						<tr><td>14</td><td>SUB A B</td><td>Subtract register A from register B, store in register A</td></tr>
+						<tr><td>15</td><td>SUB B A</td><td>Subtract register B from register A, store in register B</td></tr>
+						<tr><td>16</td><td>SUBI A</td><td>Subtract operand value from register A value, store in register A</td></tr>
+						<tr><td>17</td><td>SUBI B</td><td>Subtract operand value from register B value, store in register B</td></tr>
+						<tr><td>18</td><td>INC A</td><td>Increment A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>19</td><td>INC B</td><td>Increment B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>20</td><td>DEC A</td><td>Decrement A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>21</td><td>DEC B</td><td>Decrement B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>22</td><td>CMP A B</td><td>clear flags; if A &gt; B, set G; flag; if A &lt; B, set L flag; if equal set E flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>23</td><td>CMP B A</td><td>clear flags; if B &gt; A, set G; flag; if B &lt; A, set L flag; if equal set E flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>24</td><td>ISZERO A</td><td>clear Z flag; if A == 0, set Z flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>25</td><td>ISZERO B</td><td>clear Z flag; if B == 0, set Z flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>26</td><td>JMP</td><td>Move program counter to operand value address</td></tr>
+						<tr><td>27</td><td>JMPI</td><td>Move program counter to address contained at operand value address</td></tr>
+						<tr><td>28</td><td>JZ</td><td>Jump program counter to operand value address if Z flag is true</td></tr>
+						<tr><td>29</td><td>JZI</td><td>Jump program counter to address contained at operand value address if Z flag is true</td></tr>
+						<tr><td>30</td><td>JG</td><td>Jump program counter to operand value address if G flag is true</td></tr>
+						<tr><td>31</td><td>JGI</td><td>Jump program counter to address contained at operand value address if G flag is true</td></tr>
+						<tr><td>32</td><td>JL</td><td>Jump program counter to operand value address if L flag is true</td></tr>
+						<tr><td>33</td><td>JLI</td><td>Jump program counter to address contained at operand value address if L flag is true</td></tr>
+						<tr><td>34</td><td>JE</td><td>Jump program counter to operand value address if E flag is true</td></tr>
+						<tr><td>35</td><td>JEI</td><td>Jump program counter to address contained at operand value address if E flag is true</td></tr>
+						<tr><td>36</td><td>RELJMP</td><td>Jump to program counter plus operand value</td></tr>
+						<tr><td>37</td><td>NOT A</td><td>Bitwise not register A value into register A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>38</td><td>NOT B</td><td>Bitwise not register B value into register B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>39</td><td>AND A</td><td>Bitwise and register A value and operand value into register A</td></tr>
+						<tr><td>40</td><td>AND B</td><td>Bitwise and register B value and operand value into register B</td></tr>
+						<tr><td>41</td><td>OR A</td><td>Bitwise or register A value and operand value into register A</td></tr>
+						<tr><td>42</td><td>OR B</td><td>Bitwise or register B value and operand value into register B</td></tr>
+						<tr><td>43</td><td>XOR A</td><td>Bitwise xor register A value and operand value into register A</td></tr>
+						<tr><td>44</td><td>XOR B</td><td>Bitwise xor register B value and operand value into register B</td></tr>
+						<tr><td>45</td><td>SHL A</td><td>Shift register A value left 1 bit, operand value times</td></tr>
+						<tr><td>46</td><td>SHL B</td><td>Shift register B value left 1 bit, operand value times</td></tr>
+						<tr><td>47</td><td>SHR A</td><td>Shift register A value right 1 bit, operand value times, propagating 0</td></tr>
+						<tr><td>48</td><td>SHR B</td><td>Shift register B value right 1 bit, operand value times, propagating 0</td></tr>
+						<tr><td>49</td><td>SWP A B</td><td>Swap register A and B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>50</td><td>DEREF A</td><td>Set register A to the value at the address contained in Register A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>51</td><td>DEREF B</td><td>Set register B to the value at the address contained in Register B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>52</td><td>HALT</td><td>Halt the running program; <em>Only 1 block, no operand</em></td></tr>
 					</table>
 				</div>
 			</div>
@@ -133,8 +139,12 @@
 			<tr><td>Copy value at position @O (@V) to Register B</td></tr>
 			<tr><td>Copy value at position @O (@V) to Register A</td></tr>
 			<tr><td>Copy value at position @O (@V) to Register B</td></tr>
+			<tr><td>Copy value at grid[@V] to Register A</td></tr>
+			<tr><td>Copy value at grid[@V] to Register B</td></tr>
 			<tr><td>Copy Register A (@A) to position @O</td></tr>
 			<tr><td>Copy Register B (@B) to position @O</td></tr>
+			<tr><td>Copy Register A (@A) to position @V</td></tr>
+			<tr><td>Copy Register B (@B) to position @V</td></tr>
 			<tr><td>Register A = Register A (@A) + Register B (@B)</td></tr>
 			<tr><td>Register A = Register A (@A) + @O</td></tr>
 			<tr><td>Register B = Register B (@B) + @O</td></tr>
@@ -174,6 +184,8 @@
 			<tr><td>Register A = Register A (@A) &#x226B @O</td></tr>
 			<tr><td>Register B = Register B (@B) &#x226B @O</td></tr>
 			<tr><td>Swaps from Register A (@A), Register B (@B) to Register A (@B), Register B (@A)</td></tr>
+			<tr><td>Register A = grid[Register A (@A)]</td></tr>
+			<tr><td>Register B = grid[Register B (@B)]</td></tr>
 			<tr><td>Stop the running program</td></tr>
 		</table>
     </body>

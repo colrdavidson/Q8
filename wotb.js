@@ -159,24 +159,31 @@ function key_pressed(event) {
 
 	switch (event.keyCode) {
 		case 37: case 38: case 39: case 40: // Arrow keys
+		case 87: case 65: case 83: case 68: // WASD keys
+		case 72: case 74: case 75: case 76: // HJKL keys
 		case 32: event.preventDefault(); break; // Space
 		case 13: event.preventDefault(); break; // Enter
 		default: break;
 	}
 
 	var hit_arrow = false;
-	if (event.keyCode == 37) {
-		selected_block -= 1;
-		hit_arrow = true;
-	} else if (event.keyCode == 38) {
-		selected_block -= 16;
-		hit_arrow = true;
-	} else if (event.keyCode == 40) {
-		selected_block += 16;
-		hit_arrow = true;
-	} else if (event.keyCode == 39) {
-		selected_block += 1;
-		hit_arrow = true;
+	switch (event.keyCode) {
+		case 37: case 65: case 72: {
+			selected_block -= 1;
+			hit_arrow = true;
+		} break;
+		case 38: case 87: case 75: {
+			selected_block -= 16;
+			hit_arrow = true;
+		} break;
+		case 40: case 83: case 74: {
+			selected_block += 16;
+			hit_arrow = true;
+		} break;
+		case 39: case 68: case 76: {
+			selected_block += 1;
+			hit_arrow = true;
+		} break;
 	}
 
 	if (hit_arrow) {
@@ -288,48 +295,54 @@ function tick() {
             case 2: { grab_func = function() { op_load(board, 1); }; } break;
             case 3: { grab_func = function() { op_load_ind(board, 0); }; } break;
             case 4: { grab_func = function() { op_load_ind(board, 1); }; } break;
-            case 5: { grab_func = function() { op_store(board, 0); }; } break;
-            case 6: { grab_func = function() { op_store(board, 1); }; } break;
-            case 7: { grab_func = function() { op_add(board, 0, 1); }; } break;
-            case 8: { grab_func = function() { op_addi(board, 0); }; } break;
-            case 9: { grab_func = function() { op_addi(board, 1); }; } break;
-            case 10: { grab_func = function() { op_sub(board, 0, 1); }; } break;
-            case 11: { grab_func = function() { op_sub(board, 1, 0); }; } break;
-            case 12: { grab_func = function() { op_subi(board, 0); }; } break;
-            case 13: { grab_func = function() { op_subi(board, 1); }; } break;
-            case 14: { op_inc(0); grab_var = false; } break;
-            case 15: { op_inc(1); grab_var = false; } break;
-            case 16: { op_dec(0); grab_var = false; } break;
-            case 17: { op_dec(1); grab_var = false; } break;
-            case 18: { op_cmp(0, 1); grab_var = false; } break;
-            case 19: { op_cmp(1, 0); grab_var = false; } break;
-            case 20: { op_iszero(0); grab_var = false; } break;
-            case 21: { op_iszero(1); grab_var = false; } break;
-            case 22: { grab_func = function() { op_jmp(board); }; } break;
-            case 23: { grab_func = function() { op_jmpi(board); }; } break;
-            case 24: { grab_func = function() { op_jz(board); }; } break;
-            case 25: { grab_func = function() { op_jzi(board); }; } break;
-            case 26: { grab_func = function() { op_jg(board); }; } break;
-            case 27: { grab_func = function() { op_jgi(board); }; } break;
-            case 28: { grab_func = function() { op_jl(board); }; } break;
-            case 29: { grab_func = function() { op_jli(board); }; } break;
-            case 30: { grab_func = function() { op_je(board); }; } break;
-            case 31: { grab_func = function() { op_jei(board); }; } break;
-            case 32: { grab_func = function() { op_reljump(board); }; } break;
-            case 33: { op_not(0); grab_var = false; } break;
-            case 34: { op_not(1); grab_var = false; } break;
-            case 35: { grab_func = function() { op_and(board, 0); }; } break;
-            case 36: { grab_func = function() { op_and(board, 1); }; } break;
-            case 37: { grab_func = function() { op_or(board, 0); }; } break;
-            case 38: { grab_func = function() { op_or(board, 1); }; } break;
-            case 39: { grab_func = function() { op_xor(board, 0); }; } break;
-            case 40: { grab_func = function() { op_xor(board, 1); }; } break;
-            case 41: { grab_func = function() { op_shl(board, 0); }; } break;
-            case 42: { grab_func = function() { op_shl(board, 1); }; } break;
-            case 43: { grab_func = function() { op_shr(board, 0); }; } break;
-            case 44: { grab_func = function() { op_shr(board, 1); }; } break;
-            case 45: { op_swap(0, 1); grab_var = false; } break;
-			case 46: { running = false; grab_var = false; pc--; } break; //Halt op
+            case 5: { grab_func = function() { op_load_2(board, 0); }; } break;
+            case 6: { grab_func = function() { op_load_2(board, 1); }; } break;
+            case 7: { grab_func = function() { op_store(board, 0); }; } break;
+            case 8: { grab_func = function() { op_store(board, 1); }; } break;
+            case 9: { grab_func = function() { op_store_2(board, 0); }; } break;
+            case 10: { grab_func = function() { op_store_2(board, 1); }; } break;
+            case 11: { grab_func = function() { op_add(board, 0, 1); }; } break;
+            case 12: { grab_func = function() { op_addi(board, 0); }; } break;
+            case 13: { grab_func = function() { op_addi(board, 1); }; } break;
+            case 14: { grab_func = function() { op_sub(board, 0, 1); }; } break;
+            case 15: { grab_func = function() { op_sub(board, 1, 0); }; } break;
+            case 16: { grab_func = function() { op_subi(board, 0); }; } break;
+            case 17: { grab_func = function() { op_subi(board, 1); }; } break;
+            case 18: { op_inc(0); grab_var = false; } break;
+            case 19: { op_inc(1); grab_var = false; } break;
+            case 20: { op_dec(0); grab_var = false; } break;
+            case 21: { op_dec(1); grab_var = false; } break;
+            case 22: { op_cmp(0, 1); grab_var = false; } break;
+            case 23: { op_cmp(1, 0); grab_var = false; } break;
+            case 24: { op_iszero(0); grab_var = false; } break;
+            case 25: { op_iszero(1); grab_var = false; } break;
+            case 26: { grab_func = function() { op_jmp(board); }; } break;
+            case 27: { grab_func = function() { op_jmpi(board); }; } break;
+            case 28: { grab_func = function() { op_jz(board); }; } break;
+            case 29: { grab_func = function() { op_jzi(board); }; } break;
+            case 30: { grab_func = function() { op_jg(board); }; } break;
+            case 31: { grab_func = function() { op_jgi(board); }; } break;
+            case 32: { grab_func = function() { op_jl(board); }; } break;
+            case 33: { grab_func = function() { op_jli(board); }; } break;
+            case 34: { grab_func = function() { op_je(board); }; } break;
+            case 35: { grab_func = function() { op_jei(board); }; } break;
+            case 36: { grab_func = function() { op_reljump(board); }; } break;
+            case 37: { op_not(0); grab_var = false; } break;
+            case 38: { op_not(1); grab_var = false; } break;
+            case 39: { grab_func = function() { op_and(board, 0); }; } break;
+            case 40: { grab_func = function() { op_and(board, 1); }; } break;
+            case 41: { grab_func = function() { op_or(board, 0); }; } break;
+            case 42: { grab_func = function() { op_or(board, 1); }; } break;
+            case 43: { grab_func = function() { op_xor(board, 0); }; } break;
+            case 44: { grab_func = function() { op_xor(board, 1); }; } break;
+            case 45: { grab_func = function() { op_shl(board, 0); }; } break;
+            case 46: { grab_func = function() { op_shl(board, 1); }; } break;
+            case 47: { grab_func = function() { op_shr(board, 0); }; } break;
+            case 48: { grab_func = function() { op_shr(board, 1); }; } break;
+            case 49: { op_swap(0, 1); grab_var = false; } break;
+            case 50: { op_deref(0); grab_var = false; } break;
+            case 51: { op_deref(1); grab_var = false; } break;
+			case 52: { running = false; grab_var = false; pc--; } break; //Halt op
             default: { grab_var = false; }
         }
 		if (grab_var == false) {

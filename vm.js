@@ -146,8 +146,20 @@ function op_load_ind(board, idx) {
     pc++;
 }
 
+function op_load_2(board, idx) {
+    reg[idx] = board[board[board[pc]]];
+	reg_updated = true;
+    pc++;
+}
+
 function op_store(board, idx) {
     board[board[pc]] = reg[idx];
+	board_updated = true;
+    pc++;
+}
+
+function op_store_2(board, idx) {
+    board[board[board[pc]]] = reg[idx];
 	board_updated = true;
     pc++;
 }
@@ -193,3 +205,9 @@ function op_swap(a_idx, b_idx) {
 	reg[b_idx] = tmp;
 	reg_updated = true;
 }
+
+function op_deref(idx) {
+    reg[idx] = board[reg[idx]];
+	reg_updated = true;
+}
+
