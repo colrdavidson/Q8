@@ -49,6 +49,7 @@ function step() {
 }
 
 function update_debug() {
+	var byte_op = false;
 	if (op) {
 		var table = document.getElementById('op_table');
 		var rows = table.getElementsByTagName('tr');
@@ -62,8 +63,13 @@ function update_debug() {
 			op_desc = entries[2].innerHTML;
 		}
 
+		if (op_desc.search("Only 1 block, no operand") > -1) {
+			byte_op = true;
+		}
+
 		debug_string = "Reading instruction " + op_id + "<br><font color='#A0B0B0'>" + op_name + ': "' + op_desc + '"</font><br><br>';
-	} else {
+	}
+	if (!op || byte_op) {
 		var table = document.getElementById('simple_text');
 		var rows = table.getElementsByTagName('tr');
 		var simple_desc;
@@ -79,6 +85,7 @@ function update_debug() {
 		simple_desc = simple_desc.replace("@B", reg[1]);
 		simple_desc = simple_desc.replace("@V", board[board[pc]]);
 		debug_string += simple_desc + "";
+		byte_op = false;
 	}
 	if (debug_string === null) {
 		debug_string = "";
