@@ -28,8 +28,25 @@ tr.selected {
 	text-align: left;
 }
 
+.reg {
+	background-color: #606060;
+	padding: 0.5em;
+}
+
+#reg_a {
+	background-color: #C0C0C0;
+	color: #000;
+}
+
+#reg_b {
+	background-color: #C0C0C0;
+	color: #000;
+}
+
 th, td {
 	padding-right: 1em;
+ 	border-right: 1px solid #000000;
+ 	border-left: 1px solid #000000;
 }
 
 table {
