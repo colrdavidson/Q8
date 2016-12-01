@@ -79,7 +79,6 @@ function op_cmp(a_idx, b_idx) {
 	zero_flag = false;
 	greater_flag = false;
 
-	console.log(" " + a_idx + " " + b_idx);
 	if (reg[a_idx] > reg[b_idx]) {
 		greater_flag = true;
 	} else if (reg[a_idx] == reg[b_idx]) {
@@ -103,7 +102,7 @@ function op_reljump(board) {
 }
 
 function op_add(a_idx, b_idx) {
-    reg[a_idx] = a_idx + b_idx;
+    reg[a_idx] = reg[a_idx] + reg[b_idx];
 	reg_updated = true;
 }
 
@@ -114,7 +113,7 @@ function op_addi(board, idx) {
 }
 
 function op_sub(a_idx, b_idx) {
-    reg[a_idx] = a_idx - b_idx;
+    reg[a_idx] = reg[a_idx] - reg[b_idx];
 	reg_updated = true;
 }
 
