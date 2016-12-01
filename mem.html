@@ -134,6 +134,8 @@
 						<tr><td>51</td><td>DEREF B</td><td>Set register B to the value at the address contained in Register B; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>52</td><td>HALT</td><td>Halt the running program; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>53</td><td>ERROR</td><td>Halt the running program, toss error flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>54</td><td>JERR</td><td>Jump program counter to operand value address if Error flag is true</td></tr>
+						<tr><td>55</td><td>JERRI</td><td>Jump program counter to address contained at operand value address if Error flag is true</td></tr>
 					</table>
 				</div>
 			</div>
@@ -193,6 +195,8 @@
 			<tr><td>Register B = grid[Register B (@B)]</td></tr>
 			<tr><td>Stop the running program</td></tr>
 			<tr><td>Stop the running program, toss error flag</td></tr>
+			<tr><td>if Error flag = true; Move program counter to position @O</td></tr>
+			<tr><td>if Error flag = true; Move program counter to position @V</td></tr>
 		</table>
     </body>
 </html>

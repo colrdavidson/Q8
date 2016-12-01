@@ -72,6 +72,21 @@ function op_jli(board) {
 	}
 }
 
+function op_jerr(board) {
+	if (error_flag == true) {
+		pc = board[pc];
+    } else {
+		pc++;
+	}
+}
+
+function op_jerri(board) {
+	if (error_flag == true) {
+		pc = board[board[pc]];
+    } else {
+		pc++;
+	}
+}
 
 function op_cmp(a_idx, b_idx) {
 	less_flag = false;
@@ -102,12 +117,20 @@ function op_reljump(board) {
 }
 
 function op_add(a_idx, b_idx) {
-    reg[a_idx] = reg[a_idx] + reg[b_idx];
+	var tmp = reg[a_idx] + reg[b_idx];
+	if (tmp > 255) {
+		error_flag = true;
+	}
+    reg[a_idx] = tmp;
 	reg_updated = true;
 }
 
 function op_addi(board, idx) {
-    reg[idx] += board[pc];
+	var tmp = reg[idx] + board[pc];
+	if (tmp > 255) {
+		error_flag = true;
+	}
+    reg[idx] = tmp;
 	reg_updated = true;
     pc++;
 }
