@@ -19,6 +19,11 @@ tr.selected {
 	background-color: #606060;
 }
 
+td.selected {
+	background-color: #C01010;
+	padding: 0.25em;
+}
+
 #debug {
 	background-color: #606060;
 	padding: 1em;

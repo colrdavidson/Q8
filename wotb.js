@@ -22,6 +22,7 @@ var equal_flag = false;
 var greater_flag = false;
 var less_flag = false;
 var zero_flag = false;
+var error_flag = false;
 var reg_updated = true;
 
 var board_updated = true;
@@ -110,6 +111,7 @@ function clear_reg() {
 	less_flag = false;
 	greater_flag = false;
 	equal_flag = false;
+	error_flag = false;
 }
 
 function clear_flags() {
@@ -350,6 +352,7 @@ function tick() {
             case 50: { op_deref(0); grab_var = false; } break;
             case 51: { op_deref(1); grab_var = false; } break;
 			case 52: { running = false; grab_var = false; pc--; } break; //Halt op
+			case 53: { running = false; grab_var = false; pc--; error_flag = true; reg_updated = true; } break; //Error op
             default: { grab_var = false; }
         }
 		if (grab_var == false) {
@@ -467,6 +470,12 @@ function update_board() {
         document.getElementById("f_eq").innerHTML = equal_flag;
         document.getElementById("f_less").innerHTML = less_flag;
         document.getElementById("f_great").innerHTML = greater_flag;
+		if (error_flag) {
+			document.getElementById("f_err").className += "selected";
+		} else {
+			document.getElementById("f_err").classList.remove('selected');
+		}
+        document.getElementById("f_err").innerHTML = error_flag;
         reg_updated = false;
     }
 }

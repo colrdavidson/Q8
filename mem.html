@@ -60,8 +60,11 @@
 						<td class="reg">Register B:</td><td class="reg" id="reg_b">0</td></tr>
 					</table>
 					<table>
+						<tr><td>Error: </td><td id="f_err">false</td></tr>
+					</table>
+					<table>
 						<tr><td>Z Flag: </td><td id="f_zero">false</td>
-						<td>E Flag: </td><td id="f_eq">false</td></tr>
+						<td>Eq Flag: </td><td id="f_eq">false</td></tr>
 						<tr><td>G Flag: </td><td id="f_great">false</td>
 						<td>L Flag: </td><td id="f_less">false</td></tr>
 					</table>
@@ -130,6 +133,7 @@
 						<tr><td>50</td><td>DEREF A</td><td>Set register A to the value at the address contained in Register A; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>51</td><td>DEREF B</td><td>Set register B to the value at the address contained in Register B; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>52</td><td>HALT</td><td>Halt the running program; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>53</td><td>ERROR</td><td>Halt the running program, toss error flag; <em>Only 1 block, no operand</em></td></tr>
 					</table>
 				</div>
 			</div>
@@ -188,6 +192,7 @@
 			<tr><td>Register A = grid[Register A (@A)]</td></tr>
 			<tr><td>Register B = grid[Register B (@B)]</td></tr>
 			<tr><td>Stop the running program</td></tr>
+			<tr><td>Stop the running program, toss error flag</td></tr>
 		</table>
     </body>
 </html>
