@@ -308,11 +308,11 @@ function tick() {
             case 8: { grab_func = function() { op_store(board, 1); }; } break;
             case 9: { grab_func = function() { op_store_2(board, 0); }; } break;
             case 10: { grab_func = function() { op_store_2(board, 1); }; } break;
-            case 11: { grab_func = function() { op_add(board, 0, 1); }; } break;
+            case 11: { op_add(0, 1); grab_var = false; } break;
             case 12: { grab_func = function() { op_addi(board, 0); }; } break;
             case 13: { grab_func = function() { op_addi(board, 1); }; } break;
-            case 14: { grab_func = function() { op_sub(board, 0, 1); }; } break;
-            case 15: { grab_func = function() { op_sub(board, 1, 0); }; } break;
+            case 14: { op_sub(0, 1); grab_var = false; } break;
+            case 15: { op_sub(1, 0); grab_var = false; } break;
             case 16: { grab_func = function() { op_subi(board, 0); }; } break;
             case 17: { grab_func = function() { op_subi(board, 1); }; } break;
             case 18: { op_inc(0); grab_var = false; } break;
