@@ -1,0 +1,60 @@
+<html>
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="tutorial_style.css" rel="stylesheet">
+	</head>
+	<body>
+		<h1>Multiplication with MemoryVM</h1>
+		<p>As a gentle introduction to the MemoryVM (MVM) tool, we'll start by multiplying two numbers.
+		Because the MVM instruction set does not contain a multiply operation, we'll have to write our own.
+		The algorithm for multiplication is pretty easy, you probably learned it in grade school.</p>
+		<pre><code>6 * 4 = 24</code></pre>
+		<p>So,</p>
+<pre><code>6 + 6 + 6 + 6 = 24
+6, 4 times is 24</code></pre>
+		<p>Or alternatively: </p>
+<pre><code>4 + 4 + 4 + 4 + 4 + 4 = 24
+4, 6 times is 24</code></pre>
+	<p>In a C-like language, that looks like this: </p>
+<pre><code>int x = 0;
+for (int i = 6; i &gt; 0; i--) {
+    x += 4;
+}</code></pre>
+		<p>Alternatively: </p>
+<pre><code>int x = 0;
+for (int i = 4; i &gt; 0; i--) {
+    x += 6;
+}</code></pre>
+		<p>You'll notice that one of the loops actually does less "work". One adds 4 times, and the other adds 6 times.
+		Keep that in mind for later!</p>
+		<p>Our multiplication is a little trickier in MVM bytecode, because we have to work with real constraints. The MVM has
+		only 2 registers, meaning that we have to store our loop index, "i", in a memory tile, rather than keeping
+		it comfortably in a third register.</p>
+		<p>MVM provides a special set of operations for reading and writing to tiles. The LOADI instruction takes the value from
+		the tile at the address provided, and puts it into register A or register B accordingly. STORE places the value in
+		register A or B at the address provided.</p>
+		<p>To begin writing, we have to first load in our two values we'd like to multiply, 6 and 4 into our registers,
+		and then determine which is the smaller of the two, to minimize the number of times we have to loop through the addition.
+		We'll store that in a tile as our loop counter.</p>
+		<img src="mult_initial_load.png" width="50%" height="auto">
+		<img src="mult_initial_state.png" width="50%" height="auto">
+		<p>Each time through our loop, we have to decrement our index, check if the new value is zero. If the value is zero, we
+		need to end the program, otherwise, we have to store our new index and then continue on to the addition.</p>
+		<img src="mult_main_loop.png" width="50%" height="auto">
+		<p>The addition is fairly straightforward. We LOADI our current accumulated value into register A, and LOADI the value we want to
+		add during each pass, 6. With an ADD call, our register A is now the result of A + B, ready to be stuffed back into the accumated
+		value tile with a STORE.</p>
+		<img src="mult_no_overflow.png" width="50%" height="auto">
+		<p>Unfortunately, it's not quite that simple. Because the tiles can only contain values from 0 to 255,
+		there's a risk of overflow. When an overflow occurs, the instruction triggers the error flag, making a note of the issue. Our
+		multiplication code isn't going to generate values over 255 to keep the code simple, so before we
+		can actually do the store, we need to check for the error flag, and quit the program early if we have gotten it.</p>
+		<img src="mult_finished.png" width="50%" height="auto">
+		<p>When our loop counter is zero, we exit, leaving the result tile filled with the correct value.</p>
+		<a href="http://pentaquine.com/mem.html#1|A|1|1|1|A|1|E|1|U|1|Q|1|A|1|W|1|H|1|i|2|A|1|B|1|2|1|A|1|I|1|c|2|A|1|a|1|J|22|A|1|x|1|G|1|g|1|k|2|A|1|2|1|A|1|Y|1|H|1|P|1|8|1|U|1|B|1|2|1|A|1|a|1|Q|1|w|28|A|1|N|1|h|1|B|1|H|1|A|1|L|1|N|1|v|1|8|1|H|1|Y|1|R|1|o|1|k|3|A|1|G|1|B|231|A|1|N|1|A|2|=|">
+			Finished Program
+		</a>
+	</body>
+</html>
