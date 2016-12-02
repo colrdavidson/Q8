@@ -14,7 +14,10 @@
 		really cramp your style. MVM provides instructions for storing information in memory tiles,
 		giving you tons of space to store all the program state you'd like.</p>
 		<p>A couple of typical memory store/load patterns worth mentioning: </p>
+		<h2>I/O</h2>
 		<h3>The Direct</h3>
+		<p>Our direct memory access isn't actually I/O, just I. There's no direct <code>STORE</code> instruction,
+		because it wouldn't make any sense.</p>
 		<div style="float: left;">
 			<img src="basics_direct_store.png">
 		</div>
@@ -31,6 +34,8 @@
 		</div>
 		<br style="clear: both;">
 		<h3>The Indirect</h3>
+		<p>The indirect accessors are the meat and potatoes of the MVM IO family. Most of the time to keep our
+		limited register space available for ops, we'll wind up using these.</p>
 		<div style="float: left;">
 			<img src="basics_indirect_store.png">
 		</div>
@@ -51,6 +56,10 @@
 		</div>
 		<br style="clear: both;">
 		<h3>The Double Indirect</h3>
+		<p>Double indirect accessors are a little less frequently used, but when you need them, you need them. Very useful
+		for tracking indices into an array. You can <code>LOAD2</code> to get the value, and <code>LOADI</code> to get the index.
+		When you want to change your index, you <code>LOADI</code> the index, do your pointer math, and then <code>STORE</code> it
+		back again.</p>
 		<div style="float: left;">
 			<img src="basics_indirect2_store.png">
 		</div>
@@ -70,8 +79,11 @@
 			</table>
 		</div>
 		<br style="clear: both;">
-		<p>With register saving mechanism in mind, now we can tackle loops!</p>
+		<p>With all of our register saving mechanisms in mind, we can now tackle loops!</p>
+		<h2>Loops</h2>
 		<h3>The Register Loop</h3>
+		<p>This isn't all that useful in practice, as most of the time we'll
+		need both registers, but it does take fewer cpu cycles than a fancier loop.</p>
 		<div style="float: left;">
 			<img src="basics_register_loop.png">
 		</div>
@@ -93,6 +105,8 @@
 		</div>
 		<br style="clear: both;">
 		<h3>The Memory Tile Loop</h3>
+		<p>This is the loop you'll see frequently in some of the example projects. It's
+		a little longer than a register loop, but far more practical.</p>
 		<div style="float: left;">
 			<img src="basics_tile_loop.png">
 		</div>

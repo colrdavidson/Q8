@@ -1,6 +1,9 @@
 code {
 	background-color: #606060;
-	padding: 0.25em;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+	padding-top: 0.0625em;
+	padding-bottom: 0.0625em;
 	display: inline-block;
 	border: 1px solid #999;
 }
