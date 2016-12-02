@@ -1,6 +1,13 @@
 code {
 	background-color: #606060;
-	padding: 1em;
+	padding: 0.25em;
+	display: inline-block;
+	border: 1px solid #999;
+}
+
+pre > code {
+	background-color: #606060;
+	padding: 0.5em;
 	display: inline-block;
 	border: 1px solid #999;
 }
