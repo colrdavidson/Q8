@@ -32,9 +32,9 @@ for (int i = 4; i &gt; 0; i--) {
 		<p>Our multiplication is a little trickier in MVM bytecode, because we have to work with real constraints. The MVM has
 		only 2 registers, meaning that we have to store our loop index, "i", in a memory tile, rather than keeping
 		it comfortably in a third register.</p>
-		<p>MVM provides a special set of operations for reading and writing to tiles. The LOADI instruction takes the value from
-		the tile at the address provided, and puts it into register A or register B accordingly. STORE places the value in
-		register A or B at the address provided.</p>
+		<p>MVM provides a special set of operations for reading and writing to tiles. The <code>LOADI</code> instruction takes
+		the value from the tile at the address provided, and puts it into register A or register B accordingly.
+		<code>STORE</code> places the value in register A or B at the address provided.</p>
 		<p>To begin writing, we have to first load in our two values we'd like to multiply, 6 and 4 into our registers,
 		and then determine which is the smaller of the two, to minimize the number of times we have to loop through the addition.
 		We'll store that in a tile as our loop counter.</p>
@@ -86,9 +86,9 @@ for (int i = 4; i &gt; 0; i--) {
 				<tr><td>255</td><td>52</td><td>HALT</td></tr>
 			</table>
 		</div>
-		<p>The addition is fairly straightforward. We LOADI our current accumulated value into register A, and LOADI the value we want to
-		add during each pass, 6. With an ADD call, our register A is now the result of A + B, ready to be stuffed back into the accumated
-		value tile with a STORE.</p>
+		<p>The addition is fairly straightforward. We <code>LOADI</code> our current accumulated value into register A,
+		and <code>LOADI</code> the value we want to add during each pass, 6. With an <code>ADD</code> call, our register
+		A is now the result of A + B, ready to be stuffed back into the accumated value tile with a <code>STORE</code>.</p>
 		<div style="float: left;">
 			<img src="mult_no_overflow.png">
 		</div>
