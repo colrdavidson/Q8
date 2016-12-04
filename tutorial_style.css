@@ -15,6 +15,12 @@ pre > code {
 	border: 1px solid #999;
 }
 
+.img_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 h1, h2, h3 {
 	text-align: center;
 }
@@ -23,8 +29,12 @@ th {
 	text-align: left;
 }
 
+table {
+	width: 280px;
+}
+
 img {
-	width: 50%;
+	width: 75%;
 }
 
 body {
@@ -32,5 +42,5 @@ body {
 	color: #F0F0F0;
 	font-family: sans-serif;
 	margin: 0 auto;
-	width: 50em;
+	max-width: 50em;
 }

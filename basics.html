@@ -18,116 +18,122 @@
 		<h3>The Direct</h3>
 		<p>Our direct memory access isn't actually I/O, just I. There's no direct <code>STORE</code> instruction,
 		because it wouldn't make any sense.</p>
-		<div style="float: left;">
-			<img src="basics_direct_store.png">
+		<div class="img_container">
+			<div>
+				<img src="basics_direct_store.png">
+			</div>
+			<div>
+				<table>
+					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
+					<tr><td>0</td><td>26</td><td>JMP</td></tr>
+					<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
+					<tr><td>34</td><td>1</td><td>LOAD A</td></tr>
+					<tr><td>35</td><td>1</td><td>Operand for LOAD A</td></tr>
+					<tr><td>36</td><td>2</td><td>LOAD B</td></tr>
+					<tr><td>37</td><td>2</td><td>Operand for LOAD B</td></tr>
+				</table>
+			</div>
 		</div>
-		<div style="float: right; margin-top: -100px;">
-			<table>
-				<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-				<tr><td>0</td><td>26</td><td>JMP</td></tr>
-				<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
-				<tr><td>34</td><td>1</td><td>LOAD A</td></tr>
-				<tr><td>35</td><td>1</td><td>Operand for LOAD A</td></tr>
-				<tr><td>36</td><td>2</td><td>LOAD B</td></tr>
-				<tr><td>37</td><td>2</td><td>Operand for LOAD B</td></tr>
-			</table>
-		</div>
-		<br style="clear: both;">
 		<h3>The Indirect</h3>
 		<p>The indirect accessors are the meat and potatoes of the MVM IO family. Most of the time to keep our
 		limited register space available for ops, we'll wind up using these.</p>
-		<div style="float: left;">
-			<img src="basics_indirect_store.png">
+		<div class="img_container">
+			<div>
+				<img src="basics_indirect_store.png">
+			</div>
+			<div>
+				<table>
+					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
+					<tr><td>0</td><td>26</td><td>JMP</td></tr>
+					<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
+					<tr><td>34</td><td>3</td><td>LOADI A</td></tr>
+					<tr><td>35</td><td>64</td><td>Operand for LOADI A</td></tr>
+					<tr><td>36</td><td>4</td><td>LOADI B</td></tr>
+					<tr><td>37</td><td>65</td><td>Operand for LOADI B</td></tr>
+					<tr><td>38</td><td>7</td><td>STORE A</td></tr>
+					<tr><td>39</td><td>64</td><td>Operand for STORE A</td></tr>
+					<tr><td>40</td><td>8</td><td>STORE B</td></tr>
+					<tr><td>41</td><td>65</td><td>Operand for STORE B</td></tr>
+				</table>
+			</div>
 		</div>
-		<div style="float: right; margin-top: -150px;">
-			<table>
-				<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-				<tr><td>0</td><td>26</td><td>JMP</td></tr>
-				<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
-				<tr><td>34</td><td>3</td><td>LOADI A</td></tr>
-				<tr><td>35</td><td>64</td><td>Operand for LOADI A</td></tr>
-				<tr><td>36</td><td>4</td><td>LOADI B</td></tr>
-				<tr><td>37</td><td>65</td><td>Operand for LOADI B</td></tr>
-				<tr><td>38</td><td>7</td><td>STORE A</td></tr>
-				<tr><td>39</td><td>64</td><td>Operand for STORE A</td></tr>
-				<tr><td>40</td><td>8</td><td>STORE B</td></tr>
-				<tr><td>41</td><td>65</td><td>Operand for STORE B</td></tr>
-			</table>
-		</div>
-		<br style="clear: both;">
 		<h3>The Double Indirect</h3>
 		<p>Double indirect accessors are a little less frequently used, but when you need them, you need them. Very useful
 		for tracking indices into an array. You can <code>LOAD2</code> to get the value, and <code>LOADI</code> to get the index.
 		When you want to change your index, you <code>LOADI</code> the index, do your pointer math, and then <code>STORE</code> it
 		back again.</p>
-		<div style="float: left;">
-			<img src="basics_indirect2_store.png">
-		</div>
-		<div style="float: right; margin-top: -160px;">
-			<table>
-				<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-				<tr><td>0</td><td>26</td><td>JMP</td></tr>
-				<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
-				<tr><td>34</td><td>5</td><td>LOAD2 A</td></tr>
-				<tr><td>35</td><td>64</td><td>Operand for LOAD2 A</td></tr>
-				<tr><td>36</td><td>6</td><td>LOAD2 B</td></tr>
-				<tr><td>37</td><td>65</td><td>Operand for LOAD2 B</td></tr>
-				<tr><td>38</td><td>9</td><td>STORE2 A</td></tr>
-				<tr><td>39</td><td>64</td><td>Operand for STORE2 A</td></tr>
-				<tr><td>40</td><td>10</td><td>STORE2 B</td></tr>
-				<tr><td>41</td><td>65</td><td>Operand for STORE2 B</td></tr>
-			</table>
-		</div>
 		<br style="clear: both;">
+		<div class="img_container">
+			<div>
+				<img src="basics_indirect2_store.png">
+			</div>
+			<div>
+				<table>
+					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
+					<tr><td>0</td><td>26</td><td>JMP</td></tr>
+					<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
+					<tr><td>34</td><td>5</td><td>LOAD2 A</td></tr>
+					<tr><td>35</td><td>64</td><td>Operand for LOAD2 A</td></tr>
+					<tr><td>36</td><td>6</td><td>LOAD2 B</td></tr>
+					<tr><td>37</td><td>65</td><td>Operand for LOAD2 B</td></tr>
+					<tr><td>38</td><td>9</td><td>STORE2 A</td></tr>
+					<tr><td>39</td><td>64</td><td>Operand for STORE2 A</td></tr>
+					<tr><td>40</td><td>10</td><td>STORE2 B</td></tr>
+					<tr><td>41</td><td>65</td><td>Operand for STORE2 B</td></tr>
+				</table>
+			</div>
+		</div>
 		<p>With all of our register saving mechanisms in mind, we can now tackle loops!</p>
 		<h2>Loops</h2>
 		<h3>The Register Loop</h3>
 		<p>This isn't all that useful in practice, as most of the time we'll
 		need both registers, but it does take fewer cpu cycles than a fancier loop.</p>
-		<div style="float: left;">
-			<img src="basics_register_loop.png">
+		<div class="img_container">
+			<div>
+				<img src="basics_register_loop.png">
+			</div>
+			<div>
+				<table>
+					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
+					<tr><td>0</td><td>1</td><td>LOAD A</td></tr>
+					<tr><td>1</td><td>5</td><td>Operand for LOAD A</td></tr>
+					<tr><td>2</td><td>26</td><td>JMP</td></tr>
+					<tr><td>3</td><td>34</td><td>Operand for JMP</td></tr>
+					<tr><td>34</td><td>24</td><td>ISZERO A</td></tr>
+					<tr><td>35</td><td>28</td><td>JZ</td></tr>
+					<tr><td>36</td><td>255</td><td>Operand for JZ</td></tr>
+					<tr><td>37</td><td>20</td><td>DEC A</td></tr>
+					<tr><td>38</td><td>26</td><td>JMP</td></tr>
+					<tr><td>39</td><td>34</td><td>Operand for JMP</td></tr>
+					<tr><td>255</td><td>52</td><td>HALT</td></tr>
+				</table>
+			</div>
 		</div>
-		<div style="float: right; margin-top: -390px;">
-			<table>
-				<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-				<tr><td>0</td><td>1</td><td>LOAD A</td></tr>
-				<tr><td>1</td><td>5</td><td>Operand for LOAD A</td></tr>
-				<tr><td>2</td><td>26</td><td>JMP</td></tr>
-				<tr><td>3</td><td>34</td><td>Operand for JMP</td></tr>
-				<tr><td>34</td><td>24</td><td>ISZERO A</td></tr>
-				<tr><td>35</td><td>28</td><td>JZ</td></tr>
-				<tr><td>36</td><td>255</td><td>Operand for JZ</td></tr>
-				<tr><td>37</td><td>20</td><td>DEC A</td></tr>
-				<tr><td>38</td><td>26</td><td>JMP</td></tr>
-				<tr><td>39</td><td>34</td><td>Operand for JMP</td></tr>
-				<tr><td>255</td><td>52</td><td>HALT</td></tr>
-			</table>
-		</div>
-		<br style="clear: both;">
 		<h3>The Memory Tile Loop</h3>
 		<p>This is the loop you'll see frequently in the example projects. It's
 		a little longer than a register loop, but far more practical.</p>
-		<div style="float: left;">
-			<img src="basics_tile_loop.png">
+		<div class="img_container">
+			<div>
+				<img src="basics_tile_loop.png">
+			</div>
+			<div>
+				<table>
+					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
+					<tr><td>0</td><td>26</td><td>JMP</td></tr>
+					<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
+					<tr><td>34</td><td>3</td><td>LOAD A</td></tr>
+					<tr><td>35</td><td>80</td><td>Operand for LOAD A</td></tr>
+					<tr><td>36</td><td>24</td><td>ISZERO A</td></tr>
+					<tr><td>37</td><td>28</td><td>JZ</td></tr>
+					<tr><td>38</td><td>255</td><td>Operand for JZ</td></tr>
+					<tr><td>39</td><td>20</td><td>DEC A</td></tr>
+					<tr><td>40</td><td>7</td><td>STORE A</td></tr>
+					<tr><td>41</td><td>80</td><td>Operand for STORE A</td></tr>
+					<tr><td>42</td><td>26</td><td>JMP</td></tr>
+					<tr><td>43</td><td>34</td><td>Operand for JMP</td></tr>
+					<tr><td>255</td><td>52</td><td>HALT</td></tr>
+				</table>
+			</div>
 		</div>
-		<div style="float: right; margin-top: -390px;">
-			<table>
-				<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-				<tr><td>0</td><td>26</td><td>JMP</td></tr>
-				<tr><td>1</td><td>34</td><td>Operand for JMP</td></tr>
-				<tr><td>34</td><td>3</td><td>LOAD A</td></tr>
-				<tr><td>35</td><td>80</td><td>Operand for LOAD A</td></tr>
-				<tr><td>36</td><td>24</td><td>ISZERO A</td></tr>
-				<tr><td>37</td><td>28</td><td>JZ</td></tr>
-				<tr><td>38</td><td>255</td><td>Operand for JZ</td></tr>
-				<tr><td>39</td><td>20</td><td>DEC A</td></tr>
-				<tr><td>40</td><td>7</td><td>STORE A</td></tr>
-				<tr><td>41</td><td>80</td><td>Operand for STORE A</td></tr>
-				<tr><td>42</td><td>26</td><td>JMP</td></tr>
-				<tr><td>43</td><td>34</td><td>Operand for JMP</td></tr>
-				<tr><td>255</td><td>52</td><td>HALT</td></tr>
-			</table>
-		</div>
-		<br style="clear: both;">
 	</body>
 </html>
