@@ -1,0 +1,43 @@
+<html>
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="tutorial_style.css" rel="stylesheet">
+	</head>
+	<body>
+		<h1>Sorting and Arrays with MemoryVM</h1>
+		<p>To introduce a little more complexity and explore some of the cooler features of MVM, we are going
+		to write a simple sort. Bubblesort! It may be slow, but it's easy to understand, and easy enough to implement.</p>
+		<h3>Bubblesort</h3>
+		<a href="https://en.wikipedia.org/wiki/Bubble_sort">
+			<div class="img_container">
+				<img style="width: 30%;" src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Bubble-sort-example-300px.gif">
+			</div>
+		</a>
+		<p>In bubblesort, each element is compared with its neighbor and swapped if necessary. Unfortunately, it can't always sort
+		the whole array in one pass. It must keep running until all of the elements have slowly made their way to their correct
+		positions. In a C-like language, a typical implementation looks something like this: </p>
+		<div class="code_container">
+		<pre><code>int len = 4;
+int array[len] = {1, 2, 3, 4};
+bool swapped = true;
+
+while (swapped) {
+    swapped = false;
+    for (int i = 1; i &lt; len; i++) {
+        if (array[i - 1] &gt; array[i]) {
+            swap(&array[i - 1], &array[i]);
+            swapped = true;
+        }
+    }
+}</code></pre>
+		</div>
+		<h3>Finished Program</h3>
+		<a href="http://pentaquine.com/mvm/#1|A|1|7|2|E|1|s|1|g|1|f|1|B|1|C|1|M|1|I|1|D|1|s|1|A|1|f|1|A|1|G|1|l|4|A|1|P|1|D|1|G|1|B|1|z|1|/|1|G|1|i|13|A|1|D|1|w|1|A|1|e|1|w|1|A|1|8|2|E|1|w|1|g|1|e|1|x|1|C|1|L|1|I|1|B|2|A|1|f|1|D|1|G|1|l|41|A|1|D|1|s|1|B|1|g|1|c|1|E|1|B|1|Q|1|H|1|s|1|A|1|W|1|x|1|B|1|r|1|I|1|W|1|H|1|n|1|A|1|J|1|s|1|Q|1|q|1|y|1|A|1|7|2|E|1|s|1|h|1|I|1|T|1|B|1|7|1|E|1|I|1|s|1|h|1|p|1|Q|2|A|1|f|1|D|1|M|1|R|1|p|1|f|58|A|1|U|1|E|1|A|1|w|1|I|1|B|15|A|1|E|1|o|1|K|1|E|101|A|1|N|1|A|2|=|">
+			<div class="img_container">
+				<img style="width: 50%;" src="bubble.gif">
+			</div>
+		</a>
+	</body>
+</html>
