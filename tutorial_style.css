@@ -27,6 +27,12 @@ pre > code {
 	align-items: center;
 }
 
+.multi_code_container {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
 h1, h2, h3 {
 	text-align: center;
 }
