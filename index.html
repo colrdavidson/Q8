@@ -135,6 +135,8 @@
 						<tr><td>53</td><td>ERROR</td><td>Halt the running program, toss error flag; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>54</td><td>JERR</td><td>Jump program counter to operand value address if Error flag is true</td></tr>
 						<tr><td>55</td><td>JERRI</td><td>Jump program counter to address contained at operand value address if Error flag is true</td></tr>
+						<tr><td>56</td><td>JNE</td><td>Jump program counter to operand value address if Eq flag is false</td></tr>
+						<tr><td>57</td><td>JNEI</td><td>Jump program counter to address contained at operand value address if Eq flag is false</td></tr>
 					</table>
 				</div>
 			</div>
@@ -196,6 +198,8 @@
 			<tr><td>Stop the running program, toss error flag</td></tr>
 			<tr><td>if Error flag = true; Move program counter to position @O</td></tr>
 			<tr><td>if Error flag = true; Move program counter to position @V</td></tr>
+			<tr><td>if Eq flag = false; Move program counter to position @O</td></tr>
+			<tr><td>if Eq flag = false; Move program counter to position @V</td></tr>
 		</table>
     </body>
 </html>

@@ -355,6 +355,8 @@ function tick() {
 			case 53: { running = false; grab_var = false; pc--; error_flag = true; reg_updated = true; } break; //Error op
             case 54: { grab_func = function() { op_jerr(board); }; } break;
             case 55: { grab_func = function() { op_jerri(board); }; } break;
+            case 56: { grab_func = function() { op_jne(board); }; } break;
+            case 57: { grab_func = function() { op_jnei(board); }; } break;
             default: { grab_var = false; }
         }
 		if (grab_var == false) {

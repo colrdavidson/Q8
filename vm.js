@@ -56,6 +56,22 @@ function op_jei(board) {
 	}
 }
 
+function op_jne(board) {
+	if (equal_flag == false) {
+		pc = board[pc];
+    } else {
+		pc++;
+	}
+}
+
+function op_jnei(board) {
+	if (equal_flag == false) {
+		pc = board[board[pc]];
+    } else {
+		pc++;
+	}
+}
+
 function op_jl(board) {
 	if (less_flag == true) {
 		pc = board[pc];
@@ -136,23 +152,39 @@ function op_addi(board, idx) {
 }
 
 function op_sub(a_idx, b_idx) {
-    reg[a_idx] = reg[a_idx] - reg[b_idx];
+    var tmp = reg[a_idx] - reg[b_idx];
+	if (tmp < 0) {
+		error_flag = true;
+	}
+    reg[a_idx] = tmp;
 	reg_updated = true;
 }
 
 function op_subi(board, idx) {
-    reg[idx] -= board[pc];
+    var tmp = reg[idx] - board[pc];
+	if (tmp < 0) {
+		error_flag = true;
+	}
+    reg[idx] = tmp;
 	reg_updated = true;
     pc++;
 }
 
 function op_inc(idx) {
-    reg[idx] += 1;
+	var tmp = reg[idx] + 1;
+	if (tmp > 255) {
+		error_flag = true;
+	}
+    reg[idx] = tmp;
 	reg_updated = true;
 }
 
 function op_dec(idx) {
-    reg[idx] -= 1;
+	var tmp = reg[idx] - 1;
+	if (tmp < 0) {
+		error_flag = true;
+	}
+    reg[idx] = tmp;
 	reg_updated = true;
 }
 
@@ -205,13 +237,21 @@ function op_xor(board, idx) {
 }
 
 function op_shr(board, idx) {
-    reg[idx] = reg[idx] >>> board[pc];
+	var tmp = reg[idx] >>> board[pc];
+	if (tmp < 0) {
+		error_flag = true;
+	}
+    reg[idx] = tmp;
 	reg_updated = true;
     pc++;
 }
 
 function op_shl(board, idx) {
-    reg[idx] = reg[idx] << board[pc];
+	var tmp = reg[idx] << board[pc];
+	if (tmp > 255) {
+		error_flag = true;
+	}
+    reg[idx] = tmp;
 	reg_updated = true;
     pc++;
 }
