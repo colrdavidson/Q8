@@ -1,0 +1,100 @@
+<html>
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="tutorial_style.css" rel="stylesheet">
+	</head>
+	<body>
+		<h1>Calculating Divisors with MemoryVM</h1>
+		<p>This next problem gets a little more mathy, diving into
+		the middle of a real algorithm.</p>
+		<div class="multi_code_container">
+			<div>
+		<pre><code>int input_value = 60;
+int candidate = 0;
+for (int i = 0; i &lt;= input_value; i++) {
+    for (int j = 0; j &lt;= input_value; j++) {
+        candidate += i;
+        if (candidate == input_value) {
+            if (i &gt; j) {
+                exit program;
+            } else {
+                add i, j to divisor array;
+            }
+        }
+    }
+    candidate = 0;
+}
+</code></pre>
+			<a href="http://pentaquine.com/mvm/#1|G|1|i|41|A|1|D|1|w|1|Q|1|T|1|A|1|F|1|i|1|L|1|/|1|E|1|g|1|f|1|B|1|G|1|j|7|A|1|8|1|I|1|E|1|w|1|B|1|Y|1|i|1|P|1|B|1|I|1|H|1|w|1|h|1|p|1|Q|1|A|1|Q|1|A|1|H|1|w|1|g|1|f|1|D|1|G|1|i|17|A|1|D|2|w|1|T|1|B|1|C|1|w|1|f|1|D|1|B|1|M|1|A|1|W|1|I|1|n|1|A|1|a|1|M|25|A|1|P|2|B|1|M|1|I|1|W|1|H|1|v|1|8|1|J|1|s|1|A|1|q|1|x|1|A|1|7|1|A|1|E|1|s|1|R|1|I|1|S|1|E|1|x|1|M|1|H|1|s|1|A|1|i|1|x|1|G|1|j|52|A|1|D|1|g|1|4|1|Q|18|A|1|D|83|A|1|N|1|A|2|=|">
+				<img style="width: 90%" src="divisor.gif">
+			</a>
+			</div>
+			<div>
+<pre><code>; I typically jump into real code at the beginning
+; like this to give myself scratch-room if I forget
+; something, or need a little more space
+
+; INIT
+JMP 32 ; Hop into actual code
+
+; 32 I-LOOP
+LOADI A 193 ; Read in i
+LOADI B 192 ; Read in input_value
+CMP A B ; Check to see if the loop has finished
+JE 255 ; goto exit if done
+INC A ; i++
+STORE A 193 ; store i
+JMP 48 ; goto j-loop
+
+; 48 J-LOOP
+LOADI A 194 ; Read in j
+LOADI B 192 ; Read in input_value
+CMP A B ; Check to see if loop has finished
+JE 60 ; goto j-loop reset
+INC A ; j++
+STORE A 193 ; store j
+JMP 80 ; goto get next candidate
+
+; 60 - J-LOOP RESET
+; reset j and candiate to 0
+LOAD A 0
+STORE A 194 ; set j to 0
+STORE A 195 ; set candiate to 0
+JMP 32 ; goto i-loop
+
+; 80 - GET NEXT CANDIDATE
+LOADI A 195 ; read in candidate
+LOADI B 193 ; read in i
+ADD A B ; candidate += i
+STORE A 195 ; store new candiate
+LOADI B 192 ; load input_value
+CMP A B ; candidate == input_value?
+JE 112 ; goto append list
+JMP 48 ; goto j-loop
+
+; 112 APPEND LIST
+LOADI A 193 ; read in i
+LOADI B 194 ; read in j
+CMP A B ; i &gt; j?
+JG 255 ; goto exit
+STORE2 A 176 ; store i to array[n]
+STORE2 B 177 ; store j to array[n+1]
+LOADI A 176 ; load n
+LOADI B 177 ; load n+1
+INC A ;
+INC A ; n += 2
+INC B ;
+INC B ; (n+1) += 2
+STORE A 176 ; store new n
+STORE B 177 ; store new n+1
+JMP 48 ; goto j-loop
+
+; 255 - EXIT
+HALT
+</code></pre>
+			</div>
+		</div>
+	</body>
+</html>
