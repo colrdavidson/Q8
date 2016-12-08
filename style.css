@@ -16,46 +16,50 @@
 
 
 tr.selected {
-	background-color: #606060;
+	background-color: #bef6ea;
 }
 
-td.selected {
-	background-color: #C01010;
-	padding: 0.25em;
-}
 
 #debug {
-	background-color: #606060;
+	background-color: #bef6ea;
 	padding: 1em;
 	display: inline-block;
-	border: 1px solid #999;
 	width: 500px;
 	text-align: left;
 }
 
 .reg {
-	background-color: #606060;
+    color: #FFFFFF;
+	background-color: #28bb9c;
+	font-size: 16pt;
 	padding: 0.5em;
 }
 
 #reg_a {
-	background-color: #C0C0C0;
-	color: #000;
+    color: #0F0F0F;
+	background-color: #bef6ea;
 	width: 30px;
 	text-align: center;
 }
 
 #reg_b {
-	background-color: #C0C0C0;
-	color: #000;
+    color: #0F0F0F;
+	background-color: #bef6ea;
 	width: 30px;
 	text-align: center;
 }
 
+.button_box {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	background-color: #bef6ea;
+	width: 250px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
 th, td {
-	padding-right: 1em;
- 	border-right: 1px solid #000000;
- 	border-left: 1px solid #000000;
+	padding-right: 0.5em;
 }
 
 table {
@@ -65,7 +69,6 @@ table {
 }
 
 body {
-    background-color: #0F0F0F;
-    color: #F0F0F0;
+    color: #0F0F0F;
 	font-family: sans-serif;
 }

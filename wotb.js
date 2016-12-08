@@ -387,7 +387,7 @@ function render() {
     var u_persp = gl.getUniformLocation(shader, "perspective");
     var u_model = gl.getUniformLocation(shader, "model");
 
-    gl.uniform3f(u_color, 1.0, 1.0, 1.0);
+	gl.uniform3f(u_color, 0.745, 0.965, 0.918);
     gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
     gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -397,7 +397,7 @@ function render() {
 	model = modelTranslate(model, [(selected_block % 16) * 32, (Math.floor(selected_block / 16)) * 32, 0.0]);
 	model = modelScale(model, [33.0, 33.0, 1.0]);
 
-	gl.uniform3f(u_color, 0.0, 1.0, 0.0);
+    gl.uniform3f(u_color, 0.157, 0.733, 0.612);
 	gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 	gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -417,11 +417,11 @@ function render() {
             var i = board[pos];
 
 			if (selected_block == pos && input_mode == true) {
-                gl.uniform3f(u_color, 1.0, 1.0, 1.0);
+    			gl.uniform3f(u_color, 0.157, 0.733, 0.612);
             } else if (i != 0) {
-                gl.uniform3f(u_color, 0.7, 0.7, 0.7);
+                gl.uniform3f(u_color, 0.8, 0.8, 0.8);
             } else {
-                gl.uniform3f(u_color, 0.4, 0.4, 0.4);
+                gl.uniform3f(u_color, 0.5, 0.5, 0.5);
             }
 
             gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
@@ -453,7 +453,7 @@ function update_board() {
 		}
 
 		text_ctx.font = "16px sans-serif";
-		text_ctx.fillStyle = 'rgba(255, 255, 255, 255)';
+		text_ctx.fillStyle = 'rgba(0, 0, 0, 255)';
 		text_ctx.textAlign = "middle";
 		for (var y = 0; y < 16; y++) {
 			text_ctx.fillText((y * 16).toString(10), 14, (y * 32) + 48);

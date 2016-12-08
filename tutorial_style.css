@@ -1,18 +1,14 @@
-code {
-	background-color: #606060;
+:not(pre) > code {
+	background-color: #EEEEEE;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 	padding-top: 0.0625em;
 	padding-bottom: 0.0625em;
 	display: inline-block;
-	border: 1px solid #999;
 }
 
 pre > code {
-	background-color: #606060;
-	padding: 0.5em;
-	display: inline-block;
-	border: 1px solid #999;
+	font-size: 12px;
 }
 
 .img_container {
@@ -50,8 +46,7 @@ img {
 }
 
 body {
-	background-color: #0F0F0F;
-	color: #F0F0F0;
+	color: #0F0F0F;
 	font-family: sans-serif;
 	margin: 0 auto;
 	max-width: 50em;

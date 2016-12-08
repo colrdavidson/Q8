@@ -3,7 +3,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="tutorial_style.css" rel="stylesheet">
+		<link rel="stylesheet" href="prism.css">
+    	<link href="tutorial_style.css" rel="stylesheet">
 	</head>
 	<body>
 		<h1>Calculating Divisors with MemoryVM</h1>
@@ -14,16 +15,21 @@
 		With that in mind, let's dig into our program!</p>
 		<div class="multi_code_container">
 			<div>
-		<pre><code>int input_value = 60;
+		<pre><code class="language-c; line-numbers">int input_value = 60;
 int candidate = 0;
+// I-LOOP
 for (int i = 0; i &lt;= input_value; i++) {
+    // J-LOOP
     for (int j = 0; j &lt;= input_value; j++) {
+		// GET NEXT CANDIDATE
         candidate += i;
         if (candidate == input_value) {
             if (i &gt; j) {
-                exit program;
+                // EXIT
+                return;
             } else {
-                add i, j to divisor array;
+				// APPEND LIST
+                // add i, j to divisor array
             }
         }
     }
@@ -35,7 +41,7 @@ for (int i = 0; i &lt;= input_value; i++) {
 			</a>
 			</div>
 			<div>
-<pre><code>; I typically jump into real code at the beginning
+<pre><code class="language-none;">; I typically jump into real code at the beginning
 ; like this to give myself scratch-room if I forget
 ; something, or need a little more space
 
@@ -99,5 +105,6 @@ HALT
 </code></pre>
 			</div>
 		</div>
+		<script src="prism.js"></script>
 	</body>
 </html>
