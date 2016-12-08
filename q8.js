@@ -557,7 +557,7 @@ function b64_to_array(hash) {
 	return bytes;
 }
 
-function start_memvm() {
+function start_q8() {
     var canvas = document.getElementById("glcanvas");
 	var text_canvas = document.getElementById("text");
 
