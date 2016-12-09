@@ -1,0 +1,27 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+.img_block {
+	padding-top: 2em;
+	padding-bottom: 2em;
+	background-color: #bef6ea;
+}
+
+a {
+	display: inline-block;
+}
+
+img {
+	width: 30%;
+}
+
+body {
+	text-align: center;
+	margin: 0 auto;
+    color: #0F0F0F;
+	font-family: sans-serif;
+	max-width: 50em;
+}
