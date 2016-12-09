@@ -1,4 +1,5 @@
 .container {
+	text-align: center;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -8,16 +9,24 @@
 	display: flex;
 	flex-direction: row;
 	padding-top: 0.5em;
-	padding-bottom: 2em;
+	padding-bottom: 0.5em;
 	background-color: #bef6ea;
 }
 
 img {
-	width: 80%;
+	width: 75%;
+}
+
+h1, h2, h3 {
+	text-align: center;
+}
+
+h3 {
+	margin-bottom: -0.5em;
+	margin-top: 0.5em;
 }
 
 body {
-	text-align: center;
 	margin: 0 auto;
     color: #0F0F0F;
 	font-family: sans-serif;
