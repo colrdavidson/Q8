@@ -26,6 +26,21 @@ h3 {
 	margin-top: 0.5em;
 }
 
+nav {
+	background-color: #28bb9c;
+	color: #FFFFFF;
+	max-width: none;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+}
+
+nav > div > h2 {
+	margin-top: 0.70em;
+	margin-bottom: 0.70em;
+}
+
 body {
 	margin: 0 auto;
     color: #0F0F0F;
