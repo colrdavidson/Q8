@@ -37,18 +37,13 @@ tr.selected {
 	padding: 0.5em;
 }
 
-#reg_a {
+.regs {
     color: #0F0F0F;
 	background-color: #bef6ea;
-	width: 30px;
+	width: 60px;
 	text-align: center;
-}
-
-#reg_b {
-    color: #0F0F0F;
-	background-color: #bef6ea;
-	width: 30px;
-	text-align: center;
+	font-size: 16pt;
+	padding: 0.5em;
 }
 
 .button_box {
