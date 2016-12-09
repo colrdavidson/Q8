@@ -28,15 +28,46 @@
             }
         </script>
 
-        <link href="style.css" rel="stylesheet">
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="scrolling-nav.css" rel="stylesheet">
+		<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
         <script defer src="sylvester.js"></script>
         <script defer src="glUtils.js"></script>
         <script defer src="vm.js"></script>
         <script defer src="q8.js"></script>
     </head>
-    <body onload="start_q8()">
-        <div style="text-align: center; margin-top: -1em;">
-            <h1>Q8</h1>
+	<body id="page-top" data-target=".navbar-fixed-top" onload="start_q8()">
+		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
+		  <div class="container">
+			<div class="navbar-header page-scroll">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+			  </button>
+			  <a class="navbar-brand page-scroll" href="#">Q8</a>
+			</div>
+			<div id="navbar" >
+			  <ul class="nav navbar-nav">
+				<li class="hidden"><a href="#about">Home</a></li>
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+		<section>
+        <div style="text-align: center; margin-top: 5em;">
+			<h1>Q8</h1>
 			<h4>Instructions are formatted [op][operand]</h4>
 			<p>Your URL is your saved program. Hold onto it, or share it with friends!</p>
 			<div class="container">
@@ -205,5 +236,18 @@
 			<tr><td>if Eq flag = false; Move program counter to position @O</td></tr>
 			<tr><td>if Eq flag = false; Move program counter to position @V</td></tr>
 		</table>
+		</section>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="style.css" rel="stylesheet">
+		<script src="ie10-viewport-bug-workaround.js"></script>
+		<script src="jquery.easing.min.js"></script>
+		<script src="scrolling-nav.js"></script>
     </body>
+	<footer style="margin-top: 4em; padding-bottom: 4em; background-color: #555"></footer>
 </html>
