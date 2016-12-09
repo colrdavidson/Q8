@@ -25,6 +25,14 @@
 	align-items: flex-start;
 }
 
+.c_and_img {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+
 .ops {
 	display: flex;
 	flex-direction: column;
@@ -37,22 +45,20 @@ h1, h2, h3 {
 }
 
 th {
-	text-align: left;
-	padding-right: 1em;
+	padding-right: 0.5em;
 }
 
 table {
-	border: 0.25em solid #DDD;
+	border: 1px solid #CCC;
 	background-color: #eee;
-	margin-left: -2em;
 }
 
 img {
-	width: 90%;
+	width: 80%;
 }
 
 section {
-	max-width: 50em;
+	max-width: 65em;
 	margin: 0 auto;
 }
 

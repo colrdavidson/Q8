@@ -3,19 +3,50 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="prism.css">
-    	<link href="tutorial_style.css" rel="stylesheet">
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="scrolling-nav.css" rel="stylesheet">
+		<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
 	</head>
-	<body>
-		<h1>Calculating Divisors with MemoryVM</h1>
-		<p>This next problem gets a little more mathy, diving into
-		the middle of a real algorithm, finding divisors of a given value.
-		As a limitation of the program, it can produce bad data if <code>i * j &gt; 255</code>.
-		MVM can only handle values from 0-255, and will overflow if pushed past that maximum.
-		With that in mind, let's dig into our program!</p>
-		<div class="multi_code_container">
-			<div>
-		<pre><code class="language-c; line-numbers">int input_value = 60;
+	<body id="page-top" data-target=".navbar-fixed-top">
+		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
+		  <div class="container">
+			<div class="navbar-header page-scroll">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+			  </button>
+			  <a class="navbar-brand page-scroll" href="#">Quine8</a>
+			</div>
+			<div id="navbar" >
+			  <ul class="nav navbar-nav">
+				<li class="hidden"><a href="#about">Home</a></li>
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+		<section style="margin-top: 5em;">
+			<h1>Calculating Divisors with MemoryVM</h1>
+			<p>This next problem gets a little more mathy, diving into
+			the middle of a real algorithm, finding divisors of a given value.
+			As a limitation of the program, it can produce bad data if <code>i * j &gt; 255</code>.
+			MVM can only handle values from 0-255, and will overflow if pushed past that maximum.
+			With that in mind, let's dig into our program!</p>
+			<div class="multi_code_container">
+				<div class="c_and_img">
+					<div>
+						<pre><code class="language-c; line-numbers">int input_value = 60;
 int candidate = 0;
 // I-LOOP
 for (int i = 0; i &lt;= input_value; i++) {
@@ -36,12 +67,15 @@ for (int i = 0; i &lt;= input_value; i++) {
     candidate = 0;
 }
 </code></pre>
-			<a href="index.html#1|G|1|i|41|A|1|D|1|w|1|Q|1|T|1|A|1|F|1|i|1|L|1|/|1|E|1|g|1|f|1|B|1|G|1|j|7|A|1|8|1|I|1|E|1|w|1|B|1|Y|1|i|1|P|1|B|1|I|1|H|1|w|1|h|1|p|1|Q|1|A|1|Q|1|A|1|H|1|w|1|g|1|f|1|D|1|G|1|i|17|A|1|D|2|w|1|T|1|B|1|C|1|w|1|f|1|D|1|B|1|M|1|A|1|W|1|I|1|n|1|A|1|a|1|M|25|A|1|P|2|B|1|M|1|I|1|W|1|H|1|v|1|8|1|J|1|s|1|A|1|q|1|x|1|A|1|7|1|A|1|E|1|s|1|R|1|I|1|S|1|E|1|x|1|M|1|H|1|s|1|A|1|i|1|x|1|G|1|j|52|A|1|D|1|g|1|4|1|Q|18|A|1|D|83|A|1|N|1|A|2|=|">
-				<img style="width: 90%" src="divisor.gif">
-			</a>
-			</div>
-			<div>
-<pre><code class="language-none; line-numbers">; I typically jump into real code at the beginning
+					</div>
+					<div>
+						<a href="index.html#1|G|1|i|41|A|1|D|1|w|1|Q|1|T|1|A|1|F|1|i|1|L|1|/|1|E|1|g|1|f|1|B|1|G|1|j|7|A|1|8|1|I|1|E|1|w|1|B|1|Y|1|i|1|P|1|B|1|I|1|H|1|w|1|h|1|p|1|Q|1|A|1|Q|1|A|1|H|1|w|1|g|1|f|1|D|1|G|1|i|17|A|1|D|2|w|1|T|1|B|1|C|1|w|1|f|1|D|1|B|1|M|1|A|1|W|1|I|1|n|1|A|1|a|1|M|25|A|1|P|2|B|1|M|1|I|1|W|1|H|1|v|1|8|1|J|1|s|1|A|1|q|1|x|1|A|1|7|1|A|1|E|1|s|1|R|1|I|1|S|1|E|1|x|1|M|1|H|1|s|1|A|1|i|1|x|1|G|1|j|52|A|1|D|1|g|1|4|1|Q|18|A|1|D|83|A|1|N|1|A|2|=|">
+							<img style="width: 90%; margin-left: 1.5em;" src="divisor.gif">
+						</a>
+					</div>
+				</div>
+				<div>
+					<pre><code class="language-none; line-numbers">; I typically jump into real code at the beginning
 ; like this to give myself scratch-room if I forget
 ; something, or need a little more space
 
@@ -103,8 +137,12 @@ JMP 48 ; goto j-loop
 ; 255 - EXIT
 HALT
 </code></pre>
+				</div>
 			</div>
-		</div>
+		</section>
+		<link rel="stylesheet" href="prism.css">
+    	<link href="tutorial_style.css" rel="stylesheet">
 		<script src="prism.js"></script>
 	</body>
+	<footer style="margin-top: 4em; padding-bottom: 4em; background-color: #555"></footer>
 </html>

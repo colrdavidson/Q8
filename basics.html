@@ -3,17 +3,51 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="tutorial_style.css" rel="stylesheet">
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="scrolling-nav.css" rel="stylesheet">
+		<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
 	</head>
-	<body>
-		<h1>Common MemoryVM Structures</h1>
-		<p>If you are coming from other, higher-level programming languages, you might be asking,
-		"Where's my <code>for</code> loop?" The assembly programmers might scoff at that a bit. Use
-		<code>JMP</code> comparison instructions!</p>
-		<p>Because MVM has only 2 registers, wasting a precious register to store a loop counter would
-		really cramp your style. MVM provides instructions for storing information in memory tiles,
-		giving you tons of space to store all the program state you'd like.</p>
-		<p>A couple of typical memory store/load patterns worth mentioning: </p>
+	<body id="page-top" data-target=".navbar-fixed-top">
+		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
+		  <div class="container">
+			<div class="navbar-header page-scroll">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+			  </button>
+			  <a class="navbar-brand page-scroll" href="#">Quine8</a>
+			</div>
+			<div id="navbar" >
+			  <ul class="nav navbar-nav">
+				<li class="hidden"><a href="#about">Home</a></li>
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+
+		<section style="margin-top: 5em;">
+			<h1>Common MemoryVM Structures</h1>
+			<p>If you are coming from other, higher-level programming languages, you might be asking,
+			"Where's my <code>for</code> loop?" The assembly programmers might scoff at that a bit. Use
+			<code>JMP</code> comparison instructions!</p>
+			<p>Because MVM has only 2 registers, wasting a precious register to store a loop counter would
+			really cramp your style. MVM provides instructions for storing information in memory tiles,
+			giving you tons of space to store all the program state you'd like.</p>
+			<p>A couple of typical memory store/load patterns worth mentioning: </p>
+		</section>
+		<section>
 		<h2>I/O</h2>
 		<h3>The Direct</h3>
 		<p>Our direct memory access isn't actually I/O, just I. There's no direct <code>STORE</code> instruction,
@@ -84,6 +118,8 @@
 			</div>
 		</div>
 		<p>With all of our register saving mechanisms in mind, we can now tackle loops!</p>
+		</section>
+		<section>
 		<h2>Loops</h2>
 		<h3>The Register Loop</h3>
 		<p>This isn't all that useful in practice, as most of the time we'll
@@ -135,5 +171,8 @@
 				</table>
 			</div>
 		</div>
+		</section>
+		<link href="tutorial_style.css" rel="stylesheet">
 	</body>
+	<footer style="margin-top: 4em; padding-bottom: 4em; background-color: #555"></footer>
 </html>
