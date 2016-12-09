@@ -1,21 +1,19 @@
 .container {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around;
+	justify-content: center;
 }
 
 .img_block {
-	padding-top: 2em;
+	display: flex;
+	flex-direction: row;
+	padding-top: 0.5em;
 	padding-bottom: 2em;
 	background-color: #bef6ea;
 }
 
-a {
-	display: inline-block;
-}
-
 img {
-	width: 30%;
+	width: 80%;
 }
 
 body {
