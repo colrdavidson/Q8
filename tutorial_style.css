@@ -7,10 +7,6 @@
 	display: inline-block;
 }
 
-pre > code {
-	font-size: 12px;
-}
-
 .img_container {
 	display: flex;
 	justify-content: center;
@@ -29,25 +25,38 @@ pre > code {
 	align-items: flex-start;
 }
 
+.ops {
+	display: flex;
+	flex-direction: column;
+	align-content: flex-start;
+	justify-content: flex-start;
+}
+
 h1, h2, h3 {
 	text-align: center;
 }
 
 th {
 	text-align: left;
+	padding-right: 1em;
 }
 
 table {
-	font-size: 11pt;
+	border: 0.25em solid #DDD;
+	background-color: #eee;
+	margin-left: -2em;
 }
 
 img {
-	width: 100%;
+	width: 90%;
+}
+
+section {
+	max-width: 50em;
+	margin: 0 auto;
 }
 
 body {
 	color: #0F0F0F;
 	font-family: sans-serif;
-	margin: 0 auto;
-	max-width: 50em;
 }
