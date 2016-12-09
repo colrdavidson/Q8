@@ -3,6 +3,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="prism.css">
 		<link href="tutorial_style.css" rel="stylesheet">
 	</head>
 	<body>
@@ -11,29 +12,29 @@
 		Because the MVM instruction set does not contain a multiply operation, we'll have to write our own.
 		The algorithm for multiplication is pretty easy, you probably learned it in grade school.</p>
 		<div style="text-align: center;">
-			<pre><code>6 * 4 = 24</code></pre>
+			<code>6 * 4 = 24</code>
 		</div>
 		<p style="text-align: center;">That can be expanded in one of two ways:</p>
 		<div class="code_container">
 			<div style="margin-right: 0.25em;">
-<pre><code>6 + 6 + 6 + 6 = 24
-6, 4 times is 24</code></pre>
+				<code>6 + 6 + 6 + 6 = 24</code><br>
+				<code>6, 4 times is 24</code>
 			</div>
 			<div style="margin-left: 0.25em;">
-<pre><code>4 + 4 + 4 + 4 + 4 + 4 = 24
-4, 6 times is 24</code></pre>
+				<code>4 + 4 + 4 + 4 + 4 + 4 = 24</code><br>
+				<code>4, 6 times is 24</code>
 			</div>
 		</div>
 		<p style="text-align: center">In a C-like language, they look like this:</p>
 		<div class="code_container">
 			<div style="margin-right: 0.25em;">
-<pre><code>int x = 0;
+<pre><code class="language-c; line-numbers">int x = 0;
 for (int i = 4; i &gt; 0; i--) {
     x += 6;
 }</code></pre>
 			</div>
 			<div style="margin-left: 0.25em;">
-<pre><code>int x = 0;
+<pre><code class="language-c; line-numbers">int x = 0;
 for (int i = 6; i &gt; 0; i--) {
     x += 4;
 }</code></pre>
@@ -154,5 +155,6 @@ for (int i = 6; i &gt; 0; i--) {
 				<img style="width: 50%;" src="mult.gif">
 			</div>
 		</a>
+		<script src="prism.js"></script>
 	</body>
 </html>

@@ -3,6 +3,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="prism.css">
 		<link href="tutorial_style.css" rel="stylesheet">
 	</head>
 	<body>
@@ -20,7 +21,7 @@
 		positions.</p>
 		<div class="multi_code_container">
 			<div>
-		<pre><code>int len = 5;
+		<pre><code class="language-c; line-numbers">int len = 5;
 int array[len] = {5, 4, 3, 2, 1};
 bool swapped = true;
 
@@ -39,7 +40,7 @@ while (swapped) {
 			</a>
 			</div>
 			<div>
-<pre><code>; INIT
+<pre><code class="language-none; line-numbers">; INIT
 ; Copy the starting indices and array length for later
 LOADI A 177 ; index: i
 LOADI B 178 ; index + 1: j
@@ -98,5 +99,6 @@ HALT
 </code></pre>
 			</div>
 		</div>
+		<script src="prism.js"></script>
 	</body>
 </html>
