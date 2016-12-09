@@ -21,29 +21,12 @@ h1, h2, h3 {
 	text-align: center;
 }
 
-h3 {
-	margin-bottom: -0.5em;
-	margin-top: 0.5em;
-}
-
-nav {
-	background-color: #28bb9c;
-	color: #FFFFFF;
-	max-width: none;
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-}
-
-nav > div > h2 {
-	margin-top: 0.70em;
-	margin-bottom: 0.70em;
+section {
+	margin: 0 auto;
+	max-width: 40em;
 }
 
 body {
-	margin: 0 auto;
-    color: #0F0F0F;
 	font-family: sans-serif;
-	max-width: 50em;
+    padding-top: 50px;
 }
