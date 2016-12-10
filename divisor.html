@@ -82,7 +82,7 @@ for (int i = 0; i &lt;= input_value; i++) {
 ; INIT
 JMP 32 ; Hop into actual code
 
-; 32 I-LOOP
+; 32 - I-LOOP
 LOADI A 193 ; Read in i
 LOADI B 192 ; Read in input_value
 CMP A B ; Check to see if the loop has finished
@@ -91,7 +91,7 @@ INC A ; i++
 STORE A 193 ; store i
 JMP 48 ; goto j-loop
 
-; 48 J-LOOP
+; 48 - J-LOOP
 LOADI A 194 ; Read in j
 LOADI B 192 ; Read in input_value
 CMP A B ; Check to see if loop has finished
@@ -117,7 +117,7 @@ CMP A B ; candidate == input_value?
 JE 112 ; goto append list
 JMP 48 ; goto j-loop
 
-; 112 APPEND LIST
+; 112 - APPEND LIST
 LOADI A 193 ; read in i
 LOADI B 194 ; read in j
 CMP A B ; i &gt; j?
