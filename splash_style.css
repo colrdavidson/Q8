@@ -24,7 +24,15 @@
 	background-color: #bef6ea;
 }
 
-.basics > a {
+.quine8 {
+	text-align: center;
+	padding-top: 0.0625em;
+	padding-bottom: 1em;
+	margin-top: 1em;
+	background-color: #bef6ea;
+}
+
+a {
 	font-size: 16pt;
 }
 
