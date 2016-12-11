@@ -16,6 +16,17 @@
 	background-color: #bef6ea;
 }
 
+.basics {
+	text-align: center;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	background-color: #bef6ea;
+}
+
+.basics > a {
+	font-size: 16pt;
+}
+
 img {
 	width: 75%;
 }

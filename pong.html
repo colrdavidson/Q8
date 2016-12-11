@@ -43,15 +43,16 @@
 				<div class="c_and_img">
 					<div>
 						<pre><code class="language-c; line-numbers">while (true) {
-    for (int i = 0; i &lt; 16;) {
-        //draw 0 @ array[base + i]
-        i++;
-        //draw 1 @ array[base + i]
+    int position = 240;
+    for (int i = 15; i &gt; 0; i--) {
+        //draw 0 @ array[position]
+		position++;
+        //draw 1 @ array[position]
     }
-    for (int i = 16; i &gt; 0;) {
-        //draw 0 @ array[base + i]
-        i--;
-        //draw 1 @ array[base + i]
+    for (int i = 15; i &gt; 0; i--) {
+        //draw 0 @ array[position]
+        position--;
+        //draw 1 @ array[position]
     }
 }
 </code></pre>
@@ -63,7 +64,49 @@
 					</div>
 				</div>
 				<div>
-					<pre><code class="language-none; line-numbers">; CODE HERE
+					<pre><code class="language-none; line-numbers">; 0  - INC-INIT
+LOADI A 128 ; read in ball start position
+LOADI B 129 ; read in bounce size
+STORE A 144 ; make copy of ball start position
+STORE B 145 ; make copy of bounce size as new i
+JMP 32 ; goto inc-loop
+
+; 32 - INC-LOOP
+LOADI A 145 ; read in i
+ISZERO A ; is i == 0?
+JZ 64 ; goto dec-init
+DEC A ; i--
+STORE A 145 ; write new i
+; 40 - INC-DRAW BALL
+LOAD A 0 ; load ball clear
+STORE2 A 144 ; clear old position
+LOADI A 144 ; read position
+INC A ; position++
+STORE A 144 ; write position to grid
+LOAD A 1 ; load ball
+STORE2 A 144 ; write ball to new position
+JMP 32 ; goto inc-loop
+
+; 64 - DEC-INIT
+LOADI A 129 ; read in bounce size
+STORE A 145 ; make copy of bounce size as new i
+JMP 80 ; goto dec-loop
+
+; 80 - DEC-LOOP
+LOADI A 145 ; read in i
+ISZERO A ; is i == 0?
+JZ 64 ; goto inc-init
+DEC A ; i--
+STORE A 145 ; write new i
+; 88 - DEC-DRAW BALL
+LOAD A 0 ; load ball clear
+STORE2 A 144 ; clear old position
+LOADI A 144 ; read position
+INC A ; position--
+STORE A 144 ; write position to grid
+LOAD A 1 ; load ball
+STORE2 A 144 ; write ball to new position
+JMP 32 ; goto dec-loop
 </code></pre>
 				</div>
 			</div>
