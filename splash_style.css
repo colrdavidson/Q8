@@ -18,8 +18,9 @@
 
 .basics {
 	text-align: center;
-	padding-top: 1em;
+	padding-top: 0.0625em;
 	padding-bottom: 1em;
+	margin-bottom: 1em;
 	background-color: #bef6ea;
 }
 
