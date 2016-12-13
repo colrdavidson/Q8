@@ -35,6 +35,7 @@ var op = true;
 var op_id;
 var puzzle_list = ["#challenge1", "#challenge2", "#challenge3"];
 var cur_puzzle = 0;
+var puzzle_mode = false;
 
 var verts = [
     0.0, 0.0,
@@ -135,19 +136,27 @@ function lookup_board() {
 	var hash = window.location.hash;
 	if (hash.includes("#")) {
 		board_updated = true;
+		puzzle_mode = true;
 		switch (hash) {
 			case puzzle_list[0]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Avoid the Error Flag";
+				cur_puzzle = 0;
 				return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
 			case puzzle_list[1]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Undefined";
+				cur_puzzle = 1;
  				return new Uint8Array(16 * 16);
 				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
 			case puzzle_list[2]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 3: Undefined";
+				cur_puzzle = 3;
  				return new Uint8Array(16 * 16);
 				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
 			default: {
+				puzzle_mode = false;
 				return b64_to_array(hash);
 			}
 		}
@@ -344,6 +353,9 @@ function mouse_moved(canvas, evt) {
 }
 
 function hash_change() {
+	if (puzzle_mode) {
+		document.getElementById('challenge_box').removeAttribute("hidden");
+	}
 	board = lookup_board();
 }
 
@@ -648,6 +660,9 @@ function start_q8() {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
 
 		board = lookup_board();
+		if (puzzle_mode) {
+    		document.getElementById('challenge_box').removeAttribute("hidden");
+		}
 
         canvas.onmousedown = mouse_clicked;
         document.onmouseup = mouse_released;
