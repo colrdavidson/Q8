@@ -33,7 +33,7 @@ var packed = "";
 var debug_string = "";
 var op = true;
 var op_id;
-var challenge_list = ["#challenge0", "#challenge1", "#challenge2", "#challenge3"];
+var challenge_list = ["#challenge0", "#challenge1", "#challenge2", "#challenge3", "#challenge4", "#challenge5"];
 var cur_challenge = 0;
 var challenge_mode = false;
 
@@ -144,21 +144,29 @@ function lookup_board() {
 				return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
 			case challenge_list[1]: {
-				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Avoid the Error Flag";
+				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Use the JE to avoid the Error Flag";
 				cur_challenge = 1;
 				return b64_to_array("#5|A|1|B|1|Y|1|i|1|/|1|h|1|r|1|/|327|A|1|1|1|N|1|A|2|=|");
 			} break;
 			case challenge_list[2]: {
-				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Undefined";
+				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Compare the remote variable to an equal value to avoid the Error Flag";
 				cur_challenge = 2;
- 				return new Uint8Array(16 * 16);
-				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#1|A|1|w|1|8|2|A|1|B|1|Y|1|i|1|/|1|x|1|r|1|+|8|A|1|B|1|Q|317|A|1|1|1|N|1|A|2|=|");
 			} break;
 			case challenge_list[3]: {
-				document.getElementById('challenge_desc').innerHTML = "Challenge 3: Undefined";
+				document.getElementById('challenge_desc').innerHTML = "Challenge 3: Fix the loop";
 				cur_challenge = 3;
- 				return new Uint8Array(16 * 16);
-				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#1|A|1|w|1|8|1|Y|1|H|1|P|1|8|1|U|1|B|1|w|1|8|2|A|1|B|1|r|1|+|4|A|1|B|1|Q|317|A|1|1|1|N|1|A|2|=|");
+			} break;
+			case challenge_list[4]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 4: Call the function 5 times";
+				cur_challenge = 4;
+				return b64_to_array("#1|A|1|w|1|8|1|Y|1|H|1|P|1|Y|1|U|1|B|1|w|1|8|2|A|1|B|1|r|1|2|27|A|1|D|1|Q|1|A|1|R|1|B|1|C|1|w|1|d|1|A|1|G|1|g|32|A|1|E|1|C|241|A|1|0|1|A|2|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|1|1|N|1|A|2|=|");
+			} break;
+			case challenge_list[5]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 5: Activate the jump stack";
+				cur_challenge = 5;
+				return b64_to_array("#3|A|1|D|1|Q|1|h|1|g|1|c|1|9|1|h|1|Q|1|H|1|Q|1|h|1|o|1|g|1|N|1|v|1|8|1|a|1|A|1|g|21|A|1|D|1|Q|1|A|1|R|1|B|1|C|1|w|1|d|1|A|1|O|1|h|1|r|1|/|30|A|1|E|1|C|1|B|1|Q|239|A|1|0|1|A|2|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|1|1|N|1|A|2|=|");
 			} break;
 			default: {
 				challenge_mode = false;
