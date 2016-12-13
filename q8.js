@@ -171,6 +171,7 @@ function change_hash_val(str) {
 
 function reset_challenge() {
 	change_hash_val(puzzle_list[cur_puzzle]);
+	reset();
 }
 
 function next_challenge() {
