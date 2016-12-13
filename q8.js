@@ -171,14 +171,12 @@ function change_hash_val(str) {
 
 function reset_challenge() {
 	change_hash_val(puzzle_list[cur_puzzle]);
-	board = lookup_board();
 }
 
 function next_challenge() {
 	if (cur_puzzle < puzzle_list.length - 1) {
 		cur_puzzle++;
 		change_hash_val(puzzle_list[cur_puzzle]);
-		//board = lookup_board();
 	}
 }
 
@@ -187,13 +185,11 @@ function prev_challenge() {
 		cur_puzzle--;
 		console.log(window.location);
 		change_hash_val(puzzle_list[cur_puzzle]);
-		//board = lookup_board();
 	}
 }
 
 function clear_board() {
-	change_hash_val("");
-	board = lookup_board();
+	change_hash_val("#");
 	clear_flags();
 	highlight_row(board[selected_block]);
 	op = true;
@@ -347,12 +343,7 @@ function mouse_moved(canvas, evt) {
     mouse_y = evt.clientY - rect.top;
 }
 
-function pop_state() {
-	console.log("hash changed!");
-}
-
 function hash_change() {
-	console.log("hash changed!");
 	board = lookup_board();
 }
 
