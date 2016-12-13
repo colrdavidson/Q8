@@ -21,6 +21,14 @@ tr.selected {
 	background-color: #bef6ea;
 }
 
+td.selected {
+	background-color: #FF0000;
+	color: #FFFFFF;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
 
 #debug {
 	background-color: #bef6ea;
