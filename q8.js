@@ -33,6 +33,8 @@ var packed = "";
 var debug_string = "";
 var op = true;
 var op_id;
+var puzzle_list = ["#challenge1", "#challenge2", "#challenge3"];
+var cur_puzzle = 0;
 
 var verts = [
     0.0, 0.0,
@@ -132,15 +134,25 @@ function clear_flags() {
 function lookup_board() {
 	if (window.location.hash.includes("#")) {
 		var hash = window.location.hash;
+		board_updated = true;
 		switch (hash) {
-			case "#challenge1": {
+			case puzzle_list[0]: {
 				return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
+			} break;
+			case puzzle_list[1]: {
+ 				return new Uint8Array(16 * 16);
+				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
+			} break;
+			case puzzle_list[2]: {
+ 				return new Uint8Array(16 * 16);
+				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
 			default: {
 				return b64_to_array(window.location.hash);
 			}
 		}
 	} else {
+		board_updated = true;
  		return new Uint8Array(16 * 16);
 	}
 }
@@ -153,11 +165,30 @@ function reset() {
 	update_debug();
 }
 
+function reset_challenge() {
+	history.replaceState(undefined, undefined, puzzle_list[cur_puzzle]);
+	board = lookup_board();
+}
+
+function next_challenge() {
+	if (cur_puzzle < puzzle_list.length - 1) {
+		cur_puzzle++;
+		history.replaceState(undefined, undefined, puzzle_list[cur_puzzle]);
+		board = lookup_board();
+	}
+}
+
+function prev_challenge() {
+	if (cur_puzzle > 0) {
+		cur_puzzle--;
+		history.replaceState(undefined, undefined, puzzle_list[cur_puzzle]);
+		board = lookup_board();
+	}
+}
+
 function clear_board() {
-    for (var i = 0; i < 16 * 16; i++) {
-        board[i] = 0;
-    }
-	window.location.hash = array_to_b64(board);
+	history.replaceState(undefined, undefined, " ");
+	board = lookup_board();
 	clear_flags();
 	highlight_row(board[selected_block]);
 	op = true;
@@ -242,13 +273,13 @@ function key_released(event) {
 				entry_buffer = "";
 			}
 			board[selected_block] = parseInt(entry_buffer);
-			window.location.hash = array_to_b64(board);
+			history.replaceState(undefined, undefined, "#" + array_to_b64(board));
 			board_updated = true;
 		} else {
 			entry_buffer += String.fromCharCode(event.keyCode);
 			if (valid_entry_buffer()) {
 				board[selected_block] = parseInt(entry_buffer);
-				window.location.hash = array_to_b64(board);
+				history.replaceState(undefined, undefined, "#" + array_to_b64(board));
 				board_updated = true;
 			} else {
 				if (entry_buffer.length > 1) {
@@ -313,7 +344,6 @@ function mouse_moved(canvas, evt) {
 
 function hash_change() {
 	board = lookup_board();
-	board_updated = true;
 }
 
 function tick() {
