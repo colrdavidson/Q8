@@ -129,8 +129,24 @@ function clear_flags() {
 	entry_buffer = "";
 }
 
+function lookup_board() {
+	if (window.location.hash.includes("#")) {
+		var hash = window.location.hash;
+		switch (hash) {
+			case "#challenge1": {
+				return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
+			} break;
+			default: {
+				return b64_to_array(window.location.hash);
+			}
+		}
+	} else {
+ 		return new Uint8Array(16 * 16);
+	}
+}
+
 function reset() {
-	board = b64_to_array(window.location.hash);
+	board = lookup_board();
 	running = false;
 	clear_flags();
 	op = true;
@@ -293,6 +309,11 @@ function mouse_moved(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
     mouse_x = evt.clientX - rect.left;
     mouse_y = evt.clientY - rect.top;
+}
+
+function hash_change() {
+	board = lookup_board();
+	board_updated = true;
 }
 
 function tick() {
@@ -595,16 +616,14 @@ function start_q8() {
         gl.bindBuffer(gl.ARRAY_BUFFER, v_square);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
 
-        board = new Uint8Array(16 * 16);
-		if (window.location.hash.includes("#")) {
-			board = b64_to_array(window.location.hash);
-		}
+		board = lookup_board();
 
         canvas.onmousedown = mouse_clicked;
         document.onmouseup = mouse_released;
         document.onkeyup = key_released;
         document.onkeydown = key_pressed;
-        canvas.addEventListener('mousemove', function(evt) { mouse_moved(canvas, evt); }, false);
+        canvas.addEventListener("mousemove", function(evt) { mouse_moved(canvas, evt); }, false);
+		window.addEventListener("hashchange", function() { hash_change(); }, false);
 		highlight_row(board[selected_block]);
 
 		update_debug();
