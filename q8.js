@@ -484,6 +484,11 @@ function update_board() {
         document.getElementById("f_great").innerHTML = greater_flag;
         document.getElementById("f_stack_enabled").innerHTML = stack_enabled;
         document.getElementById("f_sp").innerHTML = sp;
+		if (stack_enabled == true) {
+			document.getElementById("f_stack_enabled").className = "selected";
+		} else {
+			document.getElementById("f_stack_enabled").classList.remove('selected');
+		}
 		if (error_flag == true) {
 			document.getElementById("f_err").className = "selected";
 		} else {

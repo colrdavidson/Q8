@@ -21,21 +21,25 @@ tr.selected {
 	background-color: #bef6ea;
 }
 
-td.selected {
+#f_err.selected {
 	background-color: #FF0000;
 	color: #FFFFFF;
-	padding-top: 0.25em;
-	padding-bottom: 0.25em;
 	padding-left: 1em;
 	padding-right: 1em;
+}
+
+#f_stack_enabled.selected {
+	background-color: #00FF00;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
 }
 
 #debug {
 	background-color: #bef6ea;
 	padding: 1em;
-	display: inline-block;
-	width: 500px;
+	width: 512px;
 	text-align: left;
+	margin-left: 2em;
 }
 
 .reg {
@@ -61,6 +65,12 @@ td.selected {
 	width: 250px;
 	margin-right: auto;
 	margin-left: auto;
+}
+
+.flag_box {
+	margin-bottom: 0.5em;
+	width: 512px;
+	margin-left: 2em;
 }
 
 th, td {

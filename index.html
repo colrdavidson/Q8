@@ -102,8 +102,8 @@
 							<td>L Flag: </td><td id="f_less">false</td></tr>
 						</table>
 						<table>
-							<tr><td>Jump Stack Enabled? </td><td id="f_stack_enabled">false</td>
-							<td>JSP: </td><td id="f_sp">0</td></tr>
+							<tr><td>JSP Enabled? </td><td id="f_stack_enabled">false</td>
+							<td style="padding-left: 1em;">JSP: </td><td id="f_sp">0</td></tr>
 						</table>
 					</div>
 					<p id="debug"></p>
@@ -176,7 +176,7 @@
 						<tr><td>55</td><td>JERRI</td><td>Jump program counter to address contained at operand value address if Error flag is true</td></tr>
 						<tr><td>56</td><td>JNE</td><td>Jump program counter to operand value address if Eq flag is false</td></tr>
 						<tr><td>57</td><td>JNEI</td><td>Jump program counter to address contained at operand value address if Eq flag is false</td></tr>
-						<tr><td>58</td><td>RET</td><td>Return to the place last jumped from; decrement JSP<em>Only 1 block, no operand</em></td></tr>
+						<tr><td>58</td><td>RET</td><td>Return to the place last jumped from, decrement JSP; <em>Errors if JSP not enabled</em>; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>59</td><td>REGJMP A</td><td>Jump program counter to address contained in Register A; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>60</td><td>REGJMP B</td><td>Jump program counter to address contained in Register B; <em>Only 1 block, no operand</em></td></tr>
 						<tr><td>61</td><td>SETSP</td><td>Enable the JMP/RET stack, set the start pointer for it</em></td></tr>
