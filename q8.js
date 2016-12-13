@@ -33,9 +33,9 @@ var packed = "";
 var debug_string = "";
 var op = true;
 var op_id;
-var puzzle_list = ["#challenge1", "#challenge2", "#challenge3"];
-var cur_puzzle = 0;
-var puzzle_mode = false;
+var challenge_list = ["#challenge0", "#challenge1", "#challenge2", "#challenge3"];
+var cur_challenge = 0;
+var challenge_mode = false;
 
 var verts = [
     0.0, 0.0,
@@ -103,7 +103,7 @@ function pause() {
     running = !running;
 	board_updated = true;
 	if (running) {
-		debug_string = "Only available while stepping!<br><br><br>";
+		debug_string = "This debug box is only available while stepping!";
 		document.getElementById("debug").innerHTML = debug_string;
 	}
 }
@@ -136,27 +136,32 @@ function lookup_board() {
 	var hash = window.location.hash;
 	if (hash.includes("#")) {
 		board_updated = true;
-		puzzle_mode = true;
+		challenge_mode = true;
 		switch (hash) {
-			case puzzle_list[0]: {
-				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Avoid the Error Flag";
-				cur_puzzle = 0;
+			case challenge_list[0]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 0: Put a 1 in the 0 position, and a 1 in the 1 position";
+				cur_challenge = 0;
 				return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
-			case puzzle_list[1]: {
+			case challenge_list[1]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Avoid the Error Flag";
+				cur_challenge = 1;
+				return b64_to_array("#5|A|1|B|1|Y|1|i|1|/|1|h|1|r|1|/|327|A|1|1|1|N|1|A|2|=|");
+			} break;
+			case challenge_list[2]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Undefined";
-				cur_puzzle = 1;
+				cur_challenge = 2;
  				return new Uint8Array(16 * 16);
 				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
-			case puzzle_list[2]: {
+			case challenge_list[3]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 3: Undefined";
-				cur_puzzle = 3;
+				cur_challenge = 3;
  				return new Uint8Array(16 * 16);
 				//return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
 			} break;
 			default: {
-				puzzle_mode = false;
+				challenge_mode = false;
 				return b64_to_array(hash);
 			}
 		}
@@ -179,21 +184,21 @@ function change_hash_val(str) {
 }
 
 function reset_challenge() {
-	change_hash_val(puzzle_list[cur_puzzle]);
+	change_hash_val(challenge_list[cur_challenge]);
 	reset();
 }
 
 function next_challenge() {
-	if (cur_puzzle < puzzle_list.length - 1) {
-		cur_puzzle++;
-		change_hash_val(puzzle_list[cur_puzzle]);
+	if (cur_challenge < challenge_list.length - 1) {
+		cur_challenge++;
+		change_hash_val(challenge_list[cur_challenge]);
 	}
 }
 
 function prev_challenge() {
-	if (cur_puzzle > 0) {
-		cur_puzzle--;
-		change_hash_val(puzzle_list[cur_puzzle]);
+	if (cur_challenge > 0) {
+		cur_challenge--;
+		change_hash_val(challenge_list[cur_challenge]);
 	}
 }
 
@@ -353,7 +358,7 @@ function mouse_moved(canvas, evt) {
 }
 
 function hash_change() {
-	if (puzzle_mode) {
+	if (challenge_mode) {
 		document.getElementById('challenge_box').removeAttribute("hidden");
 	}
 	board = lookup_board();
@@ -660,7 +665,7 @@ function start_q8() {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
 
 		board = lookup_board();
-		if (puzzle_mode) {
+		if (challenge_mode) {
     		document.getElementById('challenge_box').removeAttribute("hidden");
 		}
 
