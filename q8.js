@@ -70,7 +70,7 @@ function update_debug() {
 			byte_op = true;
 		}
 
-		debug_string = "Reading instruction " + op_id + "<br><font color='#A0B0B0'>" + op_name + ': "' + op_desc + '"</font><br><br>';
+		debug_string = "Reading instruction " + op_id + "<br><font color='#90A0A0'>" + op_name + ': "' + op_desc + '"</font><br><br>';
 	}
 	if (!op || byte_op) {
 		var table = document.getElementById('simple_text');
