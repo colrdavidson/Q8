@@ -101,6 +101,10 @@
 							<tr><td>G Flag: </td><td id="f_great">false</td>
 							<td>L Flag: </td><td id="f_less">false</td></tr>
 						</table>
+						<table>
+							<tr><td>Jump Stack Enabled? </td><td id="f_stack_enabled">false</td>
+							<td>JSP: </td><td id="f_sp">0</td></tr>
+						</table>
 					</div>
 					<p id="debug"></p>
 					<br>
@@ -129,7 +133,7 @@
 						<tr><td>12</td><td>ADDI A</td><td>Add operand value to register A</td></tr>
 						<tr><td>13</td><td>ADDI B</td><td>Add operand value to register B</td></tr>
 						<tr><td>14</td><td>SUB A B</td><td>Subtract register A from register B, store in register A</td></tr>
-						<tr><td>15</td><td>SUB B A</td><td>Subtract register B from register A, store in register B</td></tr>
+						<tr><td>15</td><td>SUB B A</td><td>Subtract register B from register A, store in register A</td></tr>
 						<tr><td>16</td><td>SUBI A</td><td>Subtract operand value from register A value, store in register A</td></tr>
 						<tr><td>17</td><td>SUBI B</td><td>Subtract operand value from register B value, store in register B</td></tr>
 						<tr><td>18</td><td>INC A</td><td>Increment A; <em>Only 1 block, no operand</em></td></tr>
@@ -172,6 +176,10 @@
 						<tr><td>55</td><td>JERRI</td><td>Jump program counter to address contained at operand value address if Error flag is true</td></tr>
 						<tr><td>56</td><td>JNE</td><td>Jump program counter to operand value address if Eq flag is false</td></tr>
 						<tr><td>57</td><td>JNEI</td><td>Jump program counter to address contained at operand value address if Eq flag is false</td></tr>
+						<tr><td>58</td><td>RET</td><td>Return to the place last jumped from; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>59</td><td>REGJMP A</td><td>Jump program counter to address contained in Register A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>60</td><td>REGJMP B</td><td>Jump program counter to address contained in Register B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>61</td><td>SETSP</td><td>Enable the JMP/RET stack, set the start pointer for it</em></td></tr>
 					</table>
 				</div>
 			</div>
@@ -235,6 +243,10 @@
 			<tr><td>if Error flag = true; Move program counter to position @V</td></tr>
 			<tr><td>if Eq flag = false; Move program counter to position @O</td></tr>
 			<tr><td>if Eq flag = false; Move program counter to position @V</td></tr>
+			<tr><td>Move program counter to last jump position</td></tr>
+			<tr><td>Move program counter to position in Register A (@A)</td></tr>
+			<tr><td>Move program counter to position in Register B (@B)</td></tr>
+			<tr><td>Enable the JMP/RET stack, JSP to @O</td></tr>
 		</table>
 		</section>
 		<!-- Bootstrap core JavaScript

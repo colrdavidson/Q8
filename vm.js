@@ -1,15 +1,27 @@
 "use strict";
 
+function push(board, x) {
+	if (stack_enabled) {
+		board[sp] = x;
+		sp++;
+		reg_updated = true;
+		board_updated = true;
+	}
+}
+
 function op_jmp(board) {
+	push(board, pc);
     pc = board[pc];
 }
 
 function op_jmpi(board) {
+	push(board, pc);
     pc = board[board[pc]];
 }
 
 function op_jz(board) {
     if (zero_flag == true) {
+		push(board, pc);
         pc = board[pc];
     } else {
 		pc++;
@@ -18,6 +30,7 @@ function op_jz(board) {
 
 function op_jzi(board) {
     if (zero_flag == true) {
+		push(board, pc);
         pc = board[board[pc]];
     } else {
 		pc++;
@@ -26,6 +39,7 @@ function op_jzi(board) {
 
 function op_jg(board) {
 	if (greater_flag == true) {
+		push(board, pc);
 		pc = board[pc];
 	} else {
 		pc++;
@@ -34,6 +48,7 @@ function op_jg(board) {
 
 function op_jgi(board) {
 	if (greater_flag == true) {
+		push(board, pc);
 		pc = board[board[pc]];
 	} else {
 		pc++;
@@ -42,6 +57,7 @@ function op_jgi(board) {
 
 function op_je(board) {
 	if (equal_flag == true) {
+		push(board, pc);
 		pc = board[pc];
     } else {
 		pc++;
@@ -50,6 +66,7 @@ function op_je(board) {
 
 function op_jei(board) {
 	if (equal_flag == true) {
+		push(board, pc);
 		pc = board[board[pc]];
     } else {
 		pc++;
@@ -58,6 +75,7 @@ function op_jei(board) {
 
 function op_jne(board) {
 	if (equal_flag == false) {
+		push(board, pc);
 		pc = board[pc];
     } else {
 		pc++;
@@ -66,6 +84,7 @@ function op_jne(board) {
 
 function op_jnei(board) {
 	if (equal_flag == false) {
+		push(board, pc);
 		pc = board[board[pc]];
     } else {
 		pc++;
@@ -74,6 +93,7 @@ function op_jnei(board) {
 
 function op_jl(board) {
 	if (less_flag == true) {
+		push(board, pc);
 		pc = board[pc];
     } else {
 		pc++;
@@ -82,6 +102,7 @@ function op_jl(board) {
 
 function op_jli(board) {
 	if (less_flag == true) {
+		push(board, pc);
 		pc = board[board[pc]];
     } else {
 		pc++;
@@ -90,6 +111,7 @@ function op_jli(board) {
 
 function op_jerr(board) {
 	if (error_flag == true) {
+		push(board, pc);
 		pc = board[pc];
     } else {
 		pc++;
@@ -98,6 +120,7 @@ function op_jerr(board) {
 
 function op_jerri(board) {
 	if (error_flag == true) {
+		push(board, pc);
 		pc = board[board[pc]];
     } else {
 		pc++;
@@ -128,8 +151,14 @@ function op_iszero(idx) {
 	reg_updated = true;
 }
 
-function op_reljump(board) {
-    pc = (board[pc] + pc) % 255;
+function op_reljmp(board) {
+	push(board, pc);
+    pc = (board[pc] + pc) % 256;
+}
+
+function op_regjmp(idx) {
+	push(board, pc);
+    pc = reg[idx];
 }
 
 function op_add(a_idx, b_idx) {
@@ -156,7 +185,7 @@ function op_sub(a_idx, b_idx) {
 	if (tmp < 0) {
 		error_flag = true;
 	}
-    reg[a_idx] = tmp;
+    reg[0] = tmp; // Store value in register A
 	reg_updated = true;
 }
 
@@ -273,3 +302,19 @@ function op_deref(idx) {
 	reg_updated = true;
 }
 
+function op_ret(board) {
+	if (stack_enabled) {
+		sp--;
+		pc = board[sp];
+	} else {
+		error_flag = true;
+	}
+	reg_updated = true;
+}
+
+function op_setsp(board) {
+	sp = board[pc];
+	stack_enabled = true;
+	reg_updated = true;
+	pc++;
+}

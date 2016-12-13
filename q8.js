@@ -17,6 +17,7 @@ var input_mode = false;
 
 var board;
 var pc = 0;
+var sp = 0;
 var reg = new Uint8Array(2);
 var equal_flag = false;
 var greater_flag = false;
@@ -24,6 +25,7 @@ var less_flag = false;
 var zero_flag = false;
 var error_flag = false;
 var reg_updated = true;
+var stack_enabled = false;
 
 var board_updated = true;
 var entry_buffer = "";
@@ -74,7 +76,7 @@ function update_debug() {
 		var table = document.getElementById('simple_text');
 		var rows = table.getElementsByTagName('tr');
 		var simple_desc;
-		if (op_id < rows.length - 1) {
+		if (op_id < rows.length) {
 			var entries = rows[op_id].getElementsByTagName('td');
 			simple_desc = entries[0].innerHTML;
 		}
@@ -119,6 +121,8 @@ function clear_flags() {
 	grab_func = null;
 	grab_var = false;
 	pc = 0;
+	sp = 0;
+	stack_enabled = false;
 	reg_updated = true;
 	board_updated = true;
 	input_mode = false;
@@ -335,7 +339,7 @@ function tick() {
             case 33: { grab_func = function() { op_jli(board); }; } break;
             case 34: { grab_func = function() { op_je(board); }; } break;
             case 35: { grab_func = function() { op_jei(board); }; } break;
-            case 36: { grab_func = function() { op_reljump(board); }; } break;
+            case 36: { grab_func = function() { op_reljmp(board); }; } break;
             case 37: { op_not(0); grab_var = false; } break;
             case 38: { op_not(1); grab_var = false; } break;
             case 39: { grab_func = function() { op_and(board, 0); }; } break;
@@ -357,6 +361,10 @@ function tick() {
             case 55: { grab_func = function() { op_jerri(board); }; } break;
             case 56: { grab_func = function() { op_jne(board); }; } break;
             case 57: { grab_func = function() { op_jnei(board); }; } break;
+            case 58: { op_ret(board); grab_var = false; } break;
+            case 59: { op_regjmp(0); grab_var = false; pc--; } break;
+            case 60: { op_regjmp(1); grab_var = false; pc--; } break;
+            case 61: { grab_func = function() { op_setsp(board); }; } break;
             default: { grab_var = false; }
         }
 		if (grab_var == false) {
@@ -474,6 +482,8 @@ function update_board() {
         document.getElementById("f_eq").innerHTML = equal_flag;
         document.getElementById("f_less").innerHTML = less_flag;
         document.getElementById("f_great").innerHTML = greater_flag;
+        document.getElementById("f_stack_enabled").innerHTML = stack_enabled;
+        document.getElementById("f_sp").innerHTML = sp;
 		if (error_flag == true) {
 			document.getElementById("f_err").className = "selected";
 		} else {
