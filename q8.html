@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script id="shader-vs" type="x-shader/x-vertex">
+            attribute vec2 my_pos;
+
+            uniform mat4 perspective;
+            uniform mat4 model;
+			uniform vec3 color;
+
+			varying highp vec3 f_color;
+
+            void main() {
+                gl_Position = perspective * model * vec4(my_pos, 0.0, 1.0);
+				f_color = color;
+            }
+        </script>
+
+        <script id="shader-fs" type="x-shader/x-fragment">
+			varying highp vec3 f_color;
+
+            void main() {
+                gl_FragColor = vec4(f_color, 1.0);
+            }
+        </script>
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="scrolling-nav.css" rel="stylesheet">
+		<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+        <script defer src="sylvester.js"></script>
+        <script defer src="glUtils.js"></script>
+        <script defer src="vm.js"></script>
+        <script defer src="q8.js"></script>
+    </head>
+	<body id="page-top" data-target=".navbar-fixed-top" onload="start_q8()">
+		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
+		  <div class="container">
+			<div class="navbar-header page-scroll">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+			  </button>
+			  <a class="navbar-brand page-scroll" href="#">Quine8</a>
+			</div>
+			<div id="navbar" >
+			  <ul class="nav navbar-nav">
+				<li class="hidden"><a href="#about">Home</a></li>
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+		<section>
+        <div style="text-align: center; margin-top: 5em;">
+			<h1>Quine8</h1>
+			<h4 style="color: #B0B0B0; margin-bottom: 1em;">Your URL is your saved program. Keep it safe and share it with your friends!</h4>
+			<div id="challenge_box" hidden>
+				<h4 id="challenge_desc" style="margin-top: -0.5em;">This is a challenging challenge</h4>
+				<button type="button" onclick="prev_challenge()" id="prev_challenge" style="margin-bottom: 1em;">Prev Challenge</button>
+				<button type="button" onclick="reset_challenge()" id="reset_challenge" style="margin-bottom: 1em;">Reset Challenge</button>
+				<button type="button" onclick="next_challenge()" id="next_challenge" style="margin-bottom: 1em;">Next Challenge</button>
+			</div>
+			<div class="container">
+				<div style="padding-right: 2em;">
+					<div style="padding-bottom: 2em">
+						<div class="button_box">
+							<button type="button" onclick="step()">Step</button>
+							<button type="button" onclick="pause()">Go/Stop</button>
+							<button type="button" onclick="reset()">Reset</button>
+							<button type="button" onclick="clear_board()">Clear</button>
+						</div>
+					</div>
+					<div>
+						<div style="margin-bottom:-544px; margin-right:-32px;">
+							<canvas id="glcanvas" width="512" height="512">NOT SUPPORT!</canvas>
+						</div>
+						<canvas id="text" width="544" height="544">NOT SUPPORT!</canvas>
+					</div>
+					<table style="margin-bottom: 5px; margin-left: 100px;">
+						<tr>
+						<td class="reg">Register A:</td><td class="regs" id="reg_a">0</td>
+						<td class="reg">Register B:</td><td class="regs" id="reg_b">0</td></tr>
+					</table>
+					<div class="flag_box">
+						<table>
+							<tr><td>Error: </td><td id="f_err">false</td></tr>
+						</table>
+						<table>
+							<tr><td>Z Flag: </td><td id="f_zero">false</td>
+							<td>Eq Flag: </td><td id="f_eq">false</td></tr>
+							<tr><td>G Flag: </td><td id="f_great">false</td>
+							<td>L Flag: </td><td id="f_less">false</td></tr>
+						</table>
+						<table>
+							<tr><td>JSP Enabled? </td><td id="f_stack_enabled">false</td>
+							<td style="padding-left: 0.5em;">JSP: </td><td id="f_sp">0</td></tr>
+						</table>
+					</div>
+					<p id="debug"></p>
+					<br>
+					<table id="inputs" style="margin-top: -1.5em; margin-bottom: 0.5em;">
+						<thead><tr><th>User Input</th><th>Function</th></tr></thead>
+						<tr><td>Left Click</td><td>select tile</td></tr>
+						<tr><td>Enter Key</td><td>toggle edit mode</td></tr>
+						<tr><td>Arrows / HJKL / WASD</td><td>move tile selection box</td></tr>
+					</table>
+				</div>
+				<div style="margin-top: -5px;">
+					<table id="op_table">
+						<thead><tr><th>Value</th><th>Instruction</th><th>Description</th></tr></thead>
+						<tr><td>0</td><td>NOP</td><td>Do nothing; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>1</td><td>LOAD A</td><td>Load operand value into register A</td></tr>
+						<tr><td>2</td><td>LOAD B</td><td>Load operand value into register B</td></tr>
+						<tr><td>3</td><td>LOADI A</td><td>Load value at operand value address into register A</td></tr>
+						<tr><td>4</td><td>LOADI B</td><td>Load value at operand value address into register B</td></tr>
+						<tr><td>5</td><td>LOAD2 A</td><td>Load value at address stored at operand value address into register A</td></tr>
+						<tr><td>6</td><td>LOAD2 B</td><td>Load value at address stored at operand value address into register B</td></tr>
+						<tr><td>7</td><td>STORE A</td><td>Store register A value into operand value address</td></tr>
+						<tr><td>8</td><td>STORE B</td><td>Store register B value into operand value address</td></tr>
+						<tr><td>9</td><td>STORE2 A</td><td>Store register A value into address stored at operand value address</td></tr>
+						<tr><td>10</td><td>STORE2 B</td><td>Store register B value into address stored at operand value address</td></tr>
+						<tr><td>11</td><td>ADD A B</td><td>Add register A and register B, store in register A</td></tr>
+						<tr><td>12</td><td>ADDI A</td><td>Add operand value to register A</td></tr>
+						<tr><td>13</td><td>ADDI B</td><td>Add operand value to register B</td></tr>
+						<tr><td>14</td><td>SUB A B</td><td>Subtract register A from register B, store in register A</td></tr>
+						<tr><td>15</td><td>SUB B A</td><td>Subtract register B from register A, store in register A</td></tr>
+						<tr><td>16</td><td>SUBI A</td><td>Subtract operand value from register A value, store in register A</td></tr>
+						<tr><td>17</td><td>SUBI B</td><td>Subtract operand value from register B value, store in register B</td></tr>
+						<tr><td>18</td><td>INC A</td><td>Increment A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>19</td><td>INC B</td><td>Increment B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>20</td><td>DEC A</td><td>Decrement A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>21</td><td>DEC B</td><td>Decrement B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>22</td><td>CMP A B</td><td>clear flags; if A &gt; B, set G; flag; if A &lt; B, set L flag; if equal set E flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>23</td><td>CMP B A</td><td>clear flags; if B &gt; A, set G; flag; if B &lt; A, set L flag; if equal set E flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>24</td><td>ISZERO A</td><td>clear Z flag; if A == 0, set Z flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>25</td><td>ISZERO B</td><td>clear Z flag; if B == 0, set Z flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>26</td><td>JMP</td><td>Move program counter to operand value address</td></tr>
+						<tr><td>27</td><td>JMPI</td><td>Move program counter to address contained at operand value address</td></tr>
+						<tr><td>28</td><td>JZ</td><td>Jump program counter to operand value address if Z flag is true</td></tr>
+						<tr><td>29</td><td>JZI</td><td>Jump program counter to address contained at operand value address if Z flag is true</td></tr>
+						<tr><td>30</td><td>JG</td><td>Jump program counter to operand value address if G flag is true</td></tr>
+						<tr><td>31</td><td>JGI</td><td>Jump program counter to address contained at operand value address if G flag is true</td></tr>
+						<tr><td>32</td><td>JL</td><td>Jump program counter to operand value address if L flag is true</td></tr>
+						<tr><td>33</td><td>JLI</td><td>Jump program counter to address contained at operand value address if L flag is true</td></tr>
+						<tr><td>34</td><td>JE</td><td>Jump program counter to operand value address if E flag is true</td></tr>
+						<tr><td>35</td><td>JEI</td><td>Jump program counter to address contained at operand value address if E flag is true</td></tr>
+						<tr><td>36</td><td>RELJMP</td><td>Jump to program counter plus operand value</td></tr>
+						<tr><td>37</td><td>NOT A</td><td>Bitwise not register A value into register A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>38</td><td>NOT B</td><td>Bitwise not register B value into register B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>39</td><td>AND A</td><td>Bitwise and register A value and operand value into register A</td></tr>
+						<tr><td>40</td><td>AND B</td><td>Bitwise and register B value and operand value into register B</td></tr>
+						<tr><td>41</td><td>OR A</td><td>Bitwise or register A value and operand value into register A</td></tr>
+						<tr><td>42</td><td>OR B</td><td>Bitwise or register B value and operand value into register B</td></tr>
+						<tr><td>43</td><td>XOR A</td><td>Bitwise xor register A value and operand value into register A</td></tr>
+						<tr><td>44</td><td>XOR B</td><td>Bitwise xor register B value and operand value into register B</td></tr>
+						<tr><td>45</td><td>SHL A</td><td>Shift register A value left 1 bit, operand value times</td></tr>
+						<tr><td>46</td><td>SHL B</td><td>Shift register B value left 1 bit, operand value times</td></tr>
+						<tr><td>47</td><td>SHR A</td><td>Shift register A value right 1 bit, operand value times, propagating 0</td></tr>
+						<tr><td>48</td><td>SHR B</td><td>Shift register B value right 1 bit, operand value times, propagating 0</td></tr>
+						<tr><td>49</td><td>SWP A B</td><td>Swap register A and B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>50</td><td>DEREF A</td><td>Set register A to the value at the address contained in Register A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>51</td><td>DEREF B</td><td>Set register B to the value at the address contained in Register B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>52</td><td>HALT</td><td>Halt the running program; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>53</td><td>ERROR</td><td>Halt the running program, toss error flag; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>54</td><td>JERR</td><td>Jump program counter to operand value address if Error flag is true</td></tr>
+						<tr><td>55</td><td>JERRI</td><td>Jump program counter to address contained at operand value address if Error flag is true</td></tr>
+						<tr><td>56</td><td>JNE</td><td>Jump program counter to operand value address if Eq flag is false</td></tr>
+						<tr><td>57</td><td>JNEI</td><td>Jump program counter to address contained at operand value address if Eq flag is false</td></tr>
+						<tr><td>58</td><td>RET</td><td>Return to the place last jumped from, decrement JSP; <em>Errors if JSP not enabled</em>; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>59</td><td>REGJMP A</td><td>Jump program counter to address contained in Register A; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>60</td><td>REGJMP B</td><td>Jump program counter to address contained in Register B; <em>Only 1 block, no operand</em></td></tr>
+						<tr><td>61</td><td>SETSP</td><td>Enable the JMP/RET stack, set the start pointer for it</em></td></tr>
+					</table>
+				</div>
+			</div>
+        </div>
+		<table id="simple_text" style="display: none;">
+			<tr><td>Do nothing</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register A</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register B</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register A</td></tr>
+			<tr><td>Copy value at position @O (@V) to Register B</td></tr>
+			<tr><td>Copy value at grid[@V] to Register A</td></tr>
+			<tr><td>Copy value at grid[@V] to Register B</td></tr>
+			<tr><td>Copy Register A (@A) to position @O</td></tr>
+			<tr><td>Copy Register B (@B) to position @O</td></tr>
+			<tr><td>Copy Register A (@A) to position @V</td></tr>
+			<tr><td>Copy Register B (@B) to position @V</td></tr>
+			<tr><td>Register A = Register A (@A) + Register B (@B)</td></tr>
+			<tr><td>Register A = Register A (@A) + @O</td></tr>
+			<tr><td>Register B = Register B (@B) + @O</td></tr>
+			<tr><td>Register A = Register A (@A) - Register B (@B)</td></tr>
+			<tr><td>Register A = Register B (@B) - Register A (@A)</td></tr>
+			<tr><td>Register A = Register A (@A) - @O</td></tr>
+			<tr><td>Register B = Register B (@B) - @O</td></tr>
+			<tr><td>Register A = Register A (@A) + 1</td></tr>
+			<tr><td>Register B = Register B (@B) + 1</td></tr>
+			<tr><td>Register A = Register A (@A) - 1</td></tr>
+			<tr><td>Register B = Register B (@B) - 1</td></tr>
+			<tr><td>Compare Register A to Register B</td></tr>
+			<tr><td>Compare Register B to Register A</td></tr>
+			<tr><td>Check if Register A is zero</td></tr>
+			<tr><td>Check if Register B is zero</td></tr>
+			<tr><td>Move the program counter to position @O</td></tr>
+			<tr><td>Move the program counter to position @V</td></tr>
+			<tr><td>If Z flag = true; Move the program counter to position @O</td></tr>
+			<tr><td>If Z flag = true; Move the program counter to position @V</td></tr>
+			<tr><td>If G flag = true; Move the program counter to position @O</td></tr>
+			<tr><td>If G flag = true; Move the program counter to position @V</td></tr>
+			<tr><td>If L flag = true; Move the program counter to position @O</td></tr>
+			<tr><td>If L flag = true; Move the program counter to position @V</td></tr>
+			<tr><td>If E flag = true; Move the program counter to position @O</td></tr>
+			<tr><td>If E flag = true; Move the program counter to position @V</td></tr>
+			<tr><td>program counter = program counter + offset (@O)</td></tr>
+			<tr><td>Register A = NOT Register A (@A)</td></tr>
+			<tr><td>Register B = NOT Register B (@B)</td></tr>
+			<tr><td>Register A = @O AND Register A (@A)</td></tr>
+			<tr><td>Register B = @O AND Register B (@B)</td></tr>
+			<tr><td>Register A = @O OR Register A (@A)</td></tr>
+			<tr><td>Register B = @O OR Register B (@B)</td></tr>
+			<tr><td>Register A = @O XOR Register A (@A)</td></tr>
+			<tr><td>Register B = @O XOR Register B (@B)</td></tr>
+			<tr><td>Register A = Register A (@A) &#x226A @O</td></tr>
+			<tr><td>Register B = Register B (@B) &#x226A @O</td></tr>
+			<tr><td>Register A = Register A (@A) &#x226B @O</td></tr>
+			<tr><td>Register B = Register B (@B) &#x226B @O</td></tr>
+			<tr><td>Swaps from Register A (@A), Register B (@B) to Register A (@B), Register B (@A)</td></tr>
+			<tr><td>Register A = grid[Register A (@A)]</td></tr>
+			<tr><td>Register B = grid[Register B (@B)]</td></tr>
+			<tr><td>Stop the running program</td></tr>
+			<tr><td>Stop the running program, toss error flag</td></tr>
+			<tr><td>if Error flag = true; Move program counter to position @O</td></tr>
+			<tr><td>if Error flag = true; Move program counter to position @V</td></tr>
+			<tr><td>if Eq flag = false; Move program counter to position @O</td></tr>
+			<tr><td>if Eq flag = false; Move program counter to position @V</td></tr>
+			<tr><td>Move program counter to last jump position</td></tr>
+			<tr><td>Move program counter to position in Register A (@A)</td></tr>
+			<tr><td>Move program counter to position in Register B (@B)</td></tr>
+			<tr><td>Enable the JMP/RET stack, JSP to @O</td></tr>
+		</table>
+		</section>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="style.css" rel="stylesheet">
+		<script src="ie10-viewport-bug-workaround.js"></script>
+		<script src="jquery.easing.min.js"></script>
+		<script src="scrolling-nav.js"></script>
+    </body>
+	<footer style="margin-top: 4em; padding-bottom: 4em; background-color: #555"></footer>
+</html>
