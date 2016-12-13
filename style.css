@@ -21,17 +21,30 @@ tr.selected {
 	background-color: #bef6ea;
 }
 
+#f_err {
+	padding-left: 0.5em;
+	text-align: center;
+	width: 4em;
+}
+
 #f_err.selected {
 	background-color: #FF0000;
 	color: #FFFFFF;
-	padding-left: 1em;
-	padding-right: 1em;
+}
+
+#f_stack_enabled {
+	padding-left: 0.5em;
+	width: 4em;
+	text-align: center;
+}
+
+#f_sp {
+	width: 2.25em;
+	text-align: center;
 }
 
 #f_stack_enabled.selected {
 	background-color: #00FF00;
-	padding-left: 0.5em;
-	padding-right: 0.5em;
 }
 
 #debug {
