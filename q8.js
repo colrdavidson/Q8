@@ -183,7 +183,6 @@ function next_challenge() {
 function prev_challenge() {
 	if (cur_puzzle > 0) {
 		cur_puzzle--;
-		console.log(window.location);
 		change_hash_val(puzzle_list[cur_puzzle]);
 	}
 }
