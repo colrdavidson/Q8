@@ -33,7 +33,7 @@ var packed = "";
 var debug_string = "";
 var op = true;
 var op_id;
-var challenge_list = ["#challenge0", "#challenge1", "#challenge2", "#challenge3", "#challenge4", "#challenge5"];
+var challenge_list = ["#challenge0", "#challenge1", "#challenge2", "#challenge3", "#challenge4", "#challenge5", "#challenge6", "#challenge7", "#challenge8", "#challenge9"];
 var cur_challenge = 0;
 var challenge_mode = false;
 
@@ -149,7 +149,7 @@ function lookup_board() {
 				return b64_to_array("#5|A|1|B|1|Y|1|i|1|/|1|h|1|r|1|/|327|A|1|1|1|N|1|A|2|=|");
 			} break;
 			case challenge_list[2]: {
-				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Compare the remote variable to an equal value to avoid the Error Flag";
+				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Compare tile 15 to an equal value to avoid the Error Flag";
 				cur_challenge = 2;
 				return b64_to_array("#1|A|1|w|1|8|2|A|1|B|1|Y|1|i|1|/|1|x|1|r|1|+|8|A|1|B|1|Q|317|A|1|1|1|N|1|A|2|=|");
 			} break;
@@ -164,9 +164,29 @@ function lookup_board() {
 				return b64_to_array("#1|A|1|w|1|8|1|Y|1|H|1|P|1|Y|1|U|1|B|1|w|1|8|2|A|1|B|1|r|1|2|27|A|1|D|1|Q|1|A|1|R|1|B|1|C|1|w|1|d|1|A|1|G|1|g|32|A|1|E|1|C|241|A|1|0|1|A|2|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|1|1|N|1|A|2|=|");
 			} break;
 			case challenge_list[5]: {
-				document.getElementById('challenge_desc').innerHTML = "Challenge 5: Activate the jump stack";
+				document.getElementById('challenge_desc').innerHTML = "Challenge 5: Activate the jump stack (it doesn't matter where you put it, just try not to overwrite code)";
 				cur_challenge = 5;
 				return b64_to_array("#3|A|1|D|1|Q|1|h|1|g|1|c|1|9|1|h|1|Q|1|H|1|Q|1|h|1|o|1|g|1|N|1|v|1|8|1|a|1|A|1|g|21|A|1|D|1|Q|1|A|1|R|1|B|1|C|1|w|1|d|1|A|1|O|1|h|1|r|1|/|30|A|1|E|1|C|1|B|1|Q|239|A|1|0|1|A|2|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|1|1|N|1|A|2|=|");
+			} break;
+			case challenge_list[6]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 6: Store two values in tiles and subtract them. Store the result in a seperate tile";
+				cur_challenge = 6;
+ 				return new Uint8Array(16 * 16);
+			} break;
+			case challenge_list[7]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 7: Increment a value and store each new version in a different tile. Example: 208 [0][1][2][3][4]";
+				cur_challenge = 7;
+ 				return new Uint8Array(16 * 16);
+			} break;
+			case challenge_list[8]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 8: Write a function to copy an array from one row to another";
+				cur_challenge = 8;
+ 				return new Uint8Array(16 * 16);
+			} break;
+			case challenge_list[9]: {
+				document.getElementById('challenge_desc').innerHTML = "Challenge 9: Find the maximum value in an array";
+				cur_challenge = 9;
+ 				return new Uint8Array(16 * 16);
 			} break;
 			default: {
 				challenge_mode = false;
