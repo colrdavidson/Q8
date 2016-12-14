@@ -64,7 +64,7 @@ for (int i = 0; i &lt;= input_value; i++) {
 </code></pre>
 					</div>
 					<div>
-						<a href="q8.html#1|G|1|i|41|A|1|D|1|w|1|Q|1|T|1|A|1|F|1|i|1|L|1|/|1|E|1|g|1|f|1|B|1|G|1|j|7|A|1|8|1|I|1|E|1|w|1|B|1|Y|1|i|1|P|1|B|1|I|1|H|1|w|1|h|1|p|1|Q|1|A|1|Q|1|A|1|H|1|w|1|g|1|f|1|D|1|G|1|i|17|A|1|D|2|w|1|T|1|B|1|C|1|w|1|f|1|D|1|B|1|M|1|A|1|W|1|I|1|n|1|A|1|a|1|M|25|A|1|P|2|B|1|M|1|I|1|W|1|H|1|v|1|8|1|J|1|s|1|A|1|q|1|x|1|A|1|7|1|A|1|E|1|s|1|R|1|I|1|S|1|E|1|x|1|M|1|H|1|s|1|A|1|i|1|x|1|G|1|j|52|A|1|D|1|g|1|4|1|Q|18|A|1|D|83|A|1|N|1|A|2|=|">
+						<a href="q8.html#1|G|1|i|41|A|1|B|1|w|1|Q|1|L|1|A|1|F|1|i|1|L|1|/|1|E|1|g|1|X|1|B|1|G|1|j|7|A|1|c|1|I|1|C|1|w|1|B|1|Y|1|i|1|P|1|B|1|I|1|F|1|w|1|h|1|p|1|Q|1|C|1|Q|1|A|1|F|1|w|1|g|1|X|1|D|1|G|1|i|17|A|1|B|2|w|1|L|1|B|1|C|1|w|1|X|1|D|1|A|1|s|1|A|1|W|1|I|1|n|1|A|1|a|1|M|25|A|1|H|1|B|1|A|1|s|1|I|1|W|1|H|1|v|1|8|1|H|1|s|1|A|1|i|1|x|1|A|1|b|1|A|1|C|1|s|1|R|1|I|1|S|1|E|1|x|1|M|1|F|1|s|1|A|1|a|1|x|1|G|1|j|52|A|1|D|1|g|1|4|1|Q|18|A|1|D|83|A|1|P|1|A|2|=|">
 							<img style="width: 90%; margin-left: 1.5em;" src="divisor.gif">
 						</a>
 					</div>
@@ -78,8 +78,8 @@ for (int i = 0; i &lt;= input_value; i++) {
 JMP 32 ; Hop into actual code
 
 ; 32 - I-LOOP
-LOADI A 193 ; Read in i
-LOADI B 192 ; Read in input_value
+LOAD A 193 ; Read in i
+LOAD B 192 ; Read in input_value
 CMP A B ; Check to see if the loop has finished
 JE 255 ; goto exit if done
 INC A ; i++
@@ -87,8 +87,8 @@ STORE A 193 ; store i
 JMP 48 ; goto j-loop
 
 ; 48 - J-LOOP
-LOADI A 194 ; Read in j
-LOADI B 192 ; Read in input_value
+LOAD A 194 ; Read in j
+LOAD B 192 ; Read in input_value
 CMP A B ; Check to see if loop has finished
 JE 60 ; goto j-loop reset
 INC A ; j++
@@ -97,30 +97,30 @@ JMP 80 ; goto get next candidate
 
 ; 60 - J-LOOP RESET
 ; reset j and candiate to 0
-LOAD A 0
+SET A 0
 STORE A 194 ; set j to 0
 STORE A 195 ; set candiate to 0
 JMP 32 ; goto i-loop
 
 ; 80 - GET NEXT CANDIDATE
-LOADI A 195 ; read in candidate
-LOADI B 193 ; read in i
+LOAD A 195 ; read in candidate
+LOAD B 193 ; read in i
 ADD A B ; candidate += i
 STORE A 195 ; store new candiate
-LOADI B 192 ; load input_value
+LOAD B 192 ; load input_value
 CMP A B ; candidate == input_value?
 JE 112 ; goto append list
 JMP 48 ; goto j-loop
 
 ; 112 - APPEND LIST
-LOADI A 193 ; read in i
-LOADI B 194 ; read in j
+LOAD A 193 ; read in i
+LOAD B 194 ; read in j
 CMP A B ; i &gt; j?
 JG 255 ; goto exit
-STORE2 A 176 ; store i to array[n]
-STORE2 B 177 ; store j to array[n+1]
-LOADI A 176 ; load n
-LOADI B 177 ; load n+1
+STOREI A 176 ; store i to array[n]
+STOREI B 177 ; store j to array[n+1]
+LOAD A 176 ; load n
+LOAD B 177 ; load n+1
 INC A ;
 INC A ; n += 2
 INC B ;

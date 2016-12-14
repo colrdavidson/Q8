@@ -139,34 +139,34 @@ function lookup_board() {
 		challenge_mode = true;
 		switch (hash) {
 			case challenge_list[0]: {
-				document.getElementById('challenge_desc').innerHTML = "Challenge 0: Put a 1 in the 0 position, and a 1 in the 1 position";
+				document.getElementById('challenge_desc').innerHTML = "Challenge 0: Put a 9 in the 0 position, and a 1 in the 1 position";
 				cur_challenge = 0;
-				return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|9|1|P|1|A|2|=|");
 			} break;
 			case challenge_list[1]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Use the JE to avoid the Error Flag";
 				cur_challenge = 1;
-				return b64_to_array("#5|A|1|B|1|Y|1|i|1|/|1|h|1|r|1|/|327|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#5|A|1|B|1|Y|1|i|1|/|1|h|1|r|1|/|327|A|1|9|1|P|1|A|2|=|");
 			} break;
 			case challenge_list[2]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Compare tile 15 to an equal value to avoid the Error Flag";
 				cur_challenge = 2;
-				return b64_to_array("#1|A|1|w|1|8|2|A|1|B|1|Y|1|i|1|/|1|x|1|r|1|+|8|A|1|B|1|Q|317|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#1|A|1|Q|1|8|2|A|1|B|1|Y|1|i|1|/|1|x|1|r|1|+|8|A|1|B|1|Q|317|A|1|9|1|P|1|A|2|=|");
 			} break;
 			case challenge_list[3]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 3: Fix the loop";
 				cur_challenge = 3;
-				return b64_to_array("#1|A|1|w|1|8|1|Y|1|H|1|P|1|8|1|U|1|B|1|w|1|8|2|A|1|B|1|r|1|+|4|A|1|B|1|Q|317|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#1|A|1|Q|1|8|1|Y|1|H|1|P|1|8|1|U|1|B|1|Q|1|8|2|A|1|B|1|r|1|+|4|A|1|B|1|Q|317|A|1|9|1|P|1|A|2|=|");
 			} break;
 			case challenge_list[4]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 4: Call the function 5 times";
 				cur_challenge = 4;
-				return b64_to_array("#1|A|1|w|1|8|1|Y|1|H|1|P|1|Y|1|U|1|B|1|w|1|8|2|A|1|B|1|r|1|2|27|A|1|D|1|Q|1|A|1|R|1|B|1|C|1|w|1|d|1|A|1|G|1|g|32|A|1|E|1|C|241|A|1|0|1|A|2|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#1|A|1|Q|1|8|1|Y|1|H|1|P|1|Y|1|U|1|B|1|Q|1|8|2|A|1|B|1|r|1|2|4|A|1|B|1|Q|21|A|1|B|1|Q|1|A|1|J|1|B|1|C|1|w|1|V|1|A|1|G|1|g|32|A|1|E|1|C|241|A|1|U|1|A|1|K|1|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|9|1|P|1|A|2|=|");
 			} break;
 			case challenge_list[5]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 5: Activate the jump stack (it doesn't matter where you put it, just try not to overwrite code)";
 				cur_challenge = 5;
-				return b64_to_array("#3|A|1|D|1|Q|1|h|1|g|1|c|1|9|1|h|1|Q|1|H|1|Q|1|h|1|o|1|g|1|N|1|v|1|8|1|a|1|A|1|g|21|A|1|D|1|Q|1|A|1|R|1|B|1|C|1|w|1|d|1|A|1|O|1|h|1|r|1|/|30|A|1|E|1|C|1|B|1|Q|239|A|1|0|1|A|2|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|1|1|N|1|A|2|=|");
+				return b64_to_array("#3|A|1|B|1|Q|1|h|1|g|1|c|1|9|1|h|1|Q|1|F|1|Q|1|h|1|o|1|g|1|J|1|v|1|8|1|a|1|A|1|g|21|A|1|B|1|Q|1|A|1|J|1|B|1|C|1|w|1|V|1|A|1|K|1|x|1|r|1|/|30|A|1|E|1|C|1|B|1|Q|239|A|1|U|1|A|1|K|1|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|9|1|P|1|A|2|=|");
 			} break;
 			case challenge_list[6]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 6: Store two values in tiles and subtract them. Store the result in a seperate tile";
@@ -405,12 +405,12 @@ function tick() {
             case 2: { grab_func = function() { op_load(board, 1); }; } break;
             case 3: { grab_func = function() { op_load_ind(board, 0); }; } break;
             case 4: { grab_func = function() { op_load_ind(board, 1); }; } break;
-            case 5: { grab_func = function() { op_load_2(board, 0); }; } break;
-            case 6: { grab_func = function() { op_load_2(board, 1); }; } break;
-            case 7: { grab_func = function() { op_store(board, 0); }; } break;
-            case 8: { grab_func = function() { op_store(board, 1); }; } break;
-            case 9: { grab_func = function() { op_store_2(board, 0); }; } break;
-            case 10: { grab_func = function() { op_store_2(board, 1); }; } break;
+            case 5: { grab_func = function() { op_store(board, 0); }; } break;
+            case 6: { grab_func = function() { op_store(board, 1); }; } break;
+            case 7: { grab_func = function() { op_store_ind(board, 0); }; } break;
+            case 8: { grab_func = function() { op_store_ind(board, 1); }; } break;
+            case 9: { grab_func = function() { op_set(board, 0); }; } break;
+            case 10: { grab_func = function() { op_set(board, 1); }; } break;
             case 11: { op_add(0, 1); grab_var = false; } break;
             case 12: { grab_func = function() { op_addi(board, 0); }; } break;
             case 13: { grab_func = function() { op_addi(board, 1); }; } break;
@@ -436,32 +436,32 @@ function tick() {
             case 33: { grab_func = function() { op_jli(board); }; } break;
             case 34: { grab_func = function() { op_je(board); }; } break;
             case 35: { grab_func = function() { op_jei(board); }; } break;
-            case 36: { grab_func = function() { op_reljmp(board); }; } break;
-            case 37: { op_not(0); grab_var = false; } break;
-            case 38: { op_not(1); grab_var = false; } break;
-            case 39: { grab_func = function() { op_and(board, 0); }; } break;
-            case 40: { grab_func = function() { op_and(board, 1); }; } break;
-            case 41: { grab_func = function() { op_or(board, 0); }; } break;
-            case 42: { grab_func = function() { op_or(board, 1); }; } break;
-            case 43: { grab_func = function() { op_xor(board, 0); }; } break;
-            case 44: { grab_func = function() { op_xor(board, 1); }; } break;
-            case 45: { grab_func = function() { op_shl(board, 0); }; } break;
-            case 46: { grab_func = function() { op_shl(board, 1); }; } break;
-            case 47: { grab_func = function() { op_shr(board, 0); }; } break;
-            case 48: { grab_func = function() { op_shr(board, 1); }; } break;
-            case 49: { op_swap(0, 1); grab_var = false; } break;
-            case 50: { op_deref(0); grab_var = false; } break;
-            case 51: { op_deref(1); grab_var = false; } break;
-			case 52: { running = false; grab_var = false; pc--; } break; //Halt op
-			case 53: { running = false; grab_var = false; pc--; error_flag = true; reg_updated = true; } break; //Error op
-            case 54: { grab_func = function() { op_jerr(board); }; } break;
-            case 55: { grab_func = function() { op_jerri(board); }; } break;
-            case 56: { grab_func = function() { op_jne(board); }; } break;
-            case 57: { grab_func = function() { op_jnei(board); }; } break;
-            case 58: { op_ret(board); grab_var = false; } break;
-            case 59: { op_regjmp(0); grab_var = false; pc--; } break;
-            case 60: { op_regjmp(1); grab_var = false; pc--; } break;
-            case 61: { grab_func = function() { op_setsp(board); }; } break;
+            case 36: { grab_func = function() { op_jne(board); }; } break;
+            case 37: { grab_func = function() { op_jnei(board); }; } break;
+            case 38: { grab_func = function() { op_jerr(board); }; } break;
+            case 39: { grab_func = function() { op_jerri(board); }; } break;
+            case 40: { grab_func = function() { op_reljmp(board); }; } break;
+            case 41: { op_regjmp(0); grab_var = false; pc--; } break;
+            case 42: { op_regjmp(1); grab_var = false; pc--; } break;
+            case 43: { op_ret(board); grab_var = false; } break;
+            case 44: { grab_func = function() { op_setsp(board); }; } break;
+            case 45: { op_deref(0); grab_var = false; } break;
+            case 46: { op_deref(1); grab_var = false; } break;
+            case 47: { op_swap(0, 1); grab_var = false; } break;
+            case 48: { op_not(0); grab_var = false; } break;
+            case 49: { op_not(1); grab_var = false; } break;
+            case 50: { grab_func = function() { op_and(board, 0); }; } break;
+            case 51: { grab_func = function() { op_and(board, 1); }; } break;
+            case 52: { grab_func = function() { op_or(board, 0); }; } break;
+            case 53: { grab_func = function() { op_or(board, 1); }; } break;
+            case 54: { grab_func = function() { op_xor(board, 0); }; } break;
+            case 55: { grab_func = function() { op_xor(board, 1); }; } break;
+            case 56: { grab_func = function() { op_shl(board, 0); }; } break;
+            case 57: { grab_func = function() { op_shl(board, 1); }; } break;
+            case 58: { grab_func = function() { op_shr(board, 0); }; } break;
+            case 59: { grab_func = function() { op_shr(board, 1); }; } break;
+			case 60: { running = false; grab_var = false; pc--; } break; //Halt op
+			case 61: { running = false; grab_var = false; pc--; error_flag = true; reg_updated = true; } break; //Error op
             default: { grab_var = false; }
         }
 		if (grab_var == false) {

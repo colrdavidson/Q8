@@ -217,19 +217,19 @@ function op_dec(idx) {
 	reg_updated = true;
 }
 
-function op_load(board, idx) {
+function op_set(board, idx) {
     reg[idx] = board[pc];
 	reg_updated = true;
     pc++;
 }
 
-function op_load_ind(board, idx) {
+function op_load(board, idx) {
     reg[idx] = board[board[pc]];
 	reg_updated = true;
     pc++;
 }
 
-function op_load_2(board, idx) {
+function op_load_ind(board, idx) {
     reg[idx] = board[board[board[pc]]];
 	reg_updated = true;
     pc++;
@@ -241,7 +241,7 @@ function op_store(board, idx) {
     pc++;
 }
 
-function op_store_2(board, idx) {
+function op_store_ind(board, idx) {
     board[board[board[pc]]] = reg[idx];
 	board_updated = true;
     pc++;
