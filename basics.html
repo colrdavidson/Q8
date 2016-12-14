@@ -33,23 +33,23 @@
 		</nav>
 
 		<section style="margin-top: 5em;">
-			<h1>Common MemoryVM Structures</h1>
+			<h1>Common Quine8 Structures</h1>
 			<p>If you are coming from other, higher-level programming languages, you might be asking,
 			"Where's my <code>for</code> loop?" The assembly programmers might scoff at that a bit. Use
 			<code>JMP</code> comparison instructions!</p>
-			<p>Because MVM has only 2 registers, wasting a precious register to store a loop counter would
-			really cramp your style. MVM provides instructions for storing information in memory tiles,
+			<p>Because Q8 has only 2 registers, wasting a precious register to store a loop counter would
+			really cramp your style. Q8 provides instructions for storing information in memory tiles,
 			giving you tons of space to store all the program state you'd like.</p>
 			<p>A couple of typical memory store/load patterns worth mentioning: </p>
 		</section>
 		<section>
 		<h2>I/O</h2>
 		<h3>The Direct</h3>
-		<p>Our direct memory access isn't actually I/O, just I. There's no direct <code>STORE</code> instruction,
-		because it wouldn't make any sense.</p>
+		<p>The direct accessors, <code>LOAD</code> and <code>STORE</code> are the meat and potatoes of the Q8 I/O family. Most of the time to keep our
+		limited register space available for ops, we'll wind up using these.</p>
 		<div class="img_container">
 			<div>
-				<img src="basics_direct_store.png">
+				<img src="basics_direct.png">
 			</div>
 			<div>
 				<table>
@@ -57,18 +57,25 @@
 					<tr><td>0</td><td>26</td><td>JMP</td></tr>
 					<tr><td>1</td><td>34</td><td>Operand</td></tr>
 					<tr><td>34</td><td>1</td><td>LOAD A</td></tr>
-					<tr><td>35</td><td>1</td><td>Operand</td></tr>
+					<tr><td>35</td><td>64</td><td>Operand</td></tr>
 					<tr><td>36</td><td>2</td><td>LOAD B</td></tr>
-					<tr><td>37</td><td>2</td><td>Operand</td></tr>
+					<tr><td>37</td><td>65</td><td>Operand</td></tr>
+					<tr><td>38</td><td>5</td><td>STORE A</td></tr>
+					<tr><td>39</td><td>64</td><td>Operand</td></tr>
+					<tr><td>40</td><td>6</td><td>STORE B</td></tr>
+					<tr><td>41</td><td>65</td><td>Operand</td></tr>
 				</table>
 			</div>
 		</div>
 		<h3>The Indirect</h3>
-		<p>The indirect accessors are the meat and potatoes of the MVM IO family. Most of the time to keep our
-		limited register space available for ops, we'll wind up using these.</p>
+		<p>Indirect accessors are a little less frequently used, but when you need them, you need them. Very useful
+		for tracking indices into an array. You can <code>LOADI</code> to get the value, and <code>LOAD</code> to get the index.
+		When you want to change your index, you <code>LOAD</code> the index, do your pointer math, and then <code>STORE</code> it
+		back again. Changing the value directly using the index is a <code>STOREI</code></p>
+		<br style="clear: both;">
 		<div class="img_container">
 			<div>
-				<img src="basics_indirect_store.png">
+				<img src="basics_indirect.png">
 			</div>
 			<div>
 				<table>
@@ -79,36 +86,29 @@
 					<tr><td>35</td><td>64</td><td>Operand</td></tr>
 					<tr><td>36</td><td>4</td><td>LOADI B</td></tr>
 					<tr><td>37</td><td>65</td><td>Operand</td></tr>
-					<tr><td>38</td><td>7</td><td>STORE A</td></tr>
+					<tr><td>38</td><td>7</td><td>STOREI A</td></tr>
 					<tr><td>39</td><td>64</td><td>Operand</td></tr>
-					<tr><td>40</td><td>8</td><td>STORE B</td></tr>
+					<tr><td>40</td><td>8</td><td>STOREI B</td></tr>
 					<tr><td>41</td><td>65</td><td>Operand</td></tr>
 				</table>
 			</div>
 		</div>
-		<h3>The Double Indirect</h3>
-		<p>Double indirect accessors are a little less frequently used, but when you need them, you need them. Very useful
-		for tracking indices into an array. You can <code>LOAD2</code> to get the value, and <code>LOADI</code> to get the index.
-		When you want to change your index, you <code>LOADI</code> the index, do your pointer math, and then <code>STORE</code> it
-		back again.</p>
-		<br style="clear: both;">
+		<h3>The Constant Friend</h3>
+		<p>A great little debugging buddy, the <code>SET</code> instruction.
+		<code>SET</code> is excellent for debugging and cramming single-use constants into registers.</p>
 		<div class="img_container">
 			<div>
-				<img src="basics_indirect2_store.png">
+				<img src="basics_constant.png">
 			</div>
 			<div>
 				<table>
 					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
 					<tr><td>0</td><td>26</td><td>JMP</td></tr>
 					<tr><td>1</td><td>34</td><td>Operand</td></tr>
-					<tr><td>34</td><td>5</td><td>LOAD2 A</td></tr>
-					<tr><td>35</td><td>64</td><td>Operand</td></tr>
-					<tr><td>36</td><td>6</td><td>LOAD2 B</td></tr>
-					<tr><td>37</td><td>65</td><td>Operand</td></tr>
-					<tr><td>38</td><td>9</td><td>STORE2 A</td></tr>
-					<tr><td>39</td><td>64</td><td>Operand</td></tr>
-					<tr><td>40</td><td>10</td><td>STORE2 B</td></tr>
-					<tr><td>41</td><td>65</td><td>Operand</td></tr>
+					<tr><td>34</td><td>9</td><td>SET A</td></tr>
+					<tr><td>35</td><td>1</td><td>Operand</td></tr>
+					<tr><td>36</td><td>10</td><td>SET B</td></tr>
+					<tr><td>37</td><td>2</td><td>Operand</td></tr>
 				</table>
 			</div>
 		</div>
@@ -126,7 +126,7 @@
 			<div>
 				<table>
 					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-					<tr><td>0</td><td>1</td><td>LOAD A</td></tr>
+					<tr><td>0</td><td>9</td><td>SET A</td></tr>
 					<tr><td>1</td><td>5</td><td>Operand</td></tr>
 					<tr><td>2</td><td>26</td><td>JMP</td></tr>
 					<tr><td>3</td><td>34</td><td>Operand</td></tr>
@@ -136,7 +136,7 @@
 					<tr><td>37</td><td>20</td><td>DEC A</td></tr>
 					<tr><td>38</td><td>26</td><td>JMP</td></tr>
 					<tr><td>39</td><td>34</td><td>Operand</td></tr>
-					<tr><td>255</td><td>52</td><td>HALT</td></tr>
+					<tr><td>255</td><td>60</td><td>HALT</td></tr>
 				</table>
 			</div>
 		</div>
@@ -152,17 +152,17 @@
 					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
 					<tr><td>0</td><td>26</td><td>JMP</td></tr>
 					<tr><td>1</td><td>34</td><td>Operand</td></tr>
-					<tr><td>34</td><td>3</td><td>LOAD A</td></tr>
+					<tr><td>34</td><td>1</td><td>LOAD A</td></tr>
 					<tr><td>35</td><td>80</td><td>Operand</td></tr>
 					<tr><td>36</td><td>24</td><td>ISZERO A</td></tr>
 					<tr><td>37</td><td>28</td><td>JZ</td></tr>
 					<tr><td>38</td><td>255</td><td>Operand</td></tr>
 					<tr><td>39</td><td>20</td><td>DEC A</td></tr>
-					<tr><td>40</td><td>7</td><td>STORE A</td></tr>
+					<tr><td>40</td><td>5</td><td>STORE A</td></tr>
 					<tr><td>41</td><td>80</td><td>Operand</td></tr>
 					<tr><td>42</td><td>26</td><td>JMP</td></tr>
 					<tr><td>43</td><td>34</td><td>Operand</td></tr>
-					<tr><td>255</td><td>52</td><td>HALT</td></tr>
+					<tr><td>255</td><td>60</td><td>HALT</td></tr>
 				</table>
 			</div>
 		</div>
