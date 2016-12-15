@@ -13,7 +13,6 @@ var grab_func = null;
 var mouse_x;
 var mouse_y;
 var selected_block = 0;
-var input_mode = false;
 
 var board;
 var pc = 0;
@@ -128,7 +127,6 @@ function clear_flags() {
 	stack_enabled = false;
 	reg_updated = true;
 	board_updated = true;
-	input_mode = false;
 	entry_buffer = "";
 }
 
@@ -244,9 +242,10 @@ function twod_to_oned(x, y, width) {
 
 var k_table = {};
 
-function valid_entry_buffer() {
-	var entry = parseInt(entry_buffer);
+function is_valid_digit_str(str) {
+	var entry = parseInt(str);
 	if (entry != NaN) {
+		console.log("is_valid? " + entry);
 		if (entry > 0 && entry < 256) {
 			return true;
 		} else {
@@ -262,8 +261,6 @@ function key_pressed(event) {
 
 	switch (event.keyCode) {
 		case 37: case 38: case 39: case 40: // Arrow keys
-		case 87: case 65: case 83: case 68: // WASD keys
-		case 72: case 74: case 75: case 76: // HJKL keys
 		case 32: event.preventDefault(); break; // Space
 		case 13: event.preventDefault(); break; // Enter
 		default: break;
@@ -271,19 +268,19 @@ function key_pressed(event) {
 
 	var hit_arrow = false;
 	switch (event.keyCode) {
-		case 37: case 65: case 72: {
+		case 37: {
 			selected_block -= 1;
 			hit_arrow = true;
 		} break;
-		case 38: case 87: case 75: {
+		case 38: {
 			selected_block -= 16;
 			hit_arrow = true;
 		} break;
-		case 40: case 83: case 74: {
+		case 40: {
 			selected_block += 16;
 			hit_arrow = true;
 		} break;
-		case 39: case 68: case 76: {
+		case 39: {
 			selected_block += 1;
 			hit_arrow = true;
 		} break;
@@ -291,11 +288,12 @@ function key_pressed(event) {
 
 	if (hit_arrow) {
 		if (selected_block < 0) {
-			selected_block = 0;
+			selected_block = (selected_block + 256) % 256;
 		} else if (selected_block > 255) {
-			selected_block = 255;
+			selected_block = selected_block % 256;
 		}
-		entry_buffer = "";
+		entry_buffer = "" + board[selected_block];
+		console.log("arrow mod: " + entry_buffer);
 		highlight_row(board[selected_block]);
 	}
 
@@ -304,43 +302,31 @@ function key_pressed(event) {
 
 function key_released(event) {
     k_table[event.keyCode] = false;
-
-	if (input_mode == true) {
-		if (event.keyCode == 13) { // Enter
-			entry_buffer = "";
-			input_mode = false;
-		} if (event.keyCode == 8) { // Backspace
+	switch (event.keyCode) {
+		case 37: case 38: case 39: case 40: {
+		} break; // Arrow keys
+		case 8: {
 			if (entry_buffer.length > 1) {
 				entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
 			} else {
-				entry_buffer = "";
+				entry_buffer = "0";
 			}
+			console.log("buffer: " + entry_buffer);
 			board[selected_block] = parseInt(entry_buffer);
 			change_hash_val("#" + array_to_b64(board));
-			board_updated = true;
-		} else {
-			entry_buffer += String.fromCharCode(event.keyCode);
-			if (valid_entry_buffer()) {
+		} break;
+		default: {
+			var tmp_buffer = entry_buffer + String.fromCharCode(event.keyCode);
+			if (is_valid_digit_str(tmp_buffer)) {
+				entry_buffer = tmp_buffer;
 				board[selected_block] = parseInt(entry_buffer);
 				change_hash_val("#" + array_to_b64(board));
-				board_updated = true;
-			} else {
-				if (entry_buffer.length > 1) {
-					entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
-				} else {
-					entry_buffer = "";
-				}
-				board_updated = true;
 			}
-		}
-		highlight_row(board[selected_block]);
-	} else {
-		if (event.keyCode == 13) {
-			input_mode = true;
-			entry_buffer = "";
-			board_updated = true;
-		}
+		} break;
 	}
+
+	board_updated = true;
+	highlight_row(board[selected_block]);
 }
 
 function clear_highlights(table, rows) {
@@ -521,7 +507,7 @@ function render() {
 			var pos = twod_to_oned(x, y, 16);
             var i = board[pos];
 
-			if (selected_block == pos && input_mode == true) {
+			if (selected_block == pos) {
     			gl.uniform3f(u_color, 0.157, 0.733, 0.612);
             } else if (i != 0) {
                 gl.uniform3f(u_color, 0.8, 0.8, 0.8);
