@@ -33,14 +33,32 @@
 		</nav>
 
 		<section style="margin-top: 5em;">
+			<h1>CPU Fundamentals</h1>
+			<p>At a basic level, a computer can only do three things:</p>
+			<h4>STORE information in memory</h4>
+			<p>In Q8, the main memory area is that gray grid.</p>
+			<h4>MOVE information around in memory</h4>
+			<p>(Copying the number from one box into another box)<br>This is done with CPU instructions,
+			commonly referred to as operations (ops), which we'll get to in a moment.</p>
+			<h4>WORK with information</h4>
+			<p>This can't happen in the main memory area,
+			it has to happen in a working memory area called a register (the two special boxes at the bottom of
+			the main memory grid).</p>
+
+			<p>To do work on information, you have to move it into the registers, do the work there, and then
+			store the results of that work back into main memory, so that you can free up the registers to do
+			more work.</p>
+
 			<h1>Common Quine8 Structures</h1>
 			<p>Q8 is designed a little differently than the standard x86 or ARM processors commonly
 			seen today. It only has 2 registers, and doesn't provide a general purpose stack. This
 			greatly simplifies the instruction table, but requires the programmer to change their
 			method of interaction with the system slightly.</p>
-			<p>To efficiently use Q8 to write code without diving into runtime modification of instruction
-			bytecode, the programmer must use tiles as external registers. The platform provides a few
-			of instructions that make "tile as a register" functionality quick and easy to use.</p>
+			<p>To keep things clear as we talk about the memory grid, we'll use the words tile or cell
+			to refer to specific byte-wide boxes in memory.</p>
+			<p>efficiently write code for Q8 without diving into runtime modification of
+			bytecode, the programmer must use general memory as external registers. The platform provides a few
+			of instructions that help to make that interaction as painless as possible.</p>
 		</section>
 		<section>
 		<h2>I/O</h2>
