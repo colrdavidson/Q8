@@ -346,26 +346,30 @@ function highlight_row(id) {
 	}
 }
 
-function mouse_clicked(event) {
+function mouse_clicked(canvas, event) {
     mouse_pressed = true;
+    var rect = canvas.getBoundingClientRect();
+	var tmp_x = event.clientX - rect.left;
+	var tmp_y = event.clientY - rect.top;
 
-	if (!running) {
-        var board_pos = twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16);
-		entry_buffer = "";
-		selected_block = board_pos;
+	if (tmp_x > canvas.width || tmp_x < 0 || tmp_y > canvas.height || tmp_y < 0) {
+		selected_block = -1;
+	} else {
+		selected_block = twod_to_oned(Math.floor(mouse_x / 32), Math.floor(mouse_y / 32), 16);
+		entry_buffer = "" + board[selected_block];
 		highlight_row(board[selected_block]);
-		board_updated = true;
 	}
+	board_updated = true;
 }
 
 function mouse_released(event) {
     mouse_pressed = false;
 }
 
-function mouse_moved(canvas, evt) {
+function mouse_moved(canvas, event) {
     var rect = canvas.getBoundingClientRect();
-    mouse_x = evt.clientX - rect.left;
-    mouse_y = evt.clientY - rect.top;
+    mouse_x = event.clientX - rect.left;
+    mouse_y = event.clientY - rect.top;
 }
 
 function hash_change() {
@@ -680,11 +684,12 @@ function start_q8() {
     		document.getElementById('challenge_box').removeAttribute("hidden");
 		}
 
-        canvas.onmousedown = mouse_clicked;
         document.onmouseup = mouse_released;
         document.onkeyup = key_released;
         document.onkeydown = key_pressed;
+
         canvas.addEventListener("mousemove", function(evt) { mouse_moved(canvas, evt); }, false);
+        document.addEventListener("mousedown", function(evt) { mouse_clicked(canvas, evt); }, false);
 		window.addEventListener("hashchange", function() { hash_change(); }, false);
 		window.addEventListener("onpopstate", function() { pop_state(); }, false);
 		highlight_row(board[selected_block]);
