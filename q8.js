@@ -245,7 +245,6 @@ var k_table = {};
 function is_valid_digit_str(str) {
 	var entry = parseInt(str);
 	if (entry != NaN) {
-		console.log("is_valid? " + entry);
 		if (entry > 0 && entry < 256) {
 			return true;
 		} else {
@@ -293,7 +292,6 @@ function key_pressed(event) {
 			selected_block = selected_block % 256;
 		}
 		entry_buffer = "" + board[selected_block];
-		console.log("arrow mod: " + entry_buffer);
 		highlight_row(board[selected_block]);
 	}
 
@@ -311,7 +309,6 @@ function key_released(event) {
 			} else {
 				entry_buffer = "0";
 			}
-			console.log("buffer: " + entry_buffer);
 			board[selected_block] = parseInt(entry_buffer);
 			change_hash_val("#" + array_to_b64(board));
 		} break;
