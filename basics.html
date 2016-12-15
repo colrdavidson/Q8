@@ -34,19 +34,19 @@
 
 		<section style="margin-top: 5em;">
 			<h1>Common Quine8 Structures</h1>
-			<p>If you are coming from other, higher-level programming languages, you might be asking,
-			"Where's my <code>for</code> loop?" The assembly programmers might scoff at that a bit. Use
-			<code>JMP</code> comparison instructions!</p>
-			<p>Because Q8 has only 2 registers, wasting a precious register to store a loop counter would
-			really cramp your style. Q8 provides instructions for storing information in memory tiles,
-			giving you tons of space to store all the program state you'd like.</p>
-			<p>A couple of typical memory store/load patterns worth mentioning: </p>
+			<p>Q8 is designed a little differently than the standard x86 or ARM processors commonly
+			seen today. It only has 2 registers, and doesn't provide a general purpose stack. This
+			greatly simplifies the instruction table, but requires the programmer to change their
+			method of interaction with the system slightly.</p>
+			<p>To efficiently use Q8 to write code without diving into runtime modification of instruction
+			bytecode, the programmer must use tiles as external registers. The platform provides a few
+			of instructions that make "tile as a register" functionality quick and easy to use.</p>
 		</section>
 		<section>
 		<h2>I/O</h2>
 		<h3>The Direct</h3>
-		<p>The direct accessors, <code>LOAD</code> and <code>STORE</code> are the meat and potatoes of the Q8 I/O family. Most of the time to keep our
-		limited register space available for ops, we'll wind up using these.</p>
+		<p>The direct accessors, <code>LOAD</code> and <code>STORE</code> are the meat and potatoes of the Q8 I/O family.
+		Most of the time to keep the limited register space available for ops, you'll wind up using these.</p>
 		<div class="img_container">
 			<div>
 				<img src="basics_direct.png">
@@ -68,10 +68,11 @@
 			</div>
 		</div>
 		<h3>The Indirect</h3>
-		<p>Indirect accessors are a little less frequently used, but when you need them, you need them. Very useful
-		for tracking indices into an array. You can <code>LOADI</code> to get the value, and <code>LOAD</code> to get the index.
-		When you want to change your index, you <code>LOAD</code> the index, do your pointer math, and then <code>STORE</code> it
-		back again. Changing the value directly using the index is a <code>STOREI</code></p>
+		<p>Indirect accessors are used a little less frequently, but when you need them, you need them. They've proved Very useful
+		for tracking indices into an array, or setting up jump tables. You can <code>LOADI</code> to get the value,
+		and <code>LOAD</code> to get the index. When you want to change your index, you <code>LOAD</code> the index,
+		make your modification, and then <code>STORE</code> it back again. Changing the value at the tile pointed to by the index
+		is a <code>STOREI</code></p>
 		<br style="clear: both;">
 		<div class="img_container">
 			<div>
@@ -95,7 +96,9 @@
 		</div>
 		<h3>The Constant Friend</h3>
 		<p>A great little debugging buddy, the <code>SET</code> instruction.
-		<code>SET</code> is excellent for debugging and cramming single-use constants into registers.</p>
+		<code>SET</code> is excellent for debugging and cramming single-use constants into registers.
+		This mechanism proves remarkably useful in some of the example programs for tracking boolean
+		data, and drawing specific block values to the screen.</p>
 		<div class="img_container">
 			<div>
 				<img src="basics_constant.png">
@@ -112,13 +115,14 @@
 				</table>
 			</div>
 		</div>
-		<p>With all of our register saving mechanisms in mind, we can now tackle loops!</p>
 		</section>
 		<section>
 		<h2>Loops</h2>
 		<h3>The Register Loop</h3>
-		<p>This isn't all that useful in practice, as most of the time we'll
-		need both registers, but it does take fewer cpu cycles than a fancier loop.</p>
+		<p>This doesn't prove to be very useful in practice, as most of the time you'll
+		need to keep both registers available, but it does take fewer cpu cycles than a tile loop,
+		not needing the additional blocks to load and store the external tile. It's also good for
+		reducing the loop's tile footprint, as it doesn't need to use an extra tile for state.</p>
 		<div class="img_container">
 			<div>
 				<img src="basics_register_loop.png">
@@ -142,7 +146,9 @@
 		</div>
 		<h3>The Memory Tile Loop</h3>
 		<p>This is the loop you'll see frequently in the example projects. It's
-		a little longer than a register loop, but far more practical.</p>
+		a little longer than a register loop, but far more practical, as it keeps the two registers
+		available for the code the loop jumps into. It isn't perfect. The loop overwrites a register,
+		so you'll need to save it if you want to come back to that value.</p>
 		<div class="img_container">
 			<div>
 				<img src="basics_tile_loop.png">
