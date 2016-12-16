@@ -32,7 +32,7 @@
 		  </div>
 		</nav>
 
-		<section style="margin-top: 5em;">
+		<section style="margin-top: 5em; max-width: 50em;">
 		<h1>Multiplication with Quine8</h1>
 		<p>As a gentle introduction to the Quine8 (Q8) tool, we'll start by multiplying two numbers.
 		Because the Q8 instruction set does not contain a multiply operation, we'll have to write our own.
@@ -66,6 +66,21 @@ for (int i = 6; i &gt; 0; i--) {
 }</code></pre>
 			</div>
 		</div>
+		<p>If you look at the two examples carefully, you'll notice that one of the 2 will resolve faster than the other.
+		4 times through the loop is faster than 6, and the larger the difference between the two numbers, the more this
+		will effect runtime. If we ran 2 * 50, it would either run through the incremental loop twice or fifty times. That
+		makes a huge difference, especially for the Q8 bytecode.</p>
+		<pre><code class="language-none">Loop ops: 10
+Add Increment ops: 11
+
+1 time through the loop: 10 + 11 = 21 ops
+2 times through the loop: 21 * 2 = 42 ops
+50 times through the loop: 21 * 50 = 1,050 ops
+</code></pre>
+		<p>Assuming each op takes 1 second, that's the difference between running in 42 seconds,
+		and running for 17 and a half minutes. This is an optimization definitely worth having.</p>
+		</section>
+		<section>
 		<div class="code_container">
 			<div>
 				<h3>Finished Program</h3>
