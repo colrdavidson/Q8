@@ -32,7 +32,7 @@
 		  </div>
 		</nav>
 
-		<section style="margin-top: 5em;">
+		<section style="margin-top: 5em; max-width: 50em;">
 		<h1>Sorting and Arrays with Quine8</h1>
 		<p>To introduce a little more complexity and explore some of the cooler features of Q8, we are going
 		to write a simple sort. Bubblesort! It may be slow, but it's easy to understand, and easy enough to implement.</p>
@@ -44,7 +44,26 @@
 		</a>
 		<p>In bubblesort, each element is compared with its neighbor and swapped if necessary. Unfortunately, it can't always sort
 		the whole array in one pass. It must keep running until all of the elements have slowly made their way to their correct
-		positions.</p>
+		positions. Worst-case, the elements are sorted, but in the opposite direction of the desired sort, it takes the length of the array, n, times the
+		the number of passes necessary to fix it, in this case, equal to the length of the array, n. That leaves the runtime at
+		a miserable worst-case of n<sup>2</sup>. With a larger array, this can get really ridiculous.</p>
+		<pre><code class="language-none">Main Loop - With Swap: 36 tiles
+Main Loop - Without Swap: 31 tiles
+Main Loop - Average: 33.5 tiles
+Restart Loop: 24 tiles
+n, our array length for this example is 5
+
+Main Loop gets called once per element, so n times per sort iteration
+Restart Loop gets called once per array walk, so average of n/2 times
+
+Main Loop average * n * Restart Loop * (n/2) = 10,050 tiles
+Main Loop worst-case * n * Restart Loop * n = 21,600 tiles
+Main Loop best-case * n * Restart Loop * 1 = 3,720 tiles</code></pre>
+		<p>Assuming each tile takes 1 second, best case runs in 1 hour, 2 minutes, and worst case runs in 6 hours.
+		n<sup>2</sup> time is not ideal. Bubblesort is more useful as a teaching tool than as a sort to use
+		for practical applications.</p>
+		</section>
+		<section>
 		<div class="multi_code_container">
 			<div class="c_and_img">
 				<div>
@@ -64,6 +83,7 @@ while (swapped) {
 }</code></pre>
 			</div>
 			<div>
+				<h3>Finished Program</h3>
 				<a href="q8.html#1|A|1|b|1|E|1|C|1|s|1|g|1|X|2|B|1|s|1|I|1|B|1|s|1|A|1|X|1|A|1|G|1|l|4|A|1|H|1|D|1|G|1|B|1|z|1|/|1|G|1|i|13|A|1|B|1|w|1|A|1|W|1|w|1|A|1|c|1|E|1|C|1|w|1|g|1|W|1|x|1|B|1|r|1|I|1|J|2|A|1|X|1|D|1|G|1|l|41|A|1|B|1|s|1|B|1|g|1|c|1|E|1|B|1|Q|1|F|1|s|1|A|1|O|1|x|1|B|1|L|1|I|1|W|1|H|1|n|1|A|1|H|1|s|1|Q|1|i|1|y|1|A|1|b|1|E|1|C|1|s|1|h|1|I|1|T|1|B|1|b|1|E|1|G|1|s|1|h|1|p|1|Q|2|A|1|X|1|D|1|L|1|x|1|p|1|f|58|A|1|U|1|E|1|A|1|w|1|I|1|B|15|A|1|E|1|o|1|K|1|E|101|A|1|P|1|A|2|=|">
 					<img style="width: 90%; margin-left: 1.5em;" src="bubble.gif">
 				</a>
