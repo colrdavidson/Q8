@@ -56,9 +56,9 @@ n, our array length for this example is 5
 Main Loop gets called once per element, so n times per sort iteration
 Restart Loop gets called once per array walk, so average of n/2 times
 
-Main Loop average * n * Restart Loop * (n/2) = 10,050 tiles
-Main Loop worst-case * n * Restart Loop * n = 21,600 tiles
-Main Loop best-case * n * Restart Loop * 1 = 3,720 tiles</code></pre>
+Main Loop average * n * Restart Loop * (n/2) = ~10,050 tiles
+Main Loop worst-case * n * Restart Loop * n = ~21,600 tiles
+Main Loop best-case * n * Restart Loop * 1 = ~3,720 tiles (Loop is already sorted)</code></pre>
 		<p>Assuming each tile takes 1 second, best case runs in 1 hour, 2 minutes, and worst case runs in 6 hours.
 		n<sup>2</sup> time is not ideal. Bubblesort is more useful as a teaching tool than as a sort to use
 		for practical applications.</p>
