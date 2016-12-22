@@ -104,7 +104,7 @@ function key_released(vm, event) {
 			} else {
 				entry_buffer = "0";
 			}
-			vm.clear_state();
+			vm.reset();
 			vm.board[vm.selected_tile] = parseInt(entry_buffer);
 			vm.save_board();
 		} break;
@@ -112,7 +112,7 @@ function key_released(vm, event) {
 			var tmp_buffer = entry_buffer + String.fromCharCode(event.keyCode);
 			if (is_valid_digit_str(tmp_buffer)) {
 				entry_buffer = tmp_buffer;
-				vm.clear_state();
+				vm.reset();
 				vm.board[vm.selected_tile] = parseInt(entry_buffer);
 				vm.save_board();
 			}
