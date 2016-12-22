@@ -94,6 +94,9 @@ tr.selected {
 	margin-left: 2em;
 }
 
+.challenge_box {
+	display: none;
+}
 
 th, td {
 	padding-right: 0.5em;

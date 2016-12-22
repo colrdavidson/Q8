@@ -5,29 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <script id="shader-vs" type="x-shader/x-vertex">
-            attribute vec2 my_pos;
-
-            uniform mat4 perspective;
-            uniform mat4 model;
-			uniform vec3 color;
-
-			varying highp vec3 f_color;
-
-            void main() {
-                gl_Position = perspective * model * vec4(my_pos, 0.0, 1.0);
-				f_color = color;
-            }
-        </script>
-
-        <script id="shader-fs" type="x-shader/x-fragment">
-			varying highp vec3 f_color;
-
-            void main() {
-                gl_FragColor = vec4(f_color, 1.0);
-            }
-        </script>
-
 		<!-- Bootstrap core CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -44,12 +21,13 @@
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
 
+		<script src="shader_pack.js"></script>
         <script defer src="sylvester.js"></script>
-        <script defer src="glUtils.js"></script>
+        <script defer src="gl_utils.js"></script>
         <script defer src="vm.js"></script>
         <script defer src="q8.js"></script>
     </head>
-	<body id="page-top" data-target=".navbar-fixed-top" onload="start_q8()">
+	<body id="page-top" data-target=".navbar-fixed-top" onload="vm_main()">
 		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
 		  <div class="container">
 			<div class="navbar-header page-scroll">
@@ -66,26 +44,32 @@
 			<h4 style="color: #B0B0B0; margin-bottom: 1em;">Your URL is your saved program. Keep it safe and share it with your friends!</h4>
 			<div id="challenge_box" hidden>
 				<h4 id="challenge_desc" style="margin-top: -0.5em;">This is a challenging challenge</h4>
-				<button type="button" onclick="prev_challenge()" id="prev_challenge" style="margin-bottom: 1em;">Prev Challenge</button>
-				<button type="button" onclick="reset_challenge()" id="reset_challenge" style="margin-bottom: 1em;">Reset Challenge</button>
-				<button type="button" onclick="next_challenge()" id="next_challenge" style="margin-bottom: 1em;">Next Challenge</button>
+				<button type="button" id="prev_challenge" style="margin-bottom: 1em;">Prev Challenge</button>
+				<button type="button" id="reset_challenge" style="margin-bottom: 1em;">Reset Challenge</button>
+				<button type="button" id="next_challenge" style="margin-bottom: 1em;">Next Challenge</button>
 			</div>
 			<div class="container">
 				<div style="padding-right: 2em;">
 					<div style="padding-bottom: 2em">
 						<div class="button_box">
-							<button type="button" onclick="step()">Step</button>
-							<button type="button" onclick="pause()">Go/Stop</button>
-							<button type="button" onclick="reset()">Reset</button>
-							<button type="button" onclick="clear_board()">Clear</button>
+							<button type="button" id="step">Step</button>
+							<button type="button" id="start">Go/Stop</button>
+							<button type="button" id="reset">Reset</button>
+							<button type="button" id="clear">Clear</button>
+						</div>
+						<div class="button_box" style="margin-top: -0.5em;">
+							<button type="button" id="tps_1">1x</button>
+							<button type="button" id="tps_10">10x</button>
+							<button type="button" id="tps_norm">20x</button>
+							<button type="button" id="tps_100">100x</button>
 						</div>
 					</div>
-					<div>
-						<div style="margin-bottom: -100%; margin-right:-32px;">
-							<canvas id="glcanvas" width="512" height="512">NOT SUPPORT!</canvas>
-						</div>
+					<div style="margin-top: -2em;">
 						<div>
-							<canvas id="text" width="544" height="544">NOT SUPPORT!</canvas>
+							<canvas id="gl_canvas" width="544" height="544">NOT SUPPORT!</canvas>
+						</div>
+						<div style="margin-top: -548px; pointer-events: none;">
+							<canvas id="text_canvas" width="544" height="544">NOT SUPPORT!</canvas>
 						</div>
 					</div>
 					<table style="margin-bottom: 5px; margin-left: 100px;">
@@ -105,7 +89,7 @@
 						</table>
 						<table>
 							<tr><td>JSP Enabled? </td><td id="f_stack_enabled">false</td>
-							<td style="padding-left: 0.5em;">JSP: </td><td id="f_sp">0</td></tr>
+							<td style="padding-left: 0.5em;">JSP: </td><td id="f_jsp">0</td></tr>
 						</table>
 					</div>
 					<p id="debug"></p>
