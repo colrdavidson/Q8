@@ -181,6 +181,30 @@ class VM {
 			rev_lookup[op.name] = i;
 		}
 		this.rev_lookup = rev_lookup;
+
+		var table = document.getElementById("op_table");
+		if (table != undefined) {
+			for (var i = 0; i < this.op_table.length; i++) {
+				var row = table.insertRow(i);
+				var id_cell = row.insertCell(0);
+				var name_cell = row.insertCell(1);
+				var desc_cell = row.insertCell(2);
+				id_cell.innerHTML = i;
+				name_cell.innerHTML = this.op_table[i].name;
+				desc_cell.innerHTML = this.op_table[i].long_desc;
+			}
+			var thead = table.createTHead();
+			var thead_row = thead.insertRow();
+			var id_cell = thead_row.insertCell(0);
+			var name_cell = thead_row.insertCell(1);
+			var desc_cell = thead_row.insertCell(2);
+			id_cell.outerHTML = "<th>Value</th>";
+			name_cell.outerHTML = "<th>Instruction</th>";
+			desc_cell.outerHTML = "<th>Description</th>";
+		}
+
+		this.page_op_table = table;
+		this.row_updated = true;
 	}
 
 	print_op_type(type) {
@@ -234,7 +258,6 @@ class VM {
 	}
 
 	load_board(rle_str) {
-
 		switch (rle_str) {
 			case "": {
 				this.board = new Uint8Array(16 * 16);
@@ -336,6 +359,7 @@ class VM {
 		this.cur_wait = 0;
 
 		this.step_updated = true;
+		this.row_updated = true;
 		this.board_updated = true;
 		this.reg_updated = true;
 	}

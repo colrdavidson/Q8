@@ -41,6 +41,7 @@ function mouse_pressed(vm, canvas, event) {
 		var new_y = Math.floor(mouse_y / 32) - 1;
 		vm.selected_tile = twod_to_oned(new_x, new_y, 16);
 		entry_buffer = "" + vm.board[vm.selected_tile];
+		vm.row_updated = true;
 	}
 
 	vm.board_updated = true;
@@ -88,6 +89,7 @@ function key_pressed(vm, event) {
 		}
 		entry_buffer = "" + vm.board[vm.selected_tile];
 	}
+	vm.row_updated = true;
 }
 
 function key_released(vm, event) {
@@ -119,6 +121,7 @@ function key_released(vm, event) {
 		}
 	}
 
+	vm.row_updated = true;
 	vm.board_updated = true;
 }
 
@@ -261,6 +264,22 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	if (vm.challenge_updated) {
 		document.getElementById('challenge_box').removeAttribute("hidden");
 		vm.challenge_updated = false;
+	}
+
+	if (vm.row_updated) {
+		if (vm.page_op_table != undefined) {
+			var rows = vm.page_op_table.getElementsByTagName('tr');
+
+			var id = vm.board[vm.selected_tile];
+			for (var i = 0; i < rows.length; i++) {
+				rows[i].classList.remove('selected');
+			}
+
+			if (id < rows.length - 1) {
+				rows[id + 1].className += " selected";
+			}
+		}
+		vm.row_updated = false;
 	}
 
 	if (vm.step_updated) {
