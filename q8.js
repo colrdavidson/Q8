@@ -4,6 +4,11 @@ var mouse_x = 0;
 var mouse_y = 0;
 var debug_vm;
 
+String.prototype.replaceAll = function (find, replace) {
+	var str = this;
+	return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+};
+
 function oned_to_twod(idx, width) {
 	return {
 		x: idx % width,
@@ -354,11 +359,11 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		if (op.length == 1 || vm.cur_inst != null) {
 			var simple_desc = op.simple_desc;
 
-			simple_desc = simple_desc.replace("@A", fmt_base(vm, vm.reg[0]));
-			simple_desc = simple_desc.replace("@B", fmt_base(vm, vm.reg[1]));
-			simple_desc = simple_desc.replace("@IIV", fmt_base(vm, vm.board[vm.board[vm.board[vm.pc]]]));
-			simple_desc = simple_desc.replace("@IV", fmt_base(vm, vm.board[vm.board[vm.pc]]));
-			simple_desc = simple_desc.replace("@V", fmt_base(vm, vm.board[vm.pc]));
+			simple_desc = simple_desc.replaceAll("@A", fmt_base(vm, vm.reg[0]));
+			simple_desc = simple_desc.replaceAll("@B", fmt_base(vm, vm.reg[1]));
+			simple_desc = simple_desc.replaceAll("@IIV", fmt_base(vm, vm.board[vm.board[vm.board[vm.pc]]]));
+			simple_desc = simple_desc.replaceAll("@IV", fmt_base(vm, vm.board[vm.board[vm.pc]]));
+			simple_desc = simple_desc.replaceAll("@V", fmt_base(vm, vm.board[vm.pc]));
 			step_string += simple_desc;
 		}
 
