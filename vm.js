@@ -24,11 +24,18 @@ function unpack_string(rle_str) {
 	for (var i = 0; i < rle_str.length; i++) {
 		var occurance_str = "";
 		var j = i;
-		for (; rle_str.charAt(j) != '|'; j++) {
+		for (; rle_str.charAt(j) != '|' && j < rle_str.length; j++) {
 			occurance_str += rle_str.charAt(j);
 		}
 		i = j + 1;
+
 		var repeat_len = parseInt(occurance_str);
+		if (isNaN(repeat_len) || repeat_len > 344) {
+			console.log(occurance_str);
+			console.log(repeat_len);
+			return "";
+		}
+
 		for (j = 0; j < repeat_len; j++) {
 			real_str += rle_str.charAt(i);
 		}
@@ -53,6 +60,13 @@ function array_to_b64(array) {
 function b64_to_array(hash) {
 	var packed = hash.slice(1);
 	var b64_str = unpack_string(packed);
+
+	if (b64_str.length != 344) {
+		alert("Invalid board hash: " + hash);
+		location.replace("");
+		return new Uint8Array(16 * 16);
+	}
+
 	var binary = window.atob(b64_str);
 
 	var len = binary.length;
@@ -98,8 +112,10 @@ class VM {
 		this.running = false;
 		this.tps = 60;
 		this.selected_tile = 0;
+		this.entry_buffer = "0";
 		this.board_updated = true;
 		this.reg_updated = true;
+		this.step_updated = true;
 		this.display_base = 10;
 		this.pre_run = "";
 		this.challenge_updated = false;
@@ -189,7 +205,7 @@ class VM {
 				var id_cell = row.insertCell(0);
 				var name_cell = row.insertCell(1);
 				var desc_cell = row.insertCell(2);
-				id_cell.innerHTML = i;
+				id_cell.innerHTML = (i).toString(this.display_base).toUpperCase();
 				name_cell.innerHTML = this.op_table[i].name;
 				desc_cell.innerHTML = this.op_table[i].long_desc;
 			}
@@ -219,13 +235,21 @@ class VM {
 		console.log(typed_ops);
 	}
 
-	switch_base() {
-		if (this.display_base == 16) {
-			this.display_base = 10;
+	update_base(base) {
+		if (this.display_base == base) {
+			return;
 		} else {
-			this.display_base = 16;
+			this.display_base = base;
+			this.reg_updated = true;
+			this.step_updated = true;
+			this.board_updated = true;
+
+			var table = this.page_op_table;
+			var rows = table.rows;
+			for (var i = 0; i < this.op_table.length; i++) {
+				rows[i + 1].cells[0].innerHTML = (i).toString(this.display_base).toUpperCase();
+			}
 		}
-		this.board_updated = true;
 	}
 
 	tick() {

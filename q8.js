@@ -2,7 +2,6 @@
 
 var mouse_x = 0;
 var mouse_y = 0;
-var entry_buffer = "";
 var debug_vm;
 
 function oned_to_twod(idx, width) {
@@ -14,6 +13,18 @@ function oned_to_twod(idx, width) {
 
 function twod_to_oned(x, y, width) {
 	return (y * width) + x;
+}
+
+function fmt_base(vm, val) {
+	return (val).toString(vm.display_base).toUpperCase();
+}
+
+function set_buffer(vm, value) {
+	if (vm.display_base == 16) {
+		vm.entry_buffer = "0x" + fmt_base(vm, value);
+	} else {
+		vm.entry_buffer = fmt_base(vm, value);
+	}
 }
 
 function is_valid_digit_str(str) {
@@ -40,7 +51,7 @@ function mouse_pressed(vm, canvas, event) {
 		var new_x = Math.floor(mouse_x / 32) - 1;
 		var new_y = Math.floor(mouse_y / 32) - 1;
 		vm.selected_tile = twod_to_oned(new_x, new_y, 16);
-		entry_buffer = "" + vm.board[vm.selected_tile];
+		set_buffer(vm, vm.board[vm.selected_tile]);
 		vm.row_updated = true;
 	}
 
@@ -87,7 +98,7 @@ function key_pressed(vm, event) {
 		} else if (vm.selected_tile > 255) {
 			vm.selected_tile = vm.selected_tile % 256;
 		}
-		entry_buffer = "" + vm.board[vm.selected_tile];
+		set_buffer(vm, vm.board[vm.selected_tile]);
 	}
 	vm.row_updated = true;
 }
@@ -101,24 +112,39 @@ function key_released(vm, event) {
 		case 37: case 38: case 39: case 40: {
 		} break;
 		case 8: { // Backspace
-			if (entry_buffer.length > 1) {
-				entry_buffer = entry_buffer.slice(0, entry_buffer.length - 1);
+			if (vm.entry_buffer.length == 3 && vm.display_base == 16) {
+				vm.entry_buffer = "0x0";
+			} else if (vm.entry_buffer.length > 1) {
+				vm.entry_buffer = vm.entry_buffer.slice(0, vm.entry_buffer.length - 1);
 			} else {
-				entry_buffer = "0";
+				vm.entry_buffer = "0";
 			}
 			vm.reset();
-			vm.board[vm.selected_tile] = parseInt(entry_buffer);
+			vm.board[vm.selected_tile] = parseInt(vm.entry_buffer, vm.display_base);
 			vm.save_board();
 		} break;
-		default: {
-			var tmp_buffer = entry_buffer + String.fromCharCode(event.keyCode);
+		case 48: case 49: case 50: case 51: case 52:
+		case 53: case 54: case 55: case 56: case 57:
+		case 65: case 66: case 67: case 68: case 69:
+		case 70: {
+			var tmp_buffer = vm.entry_buffer + String.fromCharCode(event.keyCode);
 			if (is_valid_digit_str(tmp_buffer)) {
-				entry_buffer = tmp_buffer;
+				if (tmp_buffer[0] == "0" && tmp_buffer[1] != "x") {
+					vm.entry_buffer = tmp_buffer.slice(1, tmp_buffer.length);
+				} else {
+					if (tmp_buffer != "0x0" && tmp_buffer[0] == "0" && tmp_buffer[1] == "x" && tmp_buffer[2] == "0") {
+						vm.entry_buffer = tmp_buffer.slice(0, 2) + tmp_buffer.slice(3, tmp_buffer.length);
+					} else {
+						vm.entry_buffer = tmp_buffer;
+					}
+				}
+
 				vm.reset();
-				vm.board[vm.selected_tile] = parseInt(entry_buffer);
+				vm.board[vm.selected_tile] = parseInt(vm.entry_buffer, vm.display_base);
 				vm.save_board();
 			}
-		}
+		} break;
+		default: {}
 	}
 
 	vm.row_updated = true;
@@ -221,32 +247,42 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		for (var x = 0; x < 16; x++) {
 			for (var y = 0; y < 16; y++) {
 				var pos = twod_to_oned(x, y, 16);
-				text_ctx.fillText((vm.board[pos]).toString(vm.display_base).toUpperCase(), ((x + 1) * scale) + 17, ((y + 1) * scale) + 17);
+				if (pos == vm.selected_tile) {
+					var tmp_buffer = "";
+					if (vm.entry_buffer[0] == "0" && vm.entry_buffer[1] == "x") {
+						tmp_buffer = vm.entry_buffer.slice(2, vm.entry_buffer.length);
+					} else {
+						tmp_buffer = vm.entry_buffer;
+					}
+					text_ctx.fillText(tmp_buffer, ((x + 1) * scale) + 17, ((y + 1) * scale) + 17);
+				} else {
+					text_ctx.fillText(fmt_base(vm, vm.board[pos]), ((x + 1) * scale) + 17, ((y + 1) * scale) + 17);
+				}
 			}
 		}
 
 		// TOP TEXT
 		for (var x = 0; x < 16; x++) {
-			text_ctx.fillText((x).toString(vm.display_base).toUpperCase(), ((x + 1) * scale) + 16, 20);
+			text_ctx.fillText(fmt_base(vm, x), ((x + 1) * scale) + 16, 20);
 		}
 		// SIDE TEXT
 		for (var y = 0; y < 16; y++) {
-			text_ctx.fillText((y * 16).toString(vm.display_base).toUpperCase(), 14, ((y + 1) * scale) + 17);
+			text_ctx.fillText(fmt_base(vm, y * 16), 14, ((y + 1) * scale) + 17);
 		}
 
 		vm.board_updated = false;
 	}
 
 	if (vm.reg_updated) {
-		document.getElementById("reg_a").innerHTML = vm.reg[0];
-		document.getElementById("reg_b").innerHTML = vm.reg[1];
+		document.getElementById("reg_a").innerHTML = fmt_base(vm, vm.reg[0]);
+		document.getElementById("reg_b").innerHTML = fmt_base(vm, vm.reg[1]);
 		document.getElementById("f_zero").innerHTML = vm.zero_flag;
 		document.getElementById("f_eq").innerHTML = vm.equal_flag;
 		document.getElementById("f_less").innerHTML = vm.less_flag;
 		document.getElementById("f_great").innerHTML = vm.greater_flag;
 		document.getElementById("f_err").innerHTML = vm.error_flag;
 		document.getElementById("f_stack_enabled").innerHTML = vm.jsp_enabled;
-		document.getElementById("f_jsp").innerHTML = vm.jsp;
+		document.getElementById("f_jsp").innerHTML = fmt_base(vm, vm.jsp);
 		if (vm.jsp_enabled == true) {
 			document.getElementById("f_stack_enabled").className = "selected";
 		} else {
@@ -298,18 +334,18 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		}
 
 		if (op == null) {
-			step_string += "Reading invalid instruction " + vm.board[vm.pc] + "<br>"
+			step_string += "Reading invalid instruction " + fmt_base(vm, vm.board[vm.pc]) + "<br>"
 			document.getElementById("debug").innerHTML = step_string;
 			vm.step_updated = false;
 			return;
 		}
 
-		step_string += "Reading instruction " + op_start + "<br>"
+		step_string += "Reading instruction " + fmt_base(vm, op_start) + "<br>"
 		step_string += "<font color='90A0A0'>[" + op.name + " | " + op.long_desc + "]</font><br>";
 
 		// Only triggers if the operand is available
 		if (vm.cur_inst != null && op.length > 1) {
-			step_string += "Reading operand " + vm.board[vm.pc] + "<br>";
+			step_string += "Reading operand " + fmt_base(vm, vm.board[vm.pc]) + "<br>";
 		} else if (op.length == 1) {
 			step_string += "No operand<br>";
 		}
@@ -318,11 +354,11 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		if (op.length == 1 || vm.cur_inst != null) {
 			var simple_desc = op.simple_desc;
 
-			simple_desc = simple_desc.replace("@A", vm.reg[0]);
-			simple_desc = simple_desc.replace("@B", vm.reg[1]);
-			simple_desc = simple_desc.replace("@IIV", vm.board[vm.board[vm.board[vm.pc]]]);
-			simple_desc = simple_desc.replace("@IV", vm.board[vm.board[vm.pc]]);
-			simple_desc = simple_desc.replace("@V", vm.board[vm.pc]);
+			simple_desc = simple_desc.replace("@A", fmt_base(vm, vm.reg[0]));
+			simple_desc = simple_desc.replace("@B", fmt_base(vm, vm.reg[1]));
+			simple_desc = simple_desc.replace("@IIV", fmt_base(vm, vm.board[vm.board[vm.board[vm.pc]]]));
+			simple_desc = simple_desc.replace("@IV", fmt_base(vm, vm.board[vm.board[vm.pc]]));
+			simple_desc = simple_desc.replace("@V", fmt_base(vm, vm.board[vm.pc]));
 			step_string += simple_desc;
 		}
 
@@ -370,6 +406,8 @@ function vm_main() {
 		debug_vm = vm;
 		vm.load_board(window.location.hash);
 
+		set_buffer(vm, vm.board[vm.selected_tile]);
+
 		canvas.addEventListener("mousemove", function(evt) { mouse_moved(canvas, evt); }, false);
 		document.addEventListener("mousedown", function(evt) { mouse_pressed(vm, canvas, evt); }, false);
 		document.addEventListener("keydown", function(evt) { key_pressed(vm, evt); }, false);
@@ -384,6 +422,8 @@ function vm_main() {
 		document.getElementById("tps_10").addEventListener("click", function(evt) { vm.tps = 30; }, false);
 		document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 60; }, false);
 		document.getElementById("tps_100").addEventListener("click", function(evt) { vm.tps = 240; }, false);
+		document.getElementById("base_10").addEventListener("click", function(evt) { vm.update_base(10); }, false);
+		document.getElementById("base_16").addEventListener("click", function(evt) { vm.update_base(16); }, false);
 
 		document.getElementById("prev_challenge").addEventListener("click", function(evt) { vm.prev_challenge(); }, false);
 		document.getElementById("reset_challenge").addEventListener("click", function(evt) { vm.reset_challenge(); }, false);
