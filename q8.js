@@ -415,7 +415,7 @@ function vm_main() {
 		window.addEventListener("hashchange", function(evt) { hash_change(vm, evt); }, false);
 
 		document.getElementById("step").addEventListener("click", function(evt) { vm.running = true; vm.tick(); vm.running = false; vm.step_updated = true; }, false);
-		document.getElementById("start").addEventListener("click", function(evt) { vm.running = !vm.running; }, false);
+		document.getElementById("start").addEventListener("click", function(evt) { vm.running = !vm.running; if (vm.running == false) { vm.step_updated = true; } }, false);
 		document.getElementById("reset").addEventListener("click", function(evt) { vm.reset(); }, false);
 		document.getElementById("clear").addEventListener("click", function(evt) { vm.load_board(""); vm.clear_state(); }, false);
 		document.getElementById("tps_1").addEventListener("click", function(evt) { vm.tps = 3; }, false);
