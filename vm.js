@@ -124,8 +124,12 @@ class VM {
 							   "#challenge3", "#challenge4", "#challenge5",
 							   "#challenge6", "#challenge7", "#challenge8",
 							   "#challenge9"];
-		var self = this;
+		this.read_table = [];
+		this.write_table = [];
+		this.effect_life = 3;
+		this.decay_rate = 1;
 
+		var self = this;
 		this.op_table = [
 			new Instruction("NOP", "NONE", "Do nothing", "Do nothing", function() { return op_nop(); }, 1, false, false),
 			new Instruction("LOAD A", "IO", "Load value at operand value address into register A", "Register A = [@IV]", function() { return op_load(self, 0); }, 2, false, true),
@@ -235,26 +239,43 @@ class VM {
 		console.log(typed_ops);
 	}
 
-	update_base(base) {
-		if (this.display_base == base) {
-			return;
+	switch_base() {
+		if (this.display_base == 10) {
+			this.display_base = 16;
 		} else {
-			this.display_base = base;
-			this.reg_updated = true;
-			this.step_updated = true;
-			this.board_updated = true;
+			this.display_base = 10;
+		}
 
-			var table = this.page_op_table;
-			var rows = table.rows;
-			for (var i = 0; i < this.op_table.length; i++) {
-				rows[i + 1].cells[0].innerHTML = (i).toString(this.display_base).toUpperCase();
-			}
+		this.reg_updated = true;
+		this.step_updated = true;
+		this.board_updated = true;
+
+		var table = this.page_op_table;
+		var rows = table.rows;
+		for (var i = 0; i < this.op_table.length; i++) {
+			rows[i + 1].cells[0].innerHTML = (i).toString(this.display_base).toUpperCase();
 		}
 	}
 
 	tick() {
 		if (!this.running) {
 			return;
+		}
+
+		for (var i = 0; i < this.read_table.length; i++) {
+			if (this.read_table[i] > 0) {
+				this.read_table[i] -= this.decay_rate;
+			} else {
+				this.read_table[i] = undefined;
+			}
+		}
+
+		for (var i = 0; i < this.write_table.length; i++) {
+			if (this.write_table[i] > 0) {
+				this.write_table[i] -= this.decay_rate;
+			} else {
+				this.write_table[i] = undefined;
+			}
 		}
 
 		if (this.cur_inst == null) {
@@ -382,6 +403,9 @@ class VM {
 		this.cur_inst = null;
 		this.cur_wait = 0;
 
+		this.read_table = [];
+		this.write_table = [];
+
 		this.step_updated = true;
 		this.row_updated = true;
 		this.board_updated = true;
@@ -425,22 +449,27 @@ function op_nop() { }
 
 function op_load(vm, idx) {
 	vm.reg[idx] = vm.board[vm.board[vm.pc]];
+	vm.read_table[vm.board[vm.pc]] = vm.effect_life;
 }
 
 function op_loadi(vm, idx) {
 	vm.reg[idx] = vm.board[vm.board[vm.board[vm.pc]]];
+	vm.read_table[vm.board[vm.board[vm.pc]]] = vm.effect_life;
 }
 
 function op_store(vm, idx) {
 	vm.board[vm.board[vm.pc]] = vm.reg[idx];
+	vm.write_table[vm.board[vm.pc]] = vm.effect_life;
 }
 
 function op_storei(vm, idx) {
 	vm.board[vm.board[vm.board[vm.pc]]] = vm.reg[idx];
+	vm.write_table[vm.board[vm.board[vm.pc]]] = vm.effect_life;
 }
 
 function op_set(vm, idx) {
 	vm.reg[idx] = vm.board[vm.pc];
+	vm.write_table[vm.pc] = 1;
 }
 
 function op_add(vm, a_idx, b_idx) {

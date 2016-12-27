@@ -9,6 +9,28 @@ String.prototype.replaceAll = function (find, replace) {
 	return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
 };
 
+Array.prototype.remove = function (val) {
+	var index = this.indexOf(val);
+	if (index != -1) {
+		this.splice(index, 1);
+	}
+};
+
+function blend_colors(color1, color2) {
+    if (color2 == undefined) {
+		return color1;
+	}
+
+	var w1 = 0.20;
+	var w2 = 1 - w1;
+
+	var r = (color1[0] * w1) + (color2[0] * w2);
+	var g = (color1[1] * w1) + (color2[1] * w2);
+	var b = (color1[2] * w1) + (color2[2] * w2);
+
+	return [r, g, b];
+}
+
 function oned_to_twod(idx, width) {
 	return {
 		x: idx % width,
@@ -174,12 +196,12 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	var scale_off = (pos_scale - sub_scale) / 2;
 	var model;
 
+	gl.uniform3f(u_color, 1.0, 1.0, 1.0);
 	for (var x = 0; x < 17; x++) {
 		model = loadIdentity();
 		model = modelTranslate(model, [x  * pos_scale, 0, 0]);
 		model = modelScale(model, [pos_scale, pos_scale, 1]);
 
-		gl.uniform3f(u_color, 1.0, 1.0, 1.0);
 		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -190,7 +212,6 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		model = modelTranslate(model, [0, y * pos_scale, 0]);
 		model = modelScale(model, [pos_scale, pos_scale, 1]);
 
-		gl.uniform3f(u_color, 1.0, 1.0, 1.0);
 		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -204,12 +225,21 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 
 			var pos = twod_to_oned(x, y, 16);
 
-			if (vm.selected_tile == pos) {
-				gl.uniform3f(u_color, 0.157, 0.733, 0.612);
-			} else if (vm.board[pos] != 0) {
-				gl.uniform3f(u_color, 0.8, 0.8, 0.8);
+			var highlight = undefined;
+			if (vm.read_table[pos] != undefined) {
+				highlight = [0.93, 0.57, 0.13];
+			} else if (vm.write_table[pos] != undefined) {
+				highlight = [0.0, 0.8, 0.0];
+			}
+
+			if (vm.board[pos] != 0) {
+				var color = [0.8, 0.8, 0.8];
+				var tmp = blend_colors(color, highlight);
+				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 			} else {
-				gl.uniform3f(u_color, 0.5, 0.5, 0.5);
+				var color = [0.5, 0.5, 0.5];
+				var tmp = blend_colors(color, highlight);
+				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 			}
 
 			gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
@@ -226,21 +256,38 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	model = modelTranslate(model, [(point.x * pos_scale) + scale_off, (point.y * pos_scale) + scale_off, 0]);
 	model = modelScale(model, [sub_scale, sub_scale, 1]);
 
-	gl.uniform3f(u_color, 0.745, 0.965, 0.918);
+	var highlight = [0.745, 0.965, 0.918];
+	if (vm.board[vm.pc] != 0) {
+		var color = [0.8, 0.8, 0.8];
+		var tmp = blend_colors(color, highlight);
+		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+	} else {
+		var color = [0.5, 0.5, 0.5];
+		var tmp = blend_colors(color, highlight);
+		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+	}
 	gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 	gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
 	// Draw Edit Selector
-	if (vm.selected_tile != -1) {
+	if (vm.selected_tile >= 0) {
 		point = oned_to_twod(vm.selected_tile, 16);
-		point.x += 1;
-		point.y += 1;
 		model = loadIdentity();
-		model = modelTranslate(model, [(point.x * pos_scale) + scale_off, (point.y * pos_scale) + scale_off, 0]);
+		model = modelTranslate(model, [((point.x + 1) * pos_scale) + scale_off, ((point.y + 1) * pos_scale) + scale_off, 0]);
 		model = modelScale(model, [sub_scale, sub_scale, 1]);
 
-		gl.uniform3f(u_color, 0.157, 0.733, 0.612);
+		var highlight = [0.157, 0.733, 0.612];
+		if (vm.board[vm.selected_tile] != 0) {
+			var color = [0.8, 0.8, 0.8];
+			var tmp = blend_colors(color, highlight);
+			gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+		} else {
+			var color = [0.5, 0.5, 0.5];
+			var tmp = blend_colors(color, highlight);
+			gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+		}
+
 		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -427,8 +474,7 @@ function vm_main() {
 		document.getElementById("tps_10").addEventListener("click", function(evt) { vm.tps = 30; }, false);
 		document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 60; }, false);
 		document.getElementById("tps_100").addEventListener("click", function(evt) { vm.tps = 240; }, false);
-		document.getElementById("base_10").addEventListener("click", function(evt) { vm.update_base(10); }, false);
-		document.getElementById("base_16").addEventListener("click", function(evt) { vm.update_base(16); }, false);
+		document.getElementById("switch_base").addEventListener("click", function(evt) { vm.switch_base(); }, false);
 
 		document.getElementById("prev_challenge").addEventListener("click", function(evt) { vm.prev_challenge(); }, false);
 		document.getElementById("reset_challenge").addEventListener("click", function(evt) { vm.reset_challenge(); }, false);
