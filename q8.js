@@ -16,13 +16,13 @@ Array.prototype.remove = function (val) {
 	}
 };
 
-function blend_colors(color1, color2) {
+function blend_colors(ratio, color1, color2) {
     if (color2 == undefined) {
 		return color1;
 	}
 
-	var w1 = 0.20;
-	var w2 = 1 - w1;
+	var w1 = 1 - ratio;
+	var w2 = ratio;
 
 	var r = (color1[0] * w1) + (color2[0] * w2);
 	var g = (color1[1] * w1) + (color2[1] * w2);
@@ -226,19 +226,22 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 			var pos = twod_to_oned(x, y, 16);
 
 			var highlight = undefined;
+			var decay = 1;
 			if (vm.read_table[pos] != undefined) {
+				decay = vm.read_table[pos] / vm.effect_life;
 				highlight = [0.93, 0.57, 0.13];
 			} else if (vm.write_table[pos] != undefined) {
+				decay = vm.write_table[pos] / vm.effect_life;
 				highlight = [0.0, 0.8, 0.0];
 			}
 
 			if (vm.board[pos] != 0) {
 				var color = [0.8, 0.8, 0.8];
-				var tmp = blend_colors(color, highlight);
+				var tmp = blend_colors(0.75 * decay, color, highlight);
 				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 			} else {
 				var color = [0.5, 0.5, 0.5];
-				var tmp = blend_colors(color, highlight);
+				var tmp = blend_colors(0.75 * decay, color, highlight);
 				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 			}
 
@@ -259,11 +262,11 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	var highlight = [0.745, 0.965, 0.918];
 	if (vm.board[vm.pc] != 0) {
 		var color = [0.8, 0.8, 0.8];
-		var tmp = blend_colors(color, highlight);
+		var tmp = blend_colors(0.75, color, highlight);
 		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 	} else {
 		var color = [0.5, 0.5, 0.5];
-		var tmp = blend_colors(color, highlight);
+		var tmp = blend_colors(0.75, color, highlight);
 		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 	}
 	gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
@@ -280,11 +283,11 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		var highlight = [0.157, 0.733, 0.612];
 		if (vm.board[vm.selected_tile] != 0) {
 			var color = [0.8, 0.8, 0.8];
-			var tmp = blend_colors(color, highlight);
+			var tmp = blend_colors(0.75, color, highlight);
 			gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 		} else {
 			var color = [0.5, 0.5, 0.5];
-			var tmp = blend_colors(color, highlight);
+			var tmp = blend_colors(0.75, color, highlight);
 			gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 		}
 
@@ -326,6 +329,18 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	}
 
 	if (vm.reg_updated) {
+		if (vm.reg[0] > 0) {
+			document.getElementById("reg_a").style.backgroundColor = "#CCCCCC";
+		} else {
+			document.getElementById("reg_a").style.backgroundColor = "#808080";
+		}
+
+		if (vm.reg[1] > 0) {
+			document.getElementById("reg_b").style.backgroundColor = "#CCCCCC";
+		} else {
+			document.getElementById("reg_b").style.backgroundColor = "#808080";
+		}
+
 		document.getElementById("reg_a").innerHTML = fmt_base(vm, vm.reg[0]);
 		document.getElementById("reg_b").innerHTML = fmt_base(vm, vm.reg[1]);
 		document.getElementById("f_zero").innerHTML = vm.zero_flag;

@@ -126,7 +126,7 @@ class VM {
 							   "#challenge9"];
 		this.read_table = [];
 		this.write_table = [];
-		this.effect_life = 3;
+		this.effect_life = 5;
 		this.decay_rate = 1;
 
 		var self = this;
@@ -704,11 +704,15 @@ function op_shl(vm, idx) {
 
 function op_halt(vm) {
 	vm.running = false;
+	vm.read_table = [];
+	vm.write_table = [];
 	vm.pc--;
 }
 
 function op_error(vm) {
 	vm.running = false;
 	vm.error_flag = true;
+	vm.read_table = [];
+	vm.write_table = [];
 	vm.pc--;
 }
