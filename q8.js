@@ -486,6 +486,7 @@ function vm_main() {
 		document.getElementById("reset").addEventListener("click", function(evt) { vm.reset(); }, false);
 		document.getElementById("clear").addEventListener("click", function(evt) { vm.load_board(""); vm.clear_state(); }, false);
 		document.getElementById("tps_1").addEventListener("click", function(evt) { vm.tps = 3; }, false);
+		document.getElementById("tps_5").addEventListener("click", function(evt) { vm.tps = 21; }, false);
 		document.getElementById("tps_10").addEventListener("click", function(evt) { vm.tps = 30; }, false);
 		document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 60; }, false);
 		document.getElementById("tps_100").addEventListener("click", function(evt) { vm.tps = 240; }, false);
