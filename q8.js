@@ -2,6 +2,7 @@
 
 var mouse_x = 0;
 var mouse_y = 0;
+var high_opacity = 0.95;
 var debug_vm;
 
 String.prototype.replaceAll = function (find, replace) {
@@ -247,14 +248,14 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 
 			if (vm.board[pos] != 0) {
 				var color = [0.8, 0.8, 0.8];
-				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
 				var res = blend_colors(0.5, tmp1, tmp2);
 				gl.uniform3f(u_color, res[0], res[1], res[2]);
 			} else {
 				var color = [0.5, 0.5, 0.5];
-				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
 				var res = blend_colors(0.5, tmp1, tmp2);
 				gl.uniform3f(u_color, res[0], res[1], res[2]);
 			}
@@ -276,11 +277,11 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	var highlight = [0.745, 0.965, 0.918];
 	if (vm.board[vm.pc] != 0) {
 		var color = [0.8, 0.8, 0.8];
-		var tmp = blend_colors(0.75, color, highlight);
+		var tmp = blend_colors(high_opacity, color, highlight);
 		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 	} else {
 		var color = [0.5, 0.5, 0.5];
-		var tmp = blend_colors(0.75, color, highlight);
+		var tmp = blend_colors(high_opacity, color, highlight);
 		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 	}
 
@@ -298,11 +299,11 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		var highlight = [0.157, 0.733, 0.612];
 		if (vm.board[vm.selected_tile] != 0) {
 			var color = [0.8, 0.8, 0.8];
-			var tmp = blend_colors(0.75, color, highlight);
+			var tmp = blend_colors(high_opacity, color, highlight);
 			gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 		} else {
 			var color = [0.5, 0.5, 0.5];
-			var tmp = blend_colors(0.75, color, highlight);
+			var tmp = blend_colors(high_opacity, color, highlight);
 			gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 		}
 
@@ -359,14 +360,14 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 
 			if (vm.reg[0] != 0) {
 				var color = [0.8, 0.8, 0.8];
-				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
 				var res = blend_colors(0.5, tmp1, tmp2);
 				document.getElementById("reg_a").style.backgroundColor = color_to_hex(res);
 			} else {
 				var color = [0.5, 0.5, 0.5];
-				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
 				var res = blend_colors(0.5, tmp1, tmp2);
 				document.getElementById("reg_a").style.backgroundColor = color_to_hex(res);
 			}
@@ -386,14 +387,14 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 
 			if (vm.reg[1] != 0) {
 				var color = [0.8, 0.8, 0.8];
-				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
 				var res = blend_colors(0.5, tmp1, tmp2);
 				document.getElementById("reg_b").style.backgroundColor = color_to_hex(res);
 			} else {
 				var color = [0.5, 0.5, 0.5];
-				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
 				var res = blend_colors(0.5, tmp1, tmp2);
 				document.getElementById("reg_b").style.backgroundColor = color_to_hex(res);
 			}
