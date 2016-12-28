@@ -129,6 +129,7 @@ class VM {
 		this.write_table = new Float32Array(258);
 		this.effect_life = 5;
 		this.decay_rate = 1;
+		this.io_filter = true;
 
 		var self = this;
 		this.op_table = [

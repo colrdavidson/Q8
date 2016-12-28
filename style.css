@@ -77,19 +77,18 @@ tr.selected {
 }
 
 .button_box {
-	padding-top: 1em;
-	padding-bottom: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
 	background-color: #bef6ea;
 	width: 382px;
-	height: 50px;
 	margin-left: 6.5em;
 }
 
 .button_box > button {
-	margin-top: -1em;
+	margin-top: 0.125em;
+	margin-bottom: 0.125em;
 	margin-left: 0.125em;
 	margin-right: 0.125em;
-	padding: 0.5em;
 }
 
 .flag_box {

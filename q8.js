@@ -238,12 +238,14 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 			var w_highlight = undefined;
 			var r_decay = 0;
 			var w_decay = 0;
-			if (vm.read_table[pos] != 0) {
-				r_decay = vm.read_table[pos] / vm.effect_life;
-				r_highlight = [0.93, 0.57, 0.13];
-			} else if (vm.write_table[pos] != 0) {
-				w_decay = vm.write_table[pos] / vm.effect_life;
-				w_highlight = [0.0, 0.8, 0.0];
+			if (vm.io_filter) {
+				if (vm.read_table[pos] != 0) {
+					r_decay = vm.read_table[pos] / vm.effect_life;
+					r_highlight = [0.93, 0.57, 0.13];
+				} else if (vm.write_table[pos] != 0) {
+					w_decay = vm.write_table[pos] / vm.effect_life;
+					w_highlight = [0.0, 0.8, 0.0];
+				}
 			}
 
 			if (vm.board[pos] != 0) {
@@ -350,12 +352,15 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 			var w_highlight = undefined;
 			var r_decay = 0;
 			var w_decay = 0;
-			if (vm.read_table[256] != 0) {
-				r_decay = vm.read_table[256] / vm.effect_life;
-				r_highlight = [0.93, 0.57, 0.13];
-			} else if (vm.write_table[256] != 0) {
-				w_decay = vm.write_table[256] / vm.effect_life;
-				w_highlight = [0.0, 0.8, 0.0];
+
+			if (vm.io_filter) {
+				if (vm.read_table[256] != 0) {
+					r_decay = vm.read_table[256] / vm.effect_life;
+					r_highlight = [0.93, 0.57, 0.13];
+				} else if (vm.write_table[256] != 0) {
+					w_decay = vm.write_table[256] / vm.effect_life;
+					w_highlight = [0.0, 0.8, 0.0];
+				}
 			}
 
 			if (vm.reg[0] != 0) {
@@ -377,12 +382,15 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 			var w_highlight = undefined;
 			var r_decay = 0;
 			var w_decay = 0;
-			if (vm.read_table[257] != 0) {
-				r_decay = vm.read_table[257] / vm.effect_life;
-				r_highlight = [0.93, 0.57, 0.13];
-			} else if (vm.write_table[257] != 0) {
-				w_decay = vm.write_table[257] / vm.effect_life;
-				w_highlight = [0.0, 0.8, 0.0];
+
+            if (vm.io_filter) {
+				if (vm.read_table[257] != 0) {
+					r_decay = vm.read_table[257] / vm.effect_life;
+					r_highlight = [0.93, 0.57, 0.13];
+				} else if (vm.write_table[257] != 0) {
+					w_decay = vm.write_table[257] / vm.effect_life;
+					w_highlight = [0.0, 0.8, 0.0];
+				}
 			}
 
 			if (vm.reg[1] != 0) {
@@ -550,6 +558,7 @@ function vm_main() {
 		document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 60; }, false);
 		document.getElementById("tps_100").addEventListener("click", function(evt) { vm.tps = 240; }, false);
 		document.getElementById("switch_base").addEventListener("click", function(evt) { vm.switch_base(); }, false);
+		document.getElementById("io_filter").addEventListener("click", function(evt) { vm.io_filter = !vm.io_filter; }, false);
 
 		document.getElementById("prev_challenge").addEventListener("click", function(evt) { vm.prev_challenge(); }, false);
 		document.getElementById("reset_challenge").addEventListener("click", function(evt) { vm.reset_challenge(); }, false);
