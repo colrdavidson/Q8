@@ -124,8 +124,9 @@ class VM {
 							   "#challenge3", "#challenge4", "#challenge5",
 							   "#challenge6", "#challenge7", "#challenge8",
 							   "#challenge9"];
-		this.read_table = [];
-		this.write_table = [];
+
+		this.read_table = new Float32Array(258);
+		this.write_table = new Float32Array(258);
 		this.effect_life = 5;
 		this.decay_rate = 1;
 
@@ -262,20 +263,32 @@ class VM {
 			return;
 		}
 
+		var old_a_decay = this.read_table[256];
+		var old_b_decay = this.read_table[257];
 		for (var i = 0; i < this.read_table.length; i++) {
 			if (this.read_table[i] > 0) {
 				this.read_table[i] -= this.decay_rate;
 			} else {
-				this.read_table[i] = undefined;
+				this.read_table[i] = 0;
 			}
 		}
 
-		for (var i = 0; i < this.write_table.length; i++) {
+		if ((old_a_decay != this.read_table[256]) || (old_b_decay != this.read_table[257])) {
+			this.reg_updated = true;
+		}
+
+		var old_a_decay = this.write_table[256];
+		var old_b_decay = this.write_table[257];
+		for (var i = -2; i < this.write_table.length; i++) {
 			if (this.write_table[i] > 0) {
 				this.write_table[i] -= this.decay_rate;
 			} else {
-				this.write_table[i] = undefined;
+				this.write_table[i] = 0;
 			}
+		}
+
+		if ((old_a_decay != this.write_table[256]) || (old_b_decay != this.write_table[257])) {
+			this.reg_updated = true;
 		}
 
 		if (this.cur_inst == null) {
@@ -387,6 +400,11 @@ class VM {
 		location.replace(str);
 	}
 
+	update_iotables(read_idx, write_idx) {
+		this.write_table[write_idx] = this.effect_life;
+		this.read_table[read_idx] = this.effect_life;
+	}
+
 	clear_state() {
 		this.running = false;
 
@@ -403,8 +421,8 @@ class VM {
 		this.cur_inst = null;
 		this.cur_wait = 0;
 
-		this.read_table = [];
-		this.write_table = [];
+		this.read_table = new Float32Array(258);
+		this.write_table = new Float32Array(258);
 
 		this.step_updated = true;
 		this.row_updated = true;
@@ -449,27 +467,27 @@ function op_nop() { }
 
 function op_load(vm, idx) {
 	vm.reg[idx] = vm.board[vm.board[vm.pc]];
-	vm.read_table[vm.board[vm.pc]] = vm.effect_life;
+	vm.update_iotables(vm.board[vm.pc], (idx + 256));
 }
 
 function op_loadi(vm, idx) {
 	vm.reg[idx] = vm.board[vm.board[vm.board[vm.pc]]];
-	vm.read_table[vm.board[vm.board[vm.pc]]] = vm.effect_life;
+	vm.update_iotables(vm.board[vm.board[vm.pc]], (idx + 256));
 }
 
 function op_store(vm, idx) {
 	vm.board[vm.board[vm.pc]] = vm.reg[idx];
-	vm.write_table[vm.board[vm.pc]] = vm.effect_life;
+	vm.update_iotables(idx + 256, vm.board[vm.pc]);
 }
 
 function op_storei(vm, idx) {
 	vm.board[vm.board[vm.board[vm.pc]]] = vm.reg[idx];
-	vm.write_table[vm.board[vm.board[vm.pc]]] = vm.effect_life;
+	vm.update_iotables(idx + 256, vm.board[vm.board[vm.pc]]);
 }
 
 function op_set(vm, idx) {
 	vm.reg[idx] = vm.board[vm.pc];
-	vm.write_table[vm.pc] = 1;
+	vm.update_iotables(idx + 256, vm.pc);
 }
 
 function op_add(vm, a_idx, b_idx) {
@@ -704,15 +722,15 @@ function op_shl(vm, idx) {
 
 function op_halt(vm) {
 	vm.running = false;
-	vm.read_table = [];
-	vm.write_table = [];
+	vm.read_table = new Float32Array(258);
+	vm.write_table = new Float32Array(258);
 	vm.pc--;
 }
 
 function op_error(vm) {
 	vm.running = false;
 	vm.error_flag = true;
-	vm.read_table = [];
-	vm.write_table = [];
+	vm.read_table = new Float32Array(258);
+	vm.write_table = new Float32Array(258);
 	vm.pc--;
 }

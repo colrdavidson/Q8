@@ -31,6 +31,14 @@ function blend_colors(ratio, color1, color2) {
 	return [r, g, b];
 }
 
+function color_to_hex(color) {
+	var r = Math.round(255 * color[0]);
+	var g = Math.round(255 * color[1]);
+	var b = Math.round(255 * color[2]);
+
+	return "#" + r.toString(16) + g.toString(16) + b.toString(16);
+}
+
 function oned_to_twod(idx, width) {
 	return {
 		x: idx % width,
@@ -225,24 +233,30 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 
 			var pos = twod_to_oned(x, y, 16);
 
-			var highlight = undefined;
-			var decay = 1;
-			if (vm.read_table[pos] != undefined) {
-				decay = vm.read_table[pos] / vm.effect_life;
-				highlight = [0.93, 0.57, 0.13];
-			} else if (vm.write_table[pos] != undefined) {
-				decay = vm.write_table[pos] / vm.effect_life;
-				highlight = [0.0, 0.8, 0.0];
+			var r_highlight = undefined;
+			var w_highlight = undefined;
+			var r_decay = 0;
+			var w_decay = 0;
+			if (vm.read_table[pos] != 0) {
+				r_decay = vm.read_table[pos] / vm.effect_life;
+				r_highlight = [0.93, 0.57, 0.13];
+			} else if (vm.write_table[pos] != 0) {
+				w_decay = vm.write_table[pos] / vm.effect_life;
+				w_highlight = [0.0, 0.8, 0.0];
 			}
 
 			if (vm.board[pos] != 0) {
 				var color = [0.8, 0.8, 0.8];
-				var tmp = blend_colors(0.75 * decay, color, highlight);
-				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var res = blend_colors(0.5, tmp1, tmp2);
+				gl.uniform3f(u_color, res[0], res[1], res[2]);
 			} else {
 				var color = [0.5, 0.5, 0.5];
-				var tmp = blend_colors(0.75 * decay, color, highlight);
-				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+				var tmp1 = blend_colors(0.75 * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(0.75 * w_decay, color, w_highlight);
+				var res = blend_colors(0.5, tmp1, tmp2);
+				gl.uniform3f(u_color, res[0], res[1], res[2]);
 			}
 
 			gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
@@ -269,6 +283,7 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		var tmp = blend_colors(0.75, color, highlight);
 		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
 	}
+
 	gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 	gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -329,16 +344,43 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	}
 
 	if (vm.reg_updated) {
-		if (vm.reg[0] > 0) {
-			document.getElementById("reg_a").style.backgroundColor = "#CCCCCC";
-		} else {
-			document.getElementById("reg_a").style.backgroundColor = "#808080";
+		var decay = 0;
+        var a_highlight = undefined;
+		if (vm.read_table[256] != 0) {
+			decay = vm.read_table[256] / vm.effect_life;
+			a_highlight = [0.93, 0.57, 0.13];
+		} else if (vm.write_table[256] != 0) {
+			decay = vm.write_table[256] / vm.effect_life;
+			a_highlight = [0.0, 0.8, 0.0];
 		}
 
-		if (vm.reg[1] > 0) {
-			document.getElementById("reg_b").style.backgroundColor = "#CCCCCC";
+        var b_highlight = undefined;
+		if (vm.read_table[257] != 0) {
+			decay = vm.read_table[257] / vm.effect_life;
+			b_highlight = [0.93, 0.57, 0.13];
+		} else if (vm.write_table[257] != 0) {
+			decay = vm.write_table[257] / vm.effect_life;
+			b_highlight = [0.0, 0.8, 0.0];
+		}
+
+		if (vm.reg[0] != 0) {
+			var color = [0.8, 0.8, 0.8];
+			var tmp = blend_colors(0.75 * decay, color, a_highlight);
+			document.getElementById("reg_a").style.backgroundColor = color_to_hex(tmp);
 		} else {
-			document.getElementById("reg_b").style.backgroundColor = "#808080";
+			var color = [0.5, 0.5, 0.5];
+			var tmp = blend_colors(0.75 * decay, color, a_highlight);
+			document.getElementById("reg_a").style.backgroundColor = color_to_hex(tmp);
+		}
+
+		if (vm.reg[1] != 0) {
+			var color = [0.8, 0.8, 0.8];
+			var tmp = blend_colors(0.75 * decay, color, b_highlight);
+			document.getElementById("reg_b").style.backgroundColor = color_to_hex(tmp);
+		} else {
+			var color = [0.5, 0.5, 0.5];
+			var tmp = blend_colors(0.75 * decay, color, b_highlight);
+			document.getElementById("reg_b").style.backgroundColor = color_to_hex(tmp);
 		}
 
 		document.getElementById("reg_a").innerHTML = fmt_base(vm, vm.reg[0]);
