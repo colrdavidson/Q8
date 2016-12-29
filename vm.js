@@ -110,7 +110,7 @@ class VM {
 
 		// EXTERNAL STATE
 		this.running = false;
-		this.tps = 21;
+		this.tps = 20;
 		this.selected_tile = 0;
 		this.entry_buffer = "0";
 		this.board_updated = true;
