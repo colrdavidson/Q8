@@ -54,7 +54,14 @@
 			<p>Bytecode maintains one advantage. Self-modification. A
 			clever programmer writing bytecode can take advantage of far
 			more than the apparant usable space by storing new instructions
-			on top of the old ones, and then re-executing the block.</p>
+			on top of the old ones, and then re-executing the block. Unfortunately,
+			while it's nice for space-saving, it's not great for the modern
+			processor's caching systems. When you modify the code at runtime,
+			the processor's cached bytecode becomes invalid, and it has to
+			stop and pull in the new code. On top of that, it's not great
+			for system security. If the program can modify itself, the
+			user may be able to coerce the program to make malicious self-modifications,
+			jumping into blocks of code that the program wasn't intended to run.</p>
 
 		<div class="code_container">
 			<div>
