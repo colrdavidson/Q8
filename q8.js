@@ -625,7 +625,7 @@ function vm_main() {
 		document.getElementById("tps_full").addEventListener("click", function(evt) { vm.tps = 240; }, false);
 		document.getElementById("switch_base").addEventListener("click", function(evt) { vm.switch_base(); }, false);
 		document.getElementById("io_filter").addEventListener("click", function(evt) { vm.io_filter = !vm.io_filter; }, false);
-		document.getElementById("submit_asm").addEventListener("click", function(evt) { var asm = document.getElementById("asm_in").value; vm.load_asm(asm); }, false);
+		//document.getElementById("submit_asm").addEventListener("click", function(evt) { var asm = document.getElementById("asm_in").value; vm.load_asm(asm); }, false);
 
 		document.getElementById("prev_challenge").addEventListener("click", function(evt) { vm.prev_challenge(); }, false);
 		document.getElementById("reset_challenge").addEventListener("click", function(evt) { vm.reset_challenge(); }, false);
