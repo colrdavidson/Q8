@@ -552,9 +552,9 @@ function vm_main() {
 		document.getElementById("start").addEventListener("click", function(evt) { vm.running = !vm.running; if (vm.running == false) { vm.step_updated = true; } }, false);
 		document.getElementById("reset").addEventListener("click", function(evt) { vm.reset(); }, false);
 		document.getElementById("clear").addEventListener("click", function(evt) { vm.load_board(""); vm.clear_state(); }, false);
-		document.getElementById("tps_dec").addEventListener("click", function(evt) { vm.tps /= 2; }, false);
-		document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 20; }, false);
-		document.getElementById("tps_inc").addEventListener("click", function(evt) { vm.tps *= 2; }, false);
+		document.getElementById("tps_slow").addEventListener("click", function(evt) { vm.tps = 3; }, false);
+		document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 21; }, false);
+		document.getElementById("tps_full").addEventListener("click", function(evt) { vm.tps = 240; }, false);
 		document.getElementById("switch_base").addEventListener("click", function(evt) { vm.switch_base(); }, false);
 		document.getElementById("io_filter").addEventListener("click", function(evt) { vm.io_filter = !vm.io_filter; }, false);
 
