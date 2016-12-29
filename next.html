@@ -1,0 +1,140 @@
+<html>
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="scrolling-nav.css" rel="stylesheet">
+		<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body id="page-top" data-target=".navbar-fixed-top">
+		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
+		  <div class="container">
+			<div class="navbar-header page-scroll">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+			  </button>
+			  <a class="navbar-brand page-scroll" href="index.html">Quine8</a>
+			</div>
+		  </div>
+		</nav>
+
+		<section style="margin-top: 5em; max-width: 50em;">
+			<h2>What's Next?</h2>
+			<p>When programming real hardware, the vast
+			majority of programmers avoid writing bytecode.
+			The sooner they can get at least an assembler up
+			and running, the better. Many development systems
+			even come from the manufacturer with C too. Bytecode
+			is just impractical for a project of any significant
+			size. Assemblers are not that hard to write, and
+			make the programmer's life much less miserable.</p>
+			<p>Even the most basic of assemblers hold a critical
+			advantage, labels. With bytecode, the code you write
+			has to conform to fixed positions. If you want to return
+			to a position in code you've been to before, you have to
+			hardcode that memory location. Comments are also quite
+			useful. With bytecode, there's only space for code and data.
+			With assembly, you can select lines or parts of lines to ignore,
+			and use that space to store information to clarify program
+			specifics tothe reader.</p>
+			<p>Bytecode maintains one advantage. Self-modification. A
+			clever programmer writing bytecode can take advantage of far
+			more than the apparant usable space by storing new instructions
+			on top of the old ones, and then re-executing the block.</p>
+
+		<div class="code_container">
+			<div>
+				<div>
+					<h3>Bytecode Program</h3>
+					<a href="q8.html#1|A|1|V|1|A|1|C|1|U|1|Q|1|A|1|W|1|H|1|i|2|A|1|B|1|W|1|A|1|G|1|c|2|A|1|a|1|J|22|A|1|v|1|G|1|g|1|k|2|A|1|W|1|A|1|Y|1|H|1|P|1|8|1|U|1|B|1|W|1|A|1|a|1|Q|1|w|28|A|1|F|1|h|1|A|1|n|1|A|1|L|1|J|1|v|1|8|1|F|1|Y|1|R|1|o|1|k|3|A|1|G|1|B|231|A|1|P|1|A|2|=|">
+						<div class="img_container">
+							<img style="width: 90%;" src="mult.gif">
+						</div>
+					</a>
+				</div>
+				<div>
+					<h3>Assembled Program</h3>
+					<a href="q8.html">
+						<div class="img_container">
+							<img style="width: 90%;" src="asm_mult.gif">
+						</div>
+					</a>
+				</div>
+			</div>
+			<div>
+		<pre><code class="language-none; line-numbers">; INIT
+start:
+LOAD A 80 ; load x
+LOAD B 81 ; load y
+CMP A B ; is x &gt; y?
+JG swap ; goto swap
+
+; 9 - SAVE_VAR
+save_var:
+STORE A 96 ; save min(x, y) as i
+STORE B 112 ; save max(x, y) as increment
+JMP loop
+
+; 32 - SWAP
+swap:
+SWAP A B ; (x, y) -&gt; (y, x)
+JMP save_var
+
+; 36 - LOOP
+loop:
+LOAD A 96 ; get i
+ISZERO A ; is i == 0?
+JZ exit
+DEC A ; i--
+STORE A 96 ; save new i
+JMP add_increment
+
+; 67 - ADD INCREMENT
+add_increment:
+LOAD A 97 ; read in cumulative value
+LOAD B 112 ; read in increment
+ADD A B ; cumulative = cumulative + increment
+JERR exit ; if overflow, exit
+STORE A 97 ; save new cumulative
+JMP loop
+
+; 255 - EXIT
+exit:
+HALT
+
+; DATA
+$80 6 4 ; x, y</code></pre>
+			</div>
+		</div>
+		</section>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="ie10-viewport-bug-workaround.js"></script>
+		<script src="jquery.easing.min.js"></script>
+		<script src="scrolling-nav.js"></script>
+
+		<link rel="stylesheet" href="prism.css">
+		<link href="tutorial_style.css" rel="stylesheet">
+		<script src="prism.js"></script>
+	</body>
+	<footer style="margin-top: 4em; padding-bottom: 4em; background-color: #555;"></footer>
+</html>

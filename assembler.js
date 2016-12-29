@@ -203,16 +203,16 @@ function parse_file(vm, asm_buffer) {
 			var label_idx = asm_table[i][3];
 
 			if (label_idx != undefined) {
-				console.log(op.name + " " + labels[label_idx]);
+			 //   console.log(op.name + " " + labels[label_idx]);
 				board[board_pos] = vm.rev_lookup[op.name];
 				board[board_pos + 1] = label_pos[label_idx];
 			} else {
 				if (op.length > 1) {
-					console.log(op.name + " " + operand);
+				 //   console.log(op.name + " " + operand);
 					board[board_pos] = vm.rev_lookup[op.name];
 					board[board_pos + 1] = parseInt(operand);
 				} else {
-					console.log(op.name);
+				//	console.log(op.name);
 					board[board_pos] = vm.rev_lookup[op.name];
 				}
 			}
