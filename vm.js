@@ -453,6 +453,13 @@ class VM {
 	reset_challenge() {
 		this.load_board(this.challenge_list[this.cur_challenge]);
 	}
+
+	load_asm(asm_str) {
+		var assembled_board = assemble_program(this, asm_str);
+		this.board = assembled_board;
+		this.save_board();
+		this.clear_state();
+	}
 }
 
 function push(vm, x) {

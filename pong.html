@@ -69,19 +69,23 @@
 				</div>
 				<div>
 					<pre><code class="language-none; line-numbers">; 0  - INC-INIT
+inc-init:
 LOAD A 128 ; read in ball start position
 LOAD B 129 ; read in bounce size
 STORE A 144 ; make copy of ball start position
 STORE B 145 ; make copy of bounce size as new i
-JMP 32 ; goto inc-loop
+JMP inc-loop
 
 ; 32 - INC-LOOP
+inc-loop:
 LOAD A 145 ; read in i
 ISZERO A ; is i == 0?
-JZ 64 ; goto dec-init
+JZ dec-init
 DEC A ; i--
 STORE A 145 ; write new i
+
 ; 40 - INC-DRAW BALL
+inc-draw:
 SET A 0 ; load ball clear
 STOREI A 144 ; clear old position
 LOAD A 144 ; read position
@@ -89,28 +93,35 @@ INC A ; position++
 STORE A 144 ; write position to grid
 SET A 1 ; load ball
 STOREI A 144 ; write ball to new position
-JMP 32 ; goto inc-loop
+JMP inc-loop
 
 ; 64 - DEC-INIT
+dec-init:
 LOAD A 129 ; read in bounce size
 STORE A 145 ; make copy of bounce size as new i
-JMP 80 ; goto dec-loop
+JMP dec-loop
 
 ; 80 - DEC-LOOP
+dec-loop:
 LOAD A 145 ; read in i
 ISZERO A ; is i == 0?
-JZ 64 ; goto inc-init
+JZ inc-init
 DEC A ; i--
 STORE A 145 ; write new i
+
 ; 88 - DEC-DRAW BALL
+dec-draw:
 SET A 0 ; load ball clear
 STOREI A 144 ; clear old position
 LOAD A 144 ; read position
-INC A ; position--
+DEC A ; position--
 STORE A 144 ; write position to grid
 SET A 1 ; load ball
 STOREI A 144 ; write ball to new position
-JMP 32 ; goto dec-loop
+JMP dec-loop
+
+; DATA
+$128 240 15 ; ball_start_pos, bounce_len
 </code></pre>
 				</div>
 			</div>

@@ -5,6 +5,73 @@ var mouse_y = 0;
 var high_opacity = 0.95;
 var debug_vm;
 
+
+var raw_str = `
+	; INIT
+	; Copy the starting indices and array length for later
+	start:
+	LOAD A 177 ; index: i
+	LOAD B 178 ; index + 1: j
+	STORE A 193 ; use as initial i
+	STORE B 194 ; use as initial j
+	LOAD A 176 ; len - 1
+	STORE A 192 ; use as initial j
+	JMP main_loop ; goto main loop
+
+	; 16 - IS SORTED?
+	is_sorted:
+	LOAD A 195 ; check if the swapped bool changed
+	ISZERO A
+	JZ exit ; goto exit
+	JMP restart_loop ; goto restart loop
+
+	; 32 - RESTART LOOP
+	restart_loop:
+	LOAD A 192 ; grab len - 1
+	STORE A 176 ; use as new remaining distance
+	LOAD A 193 ; grab initial i
+	LOAD B 194 ; grab initial j
+	STORE A 177 ; use as new i
+	STORE B 178 ; use as new j
+	SET A 0 ; swapped = false
+	STORE A 195 ; use as new swapped
+	JMP main_loop ; goto main loop
+
+	; 80 - MAIN LOOP
+	main_loop:
+	LOAD A 176 ; grab remaining distance to end of list
+	ISZERO A ; Are we all the way through the list?
+	JZ is_sorted ; goto is sorted?
+	DEC A ; remaining distance--
+	STORE A 176 ; store new distance
+	LOADI A 177 ; load i
+	LOADI B 178 ; load j
+	CMP A B ; compare i and j
+	JG swap_val ; goto swap values if necessary
+
+	; 95 - STORE REGISTERS
+	store_reg:
+	STOREI A 177 ; store A at grid[i]
+	STOREI B 178 ; store B at grid[j]
+	LOAD A 177 ; load i
+	LOAD B 178 ; load j
+	INC A ; i++
+	INC B ; j++
+	STORE A 177 ; update i
+	STORE B 178 ; update j
+	JMP main_loop ; goto main loop
+
+	; 112 - SWAP VALUES
+	swap_val:
+	STORE A 195 ; swapped = true
+	SWAP A B
+	JMP store_reg ; goto store registers
+
+	; 255 - EXIT
+	exit:
+	HALT
+`;
+
 String.prototype.replaceAll = function (find, replace) {
 	var str = this;
 	return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
@@ -538,6 +605,7 @@ function vm_main() {
 
 		var vm = new VM();
 		debug_vm = vm;
+
 		vm.load_board(window.location.hash);
 
 		set_buffer(vm, vm.board[vm.selected_tile]);
@@ -551,12 +619,13 @@ function vm_main() {
 		document.getElementById("step").addEventListener("click", function(evt) { vm.running = true; vm.tick(); vm.running = false; vm.step_updated = true; }, false);
 		document.getElementById("start").addEventListener("click", function(evt) { vm.running = !vm.running; if (vm.running == false) { vm.step_updated = true; } }, false);
 		document.getElementById("reset").addEventListener("click", function(evt) { vm.reset(); }, false);
-		document.getElementById("clear").addEventListener("click", function(evt) { vm.load_board(""); vm.clear_state(); }, false);
+		document.getElementById("clear").addEventListener("click", function(evt) { vm.board = new Uint8Array(16 * 16); vm.clear_state(); vm.save_board(); }, false);
 		document.getElementById("tps_slow").addEventListener("click", function(evt) { vm.tps = 3; }, false);
 		document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 21; }, false);
 		document.getElementById("tps_full").addEventListener("click", function(evt) { vm.tps = 240; }, false);
 		document.getElementById("switch_base").addEventListener("click", function(evt) { vm.switch_base(); }, false);
 		document.getElementById("io_filter").addEventListener("click", function(evt) { vm.io_filter = !vm.io_filter; }, false);
+		document.getElementById("submit_asm").addEventListener("click", function(evt) { var asm = document.getElementById("asm_in").value; vm.load_asm(asm); }, false);
 
 		document.getElementById("prev_challenge").addEventListener("click", function(evt) { vm.prev_challenge(); }, false);
 		document.getElementById("reset_challenge").addEventListener("click", function(evt) { vm.reset_challenge(); }, false);

@@ -25,6 +25,7 @@
         <script defer src="sylvester.js"></script>
         <script defer src="gl_utils.js"></script>
         <script defer src="vm.js"></script>
+		<script defer src="assembler.js"></script>
         <script defer src="q8.js"></script>
     </head>
 	<body id="page-top" data-target=".navbar-fixed-top" onload="vm_main()">
@@ -100,6 +101,9 @@
 						<thead><tr><th>User Input</th><th>Function</th></tr></thead>
 						<tr><td>Arrows Keys / Left Click</td><td>move tile selection box</td></tr>
 					</table>
+					<textarea id="asm_in"></textarea>
+					<br>
+					<button type="button" id="submit_asm">Submit Assembly</button>
 				</div>
 				<div style="margin-top: -5px;">
 					<table id="op_table"></table>

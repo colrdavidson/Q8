@@ -92,34 +92,47 @@ Add Increment tiles: 11
 			</div>
 			<div>
 <pre><code class="language-none; line-numbers">; INIT
+start:
 LOAD A 80 ; load x
 LOAD B 81 ; load y
 CMP A B ; is x &gt; y?
-JG 32 ; goto swap
+JG swap ; goto swap
+
 ; 9 - SAVE_VAR
+save_var:
 STORE A 96 ; save min(x, y) as i
 STORE B 112 ; save max(x, y) as increment
-JMP 36 ; goto
+JMP loop
 
 ; 32 - SWAP
-SWP A B ; (x, y) -&gt; (y, x)
-JMP 9 ; goto save_var
+swap:
+SWAP A B ; (x, y) -&gt; (y, x)
+JMP save_var
 
 ; 36 - LOOP
+loop:
 LOAD A 96 ; get i
 ISZERO A ; is i == 0?
-JZ 255 ; goto exit
+JZ exit
 DEC A ; i--
 STORE A 96 ; save new i
-JMP 67 ; goto add increment
+JMP add_increment
 
 ; 67 - ADD INCREMENT
+add_increment:
 LOAD A 97 ; read in cumulative value
 LOAD B 112 ; read in increment
 ADD A B ; cumulative = cumulative + increment
-JERR 255 ; if overflow, exit
+JERR exit ; if overflow, exit
 STORE A 97 ; save new cumulative
-JMP 36 ; goto loop
+JMP loop
+
+; 255 - EXIT
+exit:
+HALT
+
+; DATA
+$80 6 4 ; x, y
 </code></pre>
 			</div>
 		</div>

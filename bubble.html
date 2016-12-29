@@ -92,21 +92,24 @@ while (swapped) {
 		<div>
 <pre><code class="language-none; line-numbers">; INIT
 ; Copy the starting indices and array length for later
+start:
 LOAD A 177 ; index: i
 LOAD B 178 ; index + 1: j
 STORE A 193 ; use as initial i
 STORE B 194 ; use as initial j
 LOAD A 176 ; len - 1
 STORE A 192 ; use as initial j
-JMP 80 ; goto main loop
+JMP main_loop ; goto main loop
 
 ; 16 - IS SORTED?
+is_sorted:
 LOAD A 195 ; check if the swapped bool changed
 ISZERO A
-JZ 255 ; goto exit
-JMP 32 ; goto restart loop
+JZ exit ; goto exit
+JMP restart_loop ; goto restart loop
 
 ; 32 - RESTART LOOP
+restart_loop:
 LOAD A 192 ; grab len - 1
 STORE A 176 ; use as new remaining distance
 LOAD A 193 ; grab initial i
@@ -115,20 +118,22 @@ STORE A 177 ; use as new i
 STORE B 178 ; use as new j
 SET A 0 ; swapped = false
 STORE A 195 ; use as new swapped
-JMP 80 ; goto main loop
+JMP main_loop ; goto main loop
 
 ; 80 - MAIN LOOP
+main_loop:
 LOAD A 176 ; grab remaining distance to end of list
 ISZERO A ; Are we all the way through the list?
-JZ 16 ; goto is sorted?
+JZ is_sorted ; goto is sorted?
 DEC A ; remaining distance--
 STORE A 176 ; store new distance
 LOADI A 177 ; load i
 LOADI B 178 ; load j
 CMP A B ; compare i and j
-JG 112 ; goto swap values if necessary
+JG swap_val ; goto swap values if necessary
 
 ; 95 - STORE REGISTERS
+store_reg:
 STOREI A 177 ; store A at grid[i]
 STOREI B 178 ; store B at grid[j]
 LOAD A 177 ; load i
@@ -137,15 +142,21 @@ INC A ; i++
 INC B ; j++
 STORE A 177 ; update i
 STORE B 178 ; update j
-JMP 80 ; goto main loop
+JMP main_loop ; goto main loop
 
 ; 112 - SWAP VALUES
+swap_val:
 STORE A 195 ; swapped = true
-SWP A B
-JMP 95 ; goto store registers
+SWAP A B
+JMP store_reg ; goto store registers
 
 ; 255 - EXIT
+exit:
 HALT
+
+; DATA
+$160 5 4 3 2 1 ; ARRAY
+$176 4 160 161 ; ARRAY LENGTH, idx, idx + 1
 </code></pre>
 			</div>
 		</div>
