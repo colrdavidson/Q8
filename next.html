@@ -34,28 +34,36 @@
 
 		<section style="margin-top: 5em; max-width: 50em;">
 			<h2>What's Next?</h2>
-			<p>When programming real hardware, the vast
-			majority of programmers avoid writing bytecode.
-			The sooner they can get at least an assembler up
-			and running, the better. Many development systems
-			even come from the manufacturer with C too. Bytecode
-			is just impractical for a project of any significant
-			size. Assemblers are not that hard to write, and
-			make the programmer's life much less miserable.</p>
-			<p>Even the most basic of assemblers hold a critical
-			advantage, labels. With bytecode, the code you write
-			has to conform to fixed positions. If you want to return
-			to a position in code you've been to before, you have to
-			hardcode that memory location. Comments are also quite
-			useful. With bytecode, there's only space for code and data.
+			<p>Bytecode is something that modern programmers
+			rarely have to touch. The rare few that do, typically
+			get at least an assembler up and running as soon as
+			possible. Bytecode is rarely practical, and horrible
+			for maintenance and readability.</p>
+
+			<p>Even the most basic of assemblers hold a few critical
+			advantages. With bytecode, the code you write
+			has to conform to fixed positions. If you want to jump
+			to a point in code, or access a place in memory, that
+			position must be hardcoded. On top of that, assembly
+			uses mnemonics that are far easier to remember and quickly
+			interpret. rather than needing a instruction table,
+			most assembly instructions are intuitive. <code>ADD A B</code>
+			is far easier to read and manage mentally than a block containing the number <code>11</code>.</p>
+
+			<p>Comments are also quite
+			useful. With bytecode, there's only space for code and data,
+			as everything you write could be executed by the processor.
 			With assembly, you can select lines or parts of lines to ignore,
 			and use that space to store information to clarify program
-			specifics tothe reader.</p>
+			specifics to the reader.</p>
+
 			<p>Bytecode maintains one advantage. Self-modification. A
-			clever programmer writing bytecode can take advantage of far
+			clever programmer writing bytecode can take make use of far
 			more than the apparant usable space by storing new instructions
-			on top of the old ones, and then re-executing the block. Unfortunately,
-			while it's nice for space-saving, it's not great for the modern
+			on top of the old ones, and then re-executing the block.</p>
+
+			<p>Unfortunately, it does have a few drawbacks.
+			While it's nice for space-saving, it's not great for the modern
 			processor's caching systems. When you modify the code at runtime,
 			the processor's cached bytecode becomes invalid, and it has to
 			stop and pull in the new code. On top of that, it's not great
@@ -67,6 +75,11 @@
 			<div>
 				<div>
 					<h3>Bytecode Program</h3>
+					<ul>
+						<li>space provides room for fixing errors</li>
+						<li>separation of code and output unclear</li>
+						<li>reading requires lookup table for ops</li>
+					</ul>
 					<a href="q8.html#1|A|1|V|1|A|1|C|1|U|1|Q|1|A|1|W|1|H|1|i|2|A|1|B|1|W|1|A|1|G|1|c|2|A|1|a|1|J|22|A|1|v|1|G|1|g|1|k|2|A|1|W|1|A|1|Y|1|H|1|P|1|8|1|U|1|B|1|W|1|A|1|a|1|Q|1|w|28|A|1|F|1|h|1|A|1|n|1|A|1|L|1|J|1|v|1|8|1|F|1|Y|1|R|1|o|1|k|3|A|1|G|1|B|231|A|1|P|1|A|2|=|">
 						<div class="img_container">
 							<img style="width: 90%;" src="mult.gif">
@@ -75,6 +88,11 @@
 				</div>
 				<div>
 					<h3>Assembled Program</h3>
+					<ul>
+						<li>final program more compact</li>
+						<li>generated from more readable file</li>
+						<li>reading requires knowledge of asm</li>
+					</ul>
 					<a href="q8.html">
 						<div class="img_container">
 							<img style="width: 90%;" src="asm_mult.gif">
