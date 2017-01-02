@@ -71,14 +71,14 @@
 			user may be able to coerce the program to make malicious self-modifications,
 			jumping into blocks of code that the program wasn't intended to run.</p>
 
-			<h3>Manual Code Generation</h3>
+			<h3>Manual Bytecode Generation</h3>
 			<p>Written in bytecode manually, I had to first write the program out on paper,
 			and then translate the chunks into operations by consulting the instruction table.
 			This was slow to write, and annoying to debug.</p>
 			<div style="width: 40%; margin-left: auto; margin-right: auto;">
 				<h3>Bytecode Program</h3>
 				<ul style="margin-left: auto; margin-right: auto;">
-					<li>space provides room for fixing errors</li>
+					<li>writing requires complex mental model</li>
 					<li>separation of code and output unclear</li>
 					<li>reading requires lookup table for ops</li>
 				</ul>
@@ -88,7 +88,7 @@
 					</div>
 				</a>
 			</div>
-			<h3>Automatic Code Generation</h3>
+			<h3>Automatic Bytecode Generation</h3>
 			<p>Taking far less time to write, this was written in assembly and then
 			assembled using an assembler. The resulting program performs the same operations
 			in the same period of time, and the source is readable, and far more easily modified.
@@ -149,8 +149,8 @@ $80 6 4 ; x, y</code></pre>
 					<h3>Assembled Program</h3>
 					<ul>
 						<li>final program more compact</li>
-						<li>less readable than manual bytecode</li>
-						<li>not necessary to read output</li>
+						<li>visual code block distinction is harder</li>
+						<li>no ability to add annotation</li>
 					</ul>
 					<a href="q8.html">
 						<div class="img_container">
