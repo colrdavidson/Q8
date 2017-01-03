@@ -211,18 +211,22 @@ class VM {
 				var id_cell = row.insertCell(0);
 				var name_cell = row.insertCell(1);
 				var desc_cell = row.insertCell(2);
+				var operand_cell = row.insertCell(3);
 				id_cell.innerHTML = (i).toString(this.display_base).toUpperCase();
 				name_cell.innerHTML = this.op_table[i].name;
 				desc_cell.innerHTML = this.op_table[i].long_desc;
+				operand_cell.innerHTML = this.op_table[i].length > 1 ? "true" : "false";
 			}
 			var thead = table.createTHead();
 			var thead_row = thead.insertRow();
 			var id_cell = thead_row.insertCell(0);
 			var name_cell = thead_row.insertCell(1);
 			var desc_cell = thead_row.insertCell(2);
+			var operand_cell = thead_row.insertCell(3);
 			id_cell.outerHTML = "<th>Value</th>";
 			name_cell.outerHTML = "<th>Instruction</th>";
 			desc_cell.outerHTML = "<th>Description</th>";
+			operand_cell.outerHTML = "<th>Has Operand</th>";
 		}
 
 		this.page_op_table = table;
