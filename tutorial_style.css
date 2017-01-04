@@ -7,10 +7,24 @@
 	display: inline-block;
 }
 
+.info-tag {
+	background-color: #bef6ea;
+	color: #28bb9c;
+	padding: 0.125em;
+}
+
 .img_container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.img_link {
+	border: 2px solid #FFF;
+}
+
+.img_link:hover {
+	border: 2px solid #d0d0d0;
 }
 
 .code_container {

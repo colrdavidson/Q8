@@ -16,6 +16,14 @@
 	background-color: #bef6ea;
 }
 
+.img_link {
+	border: 2px solid #bef6ea;
+}
+
+.img_link:hover {
+	border: 2px solid #d0d0d0;
+}
+
 .basics {
 	text-align: center;
 	padding-top: 0.0625em;
