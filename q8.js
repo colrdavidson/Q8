@@ -500,6 +500,8 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 
 	if (vm.challenge_updated) {
 		document.getElementById('challenge_box').removeAttribute("hidden");
+		document.getElementById('back').href = "basics.html";
+		document.getElementById('next').href = "mult.html";
 		vm.challenge_updated = false;
 	}
 
