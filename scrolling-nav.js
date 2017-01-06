@@ -10,6 +10,7 @@ function fill() {
 }
 
 $(function() {
+	/*
     $('a.page-scroll').bind('click', function(event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
@@ -17,4 +18,5 @@ $(function() {
         }, 1500, 'easeInOutExpo');
         event.preventDefault();
     });
+	*/
 });

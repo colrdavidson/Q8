@@ -1,59 +1,30 @@
 "use strict";
 
-function flatten_hex_val(val) {
-	var cur_byte = (val).toString(16);
-	if (cur_byte.length < 2) {
-		cur_byte = "0" + cur_byte;
-	}
-	return cur_byte;
-}
-
-function pack_array(binary) {
-	var hash_str = '';
-	var occ_count = 0;
-	var occ_byte = binary[0];
-	for (var i = 0; i < binary.length; i++) {
-		var cur_byte = binary[i];
-		if (cur_byte != occ_byte) {
-			var entry = flatten_hex_val(occ_count - 1) + flatten_hex_val(occ_byte);
-			hash_str += entry;
-			occ_byte = binary[i];
-			occ_count = 1;
-		} else {
-			occ_count += 1;
-		}
-	}
-
-	if (cur_byte == occ_byte) {
-		var entry = flatten_hex_val(occ_count - 1) + flatten_hex_val(occ_byte);
-		hash_str += entry;
-	}
-
-	return hash_str;
-}
-
-function unpack_to_array(hash_str) {
-	var array = new Uint8Array(16 * 16);
-	var arr_idx = 0;
-	for (var i = 0; i < hash_str.length; i += 4) {
-		var dist = parseInt(hash_str.charAt(i) + hash_str.charAt(i + 1), 16) + 1;
-		var val = parseInt(hash_str.charAt(i + 2) + hash_str.charAt(i + 3), 16);
-		for (var j = 0; j < dist; j++) {
-        	array[arr_idx] = val;
-			arr_idx += 1;
-		}
-	}
-	return array;
-}
-
 function array_to_hash(array) {
-	var data = pack_array(array);
-	return data;
+	var norm_str = '';
+	for (var i = 0; i < this.board.length; i++) {
+		var c_byte = (this.board[i]).toString(16);
+		if (c_byte.length < 2) {
+			c_byte = "0" + c_byte;
+		}
+		norm_str += c_byte;
+	}
+
+	var compressed_str = LZString.compressToBase64(norm_str);
+	return compressed_str;
 }
 
 function hash_to_array(hash) {
 	var packed = hash.slice(1);
-	var array = unpack_to_array(packed);
+	var str = LZString.decompressFromBase64(packed);
+
+	var array = new Uint8Array(16 * 16);
+	var arr_idx = 0;
+	for (var i = 0; i < str.length; i += 2) {
+		var val = parseInt(str.charAt(i) + "" + str.charAt(i + 1), 16);
+		array[arr_idx] = val;
+		arr_idx += 1;
+	}
 	return array;
 }
 
@@ -307,42 +278,42 @@ class VM {
 			} break;
 			case this.challenge_list[0]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 0: Put a 9 in the 0 position, and a 1 in the 1 position";
-				hash_str = "#01000018001c00fe001a00fff600003d003c";
+				hash_str = "#Aw4RgDjBjAzBTMBDWtTo5r2e7/gwo4k0s8iyq6m2u+hxp4AZgBMXog==";
 				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 0;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[1]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Use the JE to avoid the Error Flag";
-				hash_str = "#03000016002200fe001a00fff400003d003c";
+				hash_str = "#Aw0iMBsBM0GYFNwEM5zBzXs93/BhRxJpZ5FlV1Ntd9DjTAzACbMDGQA=";
 				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 1;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[2]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Compare tile 15 to an equal value to avoid the Error Flag";
-				hash_str = "#0001000f01000016002200ff001a00fe05000005ed00003d003c";
+				hash_str = "#AwRmDNi0DYCY7nCAhuAptL3gFYcGFHEmlnkWVXU2130ONPMutvvMDMAJpwMZA===";
 				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 2;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[3]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 3: Fix the loop";
-				hash_str = "#0001000f0018001c00ff00140005000f0100001a00fe02000005ed00003d003c";
+				hash_str = "#AwRmDMQDhBjdIBZgFYLA6AhuAppgtA4k0s8iyq6m2u+hxp5l1t9jzr7nugZgAmfWEA==";
 				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 3;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[4]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 4: Call the function 5 times";
-				hash_str = "#0001000f0018001c00f600140005000f0100001a00f6020000050f000001004000020041000b00050040001a170000010002b30000010040000a000b0016002200ff0000003d003c";
+				hash_str = "#AwRmDMQDhBjcBsIAswCsFhdAQ0dgjA4k0srFLAJmTACN1UQdzW33SwqOfe/+BgocJGix4iZKnSClYCzogEVKuHBYAzABMNsIA===";
 				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 4;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[5]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 5: Activate the jump stack (it doesn't matter where you put it, just try not to overwrite code)";
-				hash_str = "#0100000100420018001c00f6001400050042001a0020002600ff001a00020f000001004000020041000b00050040002b001a00ff1500000100020005b20000010040000a000b0016002200ff0000003d003c";
+				hash_str = "#AwkRgFgJjAOMDGAzAbJYBWaYCGVhQpJK4GjkWVXXoERjABGmEBjux1X3PVD+GXkOEjRY8RMlTpM2XPkLFE2jiZgUUKJ2ABmACY6EQA==";
 				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 5;
 				this.challenge_updated = true;
