@@ -1,81 +1,60 @@
 "use strict";
 
-function pack_string(str) {
-	str += ";";
+function flatten_hex_val(val) {
+	var cur_byte = (val).toString(16);
+	if (cur_byte.length < 2) {
+		cur_byte = "0" + cur_byte;
+	}
+	return cur_byte;
+}
 
-	var rle_str = '';
-	var occurance_counter = 0;
-	var cur_char = str.charAt(i);
-	for (var i = 0; i < str.length; i++) {
-		if (cur_char != str.charAt(i)) {
-			rle_str += occurance_counter + "|" + cur_char + "|";
-			occurance_counter = 1;
-			cur_char = str.charAt(i);
+function pack_array(binary) {
+	var hash_str = '';
+	var occ_count = 0;
+	var occ_byte = binary[0];
+	for (var i = 0; i < binary.length; i++) {
+		var cur_byte = binary[i];
+		if (cur_byte != occ_byte) {
+			var entry = flatten_hex_val(occ_count - 1) + flatten_hex_val(occ_byte);
+			hash_str += entry;
+			occ_byte = binary[i];
+			occ_count = 1;
 		} else {
-			occurance_counter++;
+			occ_count += 1;
 		}
 	}
 
-	return rle_str;
-}
-
-function unpack_string(rle_str) {
-	var real_str = "";
-	for (var i = 0; i < rle_str.length; i++) {
-		var occurance_str = "";
-		var j = i;
-		for (; rle_str.charAt(j) != '|' && j < rle_str.length; j++) {
-			occurance_str += rle_str.charAt(j);
-		}
-		i = j + 1;
-
-		var repeat_len = parseInt(occurance_str);
-		if (isNaN(repeat_len) || repeat_len > 344) {
-			console.log(occurance_str);
-			console.log(repeat_len);
-			return "";
-		}
-
-		for (j = 0; j < repeat_len; j++) {
-			real_str += rle_str.charAt(i);
-		}
-		i += 1;
+	if (cur_byte == occ_byte) {
+		var entry = flatten_hex_val(occ_count - 1) + flatten_hex_val(occ_byte);
+		hash_str += entry;
 	}
 
-	return real_str;
+	return hash_str;
 }
 
-function array_to_b64(array) {
-	var binary = '';
-
-	for (var i = 0; i < array.byteLength; i++) {
-		binary += String.fromCharCode(array[i]);
+function unpack_to_array(hash_str) {
+	var array = new Uint8Array(16 * 16);
+	var arr_idx = 0;
+	for (var i = 0; i < hash_str.length; i += 4) {
+		var dist = parseInt(hash_str.charAt(i) + hash_str.charAt(i + 1), 16) + 1;
+		var val = parseInt(hash_str.charAt(i + 2) + hash_str.charAt(i + 3), 16);
+		for (var j = 0; j < dist; j++) {
+        	array[arr_idx] = val;
+			arr_idx += 1;
+		}
 	}
-
-	var b64_str = window.btoa(binary);
-	var packed = pack_string(b64_str);
-	return packed;
+	return array;
 }
 
-function b64_to_array(hash) {
+function array_to_hash(array) {
+	var data = pack_array(array);
+	return data;
+}
+
+function hash_to_array(hash) {
 	var packed = hash.slice(1);
-	var b64_str = unpack_string(packed);
-
-	if (b64_str.length != 344) {
-		alert("Invalid board hash: " + hash);
-		location.replace("");
-		return new Uint8Array(16 * 16);
-	}
-
-	var binary = window.atob(b64_str);
-
-	var len = binary.length;
-	var bytes = new Uint8Array(16 * 16);
-
-	for (var i = 0; i < len; i++) {
-		bytes[i] = binary.charCodeAt(i);
-	}
-	return bytes;
+	var array = unpack_to_array(packed);
+	return array;
 }
 
 class Instruction {
@@ -195,6 +174,7 @@ class VM {
 			new Instruction("SHR B", "BIT", "Shift register B value right 1 bit, operand value times, propagating 0", "Register B = Register B (@B) &#x226B @V", function() { return op_shr(self, 1); }, 1, false, true),
 			new Instruction("HALT", "UTIL", "Halt the running program", "Stop the running program", function() { return op_halt(self); }, 1, false, false),
 			new Instruction("ERROR", "UTIL", "Halt the running program, toss the error flag", "Stop the running program, toss error flag", function() { return op_error(self); }, 1, false, true),
+			new Instruction("UNSETSP", "JMP", "Disable the JSP stack", "Disable the JSP", function() { return op_unsetsp(self); }, 1, false, true),
 		];
 
 		var rev_lookup = [];
@@ -320,50 +300,50 @@ class VM {
 		this.pc = (this.pc + 1) % 256;
 	}
 
-	load_board(rle_str) {
-		switch (rle_str) {
+	load_board(hash_str) {
+		switch (hash_str) {
 			case "": {
 				this.board = new Uint8Array(16 * 16);
 			} break;
 			case this.challenge_list[0]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 0: Put a 9 in the 0 position, and a 1 in the 1 position";
-				rle_str = "#3|A|1|Y|1|H|1|P|1|4|1|a|1|/|1|w|329|A|1|9|1|P|1|A|2|=|";
-				this.board = b64_to_array(rle_str);
+				hash_str = "#01000018001c00fe001a00fff600003d003c";
+				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 0;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[1]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 1: Use the JE to avoid the Error Flag";
-				rle_str = "#5|A|1|B|1|Y|1|i|1|/|1|h|1|r|1|/|327|A|1|9|1|P|1|A|2|=|";
-				this.board = b64_to_array(rle_str);
+				hash_str = "#03000016002200fe001a00fff400003d003c";
+				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 1;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[2]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 2: Compare tile 15 to an equal value to avoid the Error Flag";
-				rle_str = "#1|A|1|Q|1|8|2|A|1|B|1|Y|1|i|1|/|1|x|1|r|1|+|8|A|1|B|1|Q|317|A|1|9|1|P|1|A|2|=|";
-				this.board = b64_to_array(rle_str);
+				hash_str = "#0001000f01000016002200ff001a00fe05000005ed00003d003c";
+				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 2;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[3]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 3: Fix the loop";
-				rle_str = "#1|A|1|Q|1|8|1|Y|1|H|1|P|1|8|1|U|1|B|1|Q|1|8|2|A|1|B|1|r|1|+|4|A|1|B|1|Q|317|A|1|9|1|P|1|A|2|=|";
-				this.board = b64_to_array(rle_str);
+				hash_str = "#0001000f0018001c00ff00140005000f0100001a00fe02000005ed00003d003c";
+				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 3;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[4]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 4: Call the function 5 times";
-				rle_str = "#1|A|1|Q|1|8|1|Y|1|H|1|P|1|Y|1|U|1|B|1|Q|1|8|2|A|1|B|1|r|1|2|4|A|1|B|1|Q|21|A|1|B|1|Q|1|A|1|J|1|B|1|C|1|w|1|V|1|A|1|G|1|g|32|A|1|E|1|C|241|A|1|U|1|A|1|K|1|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|9|1|P|1|A|2|=|";
-				this.board = b64_to_array(rle_str);
+				hash_str = "#0001000f0018001c00f600140005000f0100001a00f6020000050f000001004000020041000b00050040001a170000010002b30000010040000a000b0016002200ff0000003d003c";
+				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 4;
 				this.challenge_updated = true;
 			} break;
 			case this.challenge_list[5]: {
 				document.getElementById('challenge_desc').innerHTML = "Challenge 5: Activate the jump stack (it doesn't matter where you put it, just try not to overwrite code)";
-				rle_str = "#3|A|1|B|1|Q|1|h|1|g|1|c|1|9|1|h|1|Q|1|F|1|Q|1|h|1|o|1|g|1|J|1|v|1|8|1|a|1|A|1|g|21|A|1|B|1|Q|1|A|1|J|1|B|1|C|1|w|1|V|1|A|1|K|1|x|1|r|1|/|30|A|1|E|1|C|1|B|1|Q|239|A|1|U|1|A|1|K|1|C|1|x|1|Y|1|i|1|/|1|w|1|A|1|9|1|P|1|A|2|=|";
-				this.board = b64_to_array(rle_str);
+				hash_str = "#0100000100420018001c00f6001400050042001a0020002600ff001a00020f000001004000020041000b00050040002b001a00ff1500000100020005b20000010040000a000b0016002200ff0000003d003c";
+				this.board = hash_to_array(hash_str);
 				this.cur_challenge = 5;
 				this.challenge_updated = true;
 			} break;
@@ -392,15 +372,15 @@ class VM {
 				this.challenge_updated = true;
 			} break;
 			default: {
-				this.board = b64_to_array(rle_str);
+				this.board = hash_to_array(hash_str);
 			}
 		}
-		this.pre_run = rle_str;
+		this.pre_run = hash_str;
 		this.board_updated = true;
 	}
 
 	save_board() {
-		var str = "#" + array_to_b64(this.board);
+		var str = "#" + array_to_hash(this.board);
 		this.pre_run = str;
 		location.replace(str);
 	}
@@ -688,6 +668,10 @@ function op_ret(vm) {
 function op_setsp(vm) {
 	vm.jsp = vm.board[vm.pc];
 	vm.jsp_enabled = true;
+}
+
+function op_unsetsp(vm) {
+	vm.jsp_enabled = false;
 }
 
 function op_deref(vm, idx) {
