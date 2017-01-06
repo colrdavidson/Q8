@@ -269,7 +269,7 @@ function hash_change(vm, evt) {
 }
 
 function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, persp, vm) {
-	if (vm.board_updated) {
+	if (vm.step_updated || vm.running) {
 		gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.useProgram(shader);
 

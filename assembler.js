@@ -3,7 +3,7 @@
 var labels;
 
 function clean_str(str) {
-	var tmp_buffer = str.trim().split(/\n/);
+	var tmp_buffer = str.trim().split(/\t|\n/);
 	var buffer = [];
 	for (var i = 0; i < tmp_buffer.length; i++) {
 		buffer.push(tmp_buffer[i]);
@@ -28,18 +28,39 @@ function is_digit(n) {
 function fill_labels(line_no, asm_buffer) {
 	var line = asm_buffer[line_no];
 	for (var i = 0; i < line.length; i++) {
-		if (line[i] == ";") {
-			line = line.slice(0, i);
-			break;
-		}
-	}
-
-	for (var i = 0; i < line.length; i++) {
 		if (line[i] == ":") {
 			var label = line.slice(0, i);
 			labels.push(label);
 			break;
 		}
+	}
+}
+
+function clean_comments(asm_buffer) {
+	for (var i = 0; i < asm_buffer.length; i++) {
+		var line = asm_buffer[i];
+
+		var comment_start = line.indexOf(";");
+		if (comment_start != -1) {
+			asm_buffer[i] = line.slice(0, comment_start).trim();
+		} else {
+			asm_buffer[i] = line.trim();
+		}
+	}
+
+	return asm_buffer;
+}
+
+function verify_value(val, type, type_str, line_no) {
+	if (val.length > 0) {
+		var data = parseInt(val);
+		if (isNaN(data) || data > 0xFF || data < 0) {
+			return ['E', type_str + " on line " + line_no + " has invalid value: " + val];
+		} else {
+			return [type, data];
+		}
+	} else {
+		return ['E', type_str + " on line " + line_no + " needs a value"];
 	}
 }
 
@@ -50,65 +71,31 @@ function parse_line(vm, line_no, asm_buffer) {
 		return;
 	}
 
-	// Handle comments on their own line
-	if (line[0] == ';') {
-		return;
-	}
-
-	// Handle data declaration
-	var is_data = false;
-	if (line[0] == '$') {
-		is_data = true;
-	}
-
 	var bits = [];
+	// Handle data declaration
+	if (line[0] == '$' || line[0] == '>') {
+		bits[0] = line;
+
+		if (bits[0][0] == '$') { // Define a byte
+			var chunk = bits[0].slice(1);
+			return verify_value(chunk, 'D', "Byte declaration", line_no);
+		} else if (bits[0][0] == '>') { // Move the assembler value plop position
+			var chunk = bits[0].slice(1);
+			return verify_value(chunk, 'P', "Position Skip", line_no);
+		}
+	}
 
 	// Split into instruction and operand pieces
-	if (!is_data) {
-		for (var i = 0; i < line.length; i++) {
-			if (line[i] == ';') { // If there's a comment before the first digit
-				bits[0] = line.slice(0, i - 1);
-				break;
-			} else if (is_digit(line[i])) {
-				bits[0] = line.slice(0, i - 1);
-				bits[1] = line.slice(i);
-				break;
-			}
+	for (var i = 0; i < line.length; i++) {
+		if (is_digit(line[i]) || line[i] == '$') {
+			bits[0] = line.slice(0, i - 1);
+			bits[1] = line.slice(i);
+			break;
 		}
 	}
 
 	if (bits.length == 0) {
 		bits[0] = line;
-	}
-
-	// Remove inline comments
-	if (bits.length > 1) {
-		var operand = bits[1];
-		for (var i = 0; i < operand.length; i++) {
-			if (operand[i] == ';') {
-				bits[1] = operand.slice(0, i).trim();
-				break;
-			}
-		}
-	} else {
-		var bit = bits[0];
-		for (var i = 0; i < bit.length; i++) {
-			if (bit[i] == ';') {
-				bits[0] = bit.slice(0, i).trim();
-				break;
-			}
-		}
-	}
-
-	if (is_data) {
-		var data_line = bits[0].split(" ");
-		var pos = data_line[0].slice(1);
-		var data = [];
-		for (var i = 1; i < data_line.length; i++) {
-			data.push(data_line[i]);
-		}
-
-		return ['D', pos, data];
 	}
 
 	// Check for label declaration
@@ -131,7 +118,18 @@ function parse_line(vm, line_no, asm_buffer) {
 			}
 		}
 
-		return ['L', label_idx];
+		if (bits.length > 1) {
+			if (bits[1][0] == '$') {
+				var type_pack = verify_value(bits[1].slice(1), 'LD', "Labelled Data", line_no);
+				if (type_pack[0] == 'LD') {
+					return ['LD', label_idx, type_pack[1]];
+				} else {
+					return type_pack;
+				}
+			}
+		} else {
+			return ['L', label_idx];
+		}
 	}
 
 	// Split out label from instruction
@@ -171,6 +169,8 @@ function parse_line(vm, line_no, asm_buffer) {
 }
 
 function parse_file(vm, asm_buffer) {
+    asm_buffer = clean_comments(asm_buffer);
+
 	for (var i = 0; i < asm_buffer.length; i++) {
 		fill_labels(i, asm_buffer);
 	}
@@ -189,8 +189,15 @@ function parse_file(vm, asm_buffer) {
 		if (asm_table[i][0] == 'I') { // Instruction packet
 			var op = asm_table[i][1];
 			current_pos += op.length;
+		} else if (asm_table[i][0] == 'P') {
+			current_pos = parseInt(asm_table[i][1]);
+		} else if (asm_table[i][0] == 'D') {
+            current_pos += 1;
 		} else if (asm_table[i][0] == 'L') { // Label packet
 			label_pos[asm_table[i][1]] = current_pos;
+		} else if (asm_table[i][0] == 'LD') { // Labelled Data packet
+			label_pos[asm_table[i][1]] = current_pos;
+			current_pos += 1;
 		}
 	}
 
@@ -219,12 +226,17 @@ function parse_file(vm, asm_buffer) {
 			}
 			board_pos += op.length;
 		} else if (asm_table[i][0] == 'D') { // Data packet
-			var data_pos = parseInt(asm_table[i][1]);
+			var data = asm_table[i][1];
+			board[board_pos] = data;
+			board_pos += 1;
+		} else if (asm_table[i][0] == 'LD') { // Labelled Data packet
 			var data = asm_table[i][2];
-			for (var j = 0; j < data.length; j++) {
-				board[data_pos + j] = parseInt(data[j]);
-			}
-		} else if (asm_table[i][0] == 'E') {
+			board[board_pos] = data;
+			board_pos += 1;
+		} else if (asm_table[i][0] == 'P') { // Position packet
+			var pos = asm_table[i][1];
+			board_pos = pos;
+		} else if (asm_table[i][0] == 'E') { // Error packet
 			error_stack.push(asm_table[i][1]);
 		}
 	}
