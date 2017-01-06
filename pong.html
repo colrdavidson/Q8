@@ -72,61 +72,65 @@
 				</div>
 				<div>
 					<h3>Assembly Program</h3>
-					<pre><code class="language-none; line-numbers">; 0  - INC-INIT
+					<pre><code class="language-none; line-numbers">>0
 inc-init:
-LOAD A 128 ; read in ball start position
-LOAD B 129 ; read in bounce size
-STORE A 144 ; make copy of ball start position
-STORE B 145 ; make copy of bounce size as new i
+LOAD A ball_start ; read in ball start position
+LOAD B bounce_len ; read in bounce size
+STORE A ball_pos ; make copy of ball start position
+STORE B i ; make copy of bounce size as new i
 JMP inc-loop
 
-; 32 - INC-LOOP
+>32
 inc-loop:
-LOAD A 145 ; read in i
+LOAD A i ; read in i
 ISZERO A ; is i == 0?
 JZ dec-init
 DEC A ; i--
-STORE A 145 ; write new i
+STORE A i ; write new i
 
-; 40 - INC-DRAW BALL
+>40
 inc-draw:
 SET A 0 ; load ball clear
-STOREI A 144 ; clear old position
-LOAD A 144 ; read position
+STOREI A ball_pos ; clear old position
+LOAD A ball_pos ; read position
 INC A ; position++
-STORE A 144 ; write position to grid
+STORE A ball_pos ; write position to grid
 SET A 1 ; load ball
-STOREI A 144 ; write ball to new position
+STOREI A ball_pos ; write ball to new position
 JMP inc-loop
 
-; 64 - DEC-INIT
+>64
 dec-init:
-LOAD A 129 ; read in bounce size
-STORE A 145 ; make copy of bounce size as new i
+LOAD A bounce_len ; read in bounce size
+STORE A i ; make copy of bounce size as new i
 JMP dec-loop
 
-; 80 - DEC-LOOP
+>80
 dec-loop:
-LOAD A 145 ; read in i
+LOAD A i ; read in i
 ISZERO A ; is i == 0?
 JZ inc-init
 DEC A ; i--
-STORE A 145 ; write new i
+STORE A i ; write new i
 
-; 88 - DEC-DRAW BALL
+>88
 dec-draw:
 SET A 0 ; load ball clear
-STOREI A 144 ; clear old position
-LOAD A 144 ; read position
+STOREI A ball_pos ; clear old position
+LOAD A ball_pos ; read position
 DEC A ; position--
-STORE A 144 ; write position to grid
+STORE A ball_pos ; write position to grid
 SET A 1 ; load ball
-STOREI A 144 ; write ball to new position
+STOREI A ball_pos ; write ball to new position
 JMP dec-loop
 
 ; DATA
-$128 240 15 ; ball_start_pos, bounce_len
-</code></pre>
+>128
+ball_start: $240
+bounce_len: $15
+>144
+ball_pos: $0
+i: $0</code></pre>
 				</div>
 			</div>
 		</section>
