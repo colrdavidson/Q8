@@ -1,14 +1,12 @@
 "use strict";
 
-var labels = [];
+var labels;
 
 function clean_str(str) {
-	var tmp_buffer = str.trim().split(/\t|\n/);
+	var tmp_buffer = str.trim().split(/\n/);
 	var buffer = [];
 	for (var i = 0; i < tmp_buffer.length; i++) {
-		if (tmp_buffer[i] != "") {
-			buffer.push(tmp_buffer[i]);
-		}
+		buffer.push(tmp_buffer[i]);
 	}
 
 	return buffer;
@@ -47,6 +45,10 @@ function fill_labels(line_no, asm_buffer) {
 
 function parse_line(vm, line_no, asm_buffer) {
 	var line = asm_buffer[line_no];
+
+	if (line == "") {
+		return;
+	}
 
 	// Handle comments on their own line
 	if (line[0] == ';') {
@@ -149,14 +151,12 @@ function parse_line(vm, line_no, asm_buffer) {
 
 	var inst_no = vm.rev_lookup[bits[0]];
     if (inst_no == undefined) {
-		alert("line " + line_no + ': "' + asm_buffer[line_no] + '" is not a valid instruction!');
-		return;
+		return ['E', "line " + line_no + ': "' + asm_buffer[line_no] + '" is not a valid instruction!'];
 	}
 
 	var inst = vm.op_table[inst_no];
 	if (inst.length != bits.length) {
-		alert("line " + line_no + ': "' + asm_buffer[line_no] + '" has an invalid number of arguments!');
-		return;
+		return ['E', "line " + line_no + ': "' + asm_buffer[line_no] + '" has an invalid number of arguments!'];
 	}
 
 	if (inst.length == 2) {
@@ -196,6 +196,7 @@ function parse_file(vm, asm_buffer) {
 
 	var board_pos = 0;
 	var board = new Uint8Array(16 * 16);
+	var error_stack = [];
 	for (var i = 0; i < asm_table.length; i++) {
 		if (asm_table[i][0] == 'I') { // Instruction packet
 			var op = asm_table[i][1];
@@ -216,23 +217,24 @@ function parse_file(vm, asm_buffer) {
 					board[board_pos] = vm.rev_lookup[op.name];
 				}
 			}
-
 			board_pos += op.length;
 		} else if (asm_table[i][0] == 'D') { // Data packet
 			var data_pos = parseInt(asm_table[i][1]);
 			var data = asm_table[i][2];
-
 			for (var j = 0; j < data.length; j++) {
 				board[data_pos + j] = parseInt(data[j]);
 			}
+		} else if (asm_table[i][0] == 'E') {
+			error_stack.push(asm_table[i][1]);
 		}
 	}
 
-	return board;
+	return [board, error_stack];
 }
 
 function assemble_program(vm, program) {
+	labels = [];
 	var asm_buffer = clean_str(program);
-    var board = parse_file(vm, asm_buffer);
-	return board;
+    var asm_ret = parse_file(vm, asm_buffer);
+	return asm_ret;
 }

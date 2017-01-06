@@ -2,8 +2,8 @@
 
 function array_to_hash(array) {
 	var norm_str = '';
-	for (var i = 0; i < this.board.length; i++) {
-		var c_byte = (this.board[i]).toString(16);
+	for (var i = 0; i < array.length; i++) {
+		var c_byte = (array[i]).toString(16);
 		if (c_byte.length < 2) {
 			c_byte = "0" + c_byte;
 		}
@@ -410,8 +410,17 @@ class VM {
 	}
 
 	load_asm(asm_str) {
-		var assembled_board = assemble_program(this, asm_str);
-		this.board = assembled_board;
+		var asm_ret = assemble_program(this, asm_str);
+		this.board = asm_ret[0];
+
+		if (asm_ret[1].length > 0) {
+			document.getElementById("asm_err").innerHTML = "";
+			for (var i = 0; i < asm_ret[1].length; i++) {
+				document.getElementById("asm_err").innerHTML += asm_ret[1][i] + "<br>";
+			}
+		} else {
+			document.getElementById("asm_err").innerHTML = "<br>";
+		}
 		this.save_board();
 		this.clear_state();
 	}

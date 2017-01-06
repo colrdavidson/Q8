@@ -168,10 +168,15 @@ function mouse_moved(canvas, event) {
 }
 
 function key_pressed(vm, event) {
+	if (document.activeElement.tagName != "BODY") {
+		return;
+	}
+
 	switch (event.keyCode) {
-		case 37: case 38: case 39: case 40:
-		case 32: event.preventDefault(); break;
-		case 13: event.preventDefault(); break;
+		case 32: case 37: case 38: case 39: case 40:
+		case 13: {
+			event.preventDefault();
+		} break;
 		default: break;
 	}
 
@@ -207,6 +212,10 @@ function key_pressed(vm, event) {
 }
 
 function key_released(vm, event) {
+	if (document.activeElement.tagName != "BODY") {
+		return;
+	}
+
 	if (vm.running) {
 		vm.reset();
 	}
@@ -260,113 +269,92 @@ function hash_change(vm, evt) {
 }
 
 function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, persp, vm) {
-	gl.clear(gl.COLOR_BUFFER_BIT);
-	gl.useProgram(shader);
+	if (vm.board_updated) {
+		gl.clear(gl.COLOR_BUFFER_BIT);
+		gl.useProgram(shader);
 
-	gl.enableVertexAttribArray(a_pos);
-	gl.bindBuffer(gl.ARRAY_BUFFER, v_tile);
-	gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
+		gl.enableVertexAttribArray(a_pos);
+		gl.bindBuffer(gl.ARRAY_BUFFER, v_tile);
+		gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
 
-	var pos_scale = 30.118;
-	var sub_scale = 29;
-	var scale_off = (pos_scale - sub_scale) / 2;
-	var model;
+		var pos_scale = 30.118;
+		var sub_scale = 29;
+		var scale_off = (pos_scale - sub_scale) / 2;
+		var model;
 
-	gl.uniform3f(u_color, 1.0, 1.0, 1.0);
-	for (var x = 0; x < 17; x++) {
-		model = loadIdentity();
-		model = modelTranslate(model, [x  * pos_scale, 0, 0]);
-		model = modelScale(model, [pos_scale, pos_scale, 1]);
-
-		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
-		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
-		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-	}
-
-	for (var y = 0; y < 17; y++) {
-		model = loadIdentity();
-		model = modelTranslate(model, [0, y * pos_scale, 0]);
-		model = modelScale(model, [pos_scale, pos_scale, 1]);
-
-		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
-		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
-		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-	}
-
-	for (var x = 0; x < 16; x++) {
-		for (var y = 0; y < 16; y++) {
+		gl.uniform3f(u_color, 1.0, 1.0, 1.0);
+		for (var x = 0; x < 17; x++) {
 			model = loadIdentity();
-			model = modelTranslate(model, [((x + 1) * pos_scale) + scale_off, ((y + 1) * pos_scale) + scale_off, 0]);
-			model = modelScale(model, [sub_scale, sub_scale, 1]);
-
-			var pos = twod_to_oned(x, y, 16);
-
-			var r_highlight = undefined;
-			var w_highlight = undefined;
-			var r_decay = 0;
-			var w_decay = 0;
-			if (vm.io_filter) {
-				if (vm.read_table[pos] != 0) {
-					r_decay = vm.read_table[pos] / vm.effect_life;
-					r_highlight = [0.93, 0.57, 0.13];
-				} else if (vm.write_table[pos] != 0) {
-					w_decay = vm.write_table[pos] / vm.effect_life;
-					w_highlight = [0.0, 0.8, 0.0];
-				}
-			}
-
-			if (vm.board[pos] != 0) {
-				var color = [0.8, 0.8, 0.8];
-				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
-				var res = blend_colors(0.5, tmp1, tmp2);
-				gl.uniform3f(u_color, res[0], res[1], res[2]);
-			} else {
-				var color = [0.5, 0.5, 0.5];
-				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
-				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
-				var res = blend_colors(0.5, tmp1, tmp2);
-				gl.uniform3f(u_color, res[0], res[1], res[2]);
-			}
+			model = modelTranslate(model, [x  * pos_scale, 0, 0]);
+			model = modelScale(model, [pos_scale, pos_scale, 1]);
 
 			gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 			gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 		}
-	}
 
-	// Draw Program Counter
-	var point = oned_to_twod(vm.pc, 16);
-	point.x += 1;
-	point.y += 1;
-	model = loadIdentity();
-	model = modelTranslate(model, [(point.x * pos_scale) + scale_off, (point.y * pos_scale) + scale_off, 0]);
-	model = modelScale(model, [sub_scale, sub_scale, 1]);
+		for (var y = 0; y < 17; y++) {
+			model = loadIdentity();
+			model = modelTranslate(model, [0, y * pos_scale, 0]);
+			model = modelScale(model, [pos_scale, pos_scale, 1]);
 
-	var highlight = [0.745, 0.965, 0.918];
-	if (vm.board[vm.pc] != 0) {
-		var color = [0.8, 0.8, 0.8];
-		var tmp = blend_colors(high_opacity, color, highlight);
-		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
-	} else {
-		var color = [0.5, 0.5, 0.5];
-		var tmp = blend_colors(high_opacity, color, highlight);
-		gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
-	}
+			gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
+			gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
+			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+		}
 
-	gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
-	gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
-	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+		for (var x = 0; x < 16; x++) {
+			for (var y = 0; y < 16; y++) {
+				model = loadIdentity();
+				model = modelTranslate(model, [((x + 1) * pos_scale) + scale_off, ((y + 1) * pos_scale) + scale_off, 0]);
+				model = modelScale(model, [sub_scale, sub_scale, 1]);
 
-	// Draw Edit Selector
-	if (vm.selected_tile >= 0) {
-		point = oned_to_twod(vm.selected_tile, 16);
+				var pos = twod_to_oned(x, y, 16);
+
+				var r_highlight = undefined;
+				var w_highlight = undefined;
+				var r_decay = 0;
+				var w_decay = 0;
+				if (vm.io_filter) {
+					if (vm.read_table[pos] != 0) {
+						r_decay = vm.read_table[pos] / vm.effect_life;
+						r_highlight = [0.93, 0.57, 0.13];
+					} else if (vm.write_table[pos] != 0) {
+						w_decay = vm.write_table[pos] / vm.effect_life;
+						w_highlight = [0.0, 0.8, 0.0];
+					}
+				}
+
+				if (vm.board[pos] != 0) {
+					var color = [0.8, 0.8, 0.8];
+					var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+					var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
+					var res = blend_colors(0.5, tmp1, tmp2);
+					gl.uniform3f(u_color, res[0], res[1], res[2]);
+				} else {
+					var color = [0.5, 0.5, 0.5];
+					var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+					var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
+					var res = blend_colors(0.5, tmp1, tmp2);
+					gl.uniform3f(u_color, res[0], res[1], res[2]);
+				}
+
+				gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
+				gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
+				gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+			}
+		}
+
+		// Draw Program Counter
+		var point = oned_to_twod(vm.pc, 16);
+		point.x += 1;
+		point.y += 1;
 		model = loadIdentity();
-		model = modelTranslate(model, [((point.x + 1) * pos_scale) + scale_off, ((point.y + 1) * pos_scale) + scale_off, 0]);
+		model = modelTranslate(model, [(point.x * pos_scale) + scale_off, (point.y * pos_scale) + scale_off, 0]);
 		model = modelScale(model, [sub_scale, sub_scale, 1]);
 
-		var highlight = [0.157, 0.733, 0.612];
-		if (vm.board[vm.selected_tile] != 0) {
+		var highlight = [0.745, 0.965, 0.918];
+		if (vm.board[vm.pc] != 0) {
 			var color = [0.8, 0.8, 0.8];
 			var tmp = blend_colors(high_opacity, color, highlight);
 			gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
@@ -379,9 +367,30 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-	}
 
-	if (vm.board_updated) {
+		// Draw Edit Selector
+		if (vm.selected_tile >= 0) {
+			point = oned_to_twod(vm.selected_tile, 16);
+			model = loadIdentity();
+			model = modelTranslate(model, [((point.x + 1) * pos_scale) + scale_off, ((point.y + 1) * pos_scale) + scale_off, 0]);
+			model = modelScale(model, [sub_scale, sub_scale, 1]);
+
+			var highlight = [0.157, 0.733, 0.612];
+			if (vm.board[vm.selected_tile] != 0) {
+				var color = [0.8, 0.8, 0.8];
+				var tmp = blend_colors(high_opacity, color, highlight);
+				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+			} else {
+				var color = [0.5, 0.5, 0.5];
+				var tmp = blend_colors(high_opacity, color, highlight);
+				gl.uniform3f(u_color, tmp[0], tmp[1], tmp[2]);
+			}
+
+			gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
+			gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
+			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+		}
+
 		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
 		var scale = text_ctx.canvas.width / 17;
 		for (var x = 0; x < 16; x++) {
@@ -627,7 +636,10 @@ function vm_main() {
 		document.getElementById("tps_full").addEventListener("click", function(evt) { vm.tps = 240; }, false);
 		document.getElementById("switch_base").addEventListener("click", function(evt) { vm.switch_base(); }, false);
 		document.getElementById("io_filter").addEventListener("click", function(evt) { vm.io_filter = !vm.io_filter; }, false);
-		//document.getElementById("submit_asm").addEventListener("click", function(evt) { var asm = document.getElementById("asm_in").value; vm.load_asm(asm); }, false);
+
+		if (document.getElementById("asm_in") != null) {
+			document.getElementById("asm_in").addEventListener("input", function(evt) { var asm = document.getElementById("asm_in").value; vm.load_asm(asm); }, false);
+		}
 
 		document.getElementById("prev_challenge").addEventListener("click", function(evt) { vm.prev_challenge(); }, false);
 		document.getElementById("reset_challenge").addEventListener("click", function(evt) { vm.reset_challenge(); }, false);
