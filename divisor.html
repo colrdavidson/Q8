@@ -92,74 +92,79 @@ for (int i = 0; i &lt;= input_value; i++) {
 ; like this to give myself scratch-room if I forget
 ; something, or need a little more space
 
-; INIT
-init:
+>0
 JMP i-loop ; Hop into actual code
 
-; 32 - I-LOOP
+>32
 i-loop:
-LOAD A 193 ; Read in i
-LOAD B 192 ; Read in input_value
+LOAD A i ; Read in i
+LOAD B in ; Read in input_value
 CMP A B ; Check to see if the loop has finished
 JE exit ; goto exit if done
 INC A ; i++
-STORE A 193 ; store i
+STORE A i ; store i
 JMP j-loop
 
-; 48 - J-LOOP
+>48
 j-loop:
-LOAD A 194 ; Read in j
-LOAD B 192 ; Read in input_value
+LOAD A j ; Read in j
+LOAD B in ; Read in input_value
 CMP A B ; Check to see if loop has finished
 JE j-loop_reset
 INC A ; j++
-STORE A 194 ; store j
+STORE A j ; store j
 JMP get_next_candidate ; goto get next candidate
 
-; 60 - J-LOOP RESET
+>60
 ; reset j and candiate to 0
 j-loop_reset:
 SET A 0
-STORE A 194 ; set j to 0
-STORE A 195 ; set candiate to 0
+STORE A j ; set j to 0
+STORE A candidate ; set candiate to 0
 JMP i-loop
 
-; 80 - GET NEXT CANDIDATE
+>80
 get_next_candidate:
-LOAD A 195 ; read in candidate
-LOAD B 193 ; read in i
+LOAD A candidate ; read in candidate
+LOAD B i ; read in i
 ADD A B ; candidate += i
-STORE A 195 ; store new candiate
-LOAD B 192 ; load input_value
+STORE A candidate ; store new candiate
+LOAD B in ; load input_value
 CMP A B ; candidate == input_value?
 JE append_list
 JMP j-loop
 
-; 112 - APPEND LIST
+>112
 append_list:
-LOAD A 193 ; read in i
-LOAD B 194 ; read in j
-CMP A B ; i &gt; j?
+LOAD A i ; read in i
+LOAD B j ; read in j
+CMP A B ; i > j?
 JG exit
-STOREI A 176 ; store i to array[n]
-STOREI B 177 ; store j to array[n+1]
-LOAD A 176 ; load n
-LOAD B 177 ; load n+1
+STOREI A idx ; store i to array[n]
+STOREI B idx+ ; store j to array[n+1]
+LOAD A idx ; load n
+LOAD B idx+ ; load n+1
 INC A ;
 INC A ; n += 2
 INC B ;
 INC B ; (n+1) += 2
-STORE A 176 ; store new n
-STORE B 177 ; store new n+1
+STORE A idx ; store new n
+STORE B idx+ ; store new n+1
 JMP j-loop
 
-; 255 - EXIT
+>255
 exit:
 HALT
 
 ; DATA
-$176 224 225 ; array idx, idx + 1
-$192 12 ; input_value
+>176
+idx: $224
+idx+: $225
+>192
+in: $12
+i: $0
+j: $0
+candidate: $0
 </code></pre>
 				</div>
 			</div>

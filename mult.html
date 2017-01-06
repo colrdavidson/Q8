@@ -92,48 +92,55 @@ Add Increment tiles: 11
 			</div>
 			<div>
 				<h3>Assembly Program</h3>
-<pre><code class="language-none; line-numbers">; INIT
+<pre><code class="language-none; line-numbers">>0
 start:
-LOAD A 80 ; load x
-LOAD B 81 ; load y
-CMP A B ; is x &gt; y?
+LOAD A x ; load x
+LOAD B y ; load y
+CMP A B ; is x > y?
 JG swap ; goto swap
 
-; 9 - SAVE_VAR
+>9
 save_var:
-STORE A 96 ; save min(x, y) as i
-STORE B 112 ; save max(x, y) as increment
+STORE A i ; save min(x, y) as i
+STORE B inc ; save max(x, y) as increment
 JMP loop
 
-; 32 - SWAP
+>32
 swap:
-SWAP A B ; (x, y) -&gt; (y, x)
+SWAP A B ; (x, y) -> (y, x)
 JMP save_var
 
-; 36 - LOOP
+>36
 loop:
-LOAD A 96 ; get i
+LOAD A i ; get i
 ISZERO A ; is i == 0?
 JZ exit
 DEC A ; i--
-STORE A 96 ; save new i
+STORE A i ; save new i
 JMP add_increment
 
-; 67 - ADD INCREMENT
+>67
 add_increment:
-LOAD A 97 ; read in cumulative value
-LOAD B 112 ; read in increment
+LOAD A cumulative ; read in cumulative value
+LOAD B inc ; read in increment
 ADD A B ; cumulative = cumulative + increment
 JERR exit ; if overflow, exit
-STORE A 97 ; save new cumulative
+STORE A cumulative ; save new cumulative
 JMP loop
 
-; 255 - EXIT
+>255
 exit:
 HALT
 
 ; DATA
-$80 6 4 ; x, y
+>80
+x: $6
+y: $4
+>96
+i: $0
+cumulative: $0
+>112
+inc: $0
 </code></pre>
 			</div>
 		</div>
