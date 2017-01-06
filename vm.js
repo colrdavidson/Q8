@@ -66,8 +66,11 @@ class VM {
 		this.board_updated = true;
 		this.reg_updated = true;
 		this.step_updated = true;
+
+		this.rendered_pc = -1;
 		this.display_base = 10;
 		this.pre_run = "";
+
 		this.challenge_updated = false;
 		this.cur_challenge = 0;
 		this.challenge_list = ["#challenge0", "#challenge1", "#challenge2",
@@ -143,7 +146,7 @@ class VM {
 			new Instruction("SHL B", "BIT", "Shift register B value left 1 bit, operand value times", "Register B = Register B (@B) &#x226A @V", function() { return op_shl(self, 1); }, 1, false, true),
 			new Instruction("SHR A", "BIT", "Shift register A value right 1 bit, operand value times, propagating 0", "Register A = Register A (@A) &#x226B @V", function() { return op_shr(self, 0); }, 1, false, true),
 			new Instruction("SHR B", "BIT", "Shift register B value right 1 bit, operand value times, propagating 0", "Register B = Register B (@B) &#x226B @V", function() { return op_shr(self, 1); }, 1, false, true),
-			new Instruction("HALT", "UTIL", "Halt the running program", "Stop the running program", function() { return op_halt(self); }, 1, false, false),
+			new Instruction("HALT", "UTIL", "Halt the running program", "Stop the running program", function() { return op_halt(self); }, 1, false, true),
 			new Instruction("ERROR", "UTIL", "Halt the running program, toss the error flag", "Stop the running program, toss error flag", function() { return op_error(self); }, 1, false, true),
 			new Instruction("UNSETSP", "JMP", "Disable the JSP stack", "Disable the JSP", function() { return op_unsetsp(self); }, 1, false, true),
 		];

@@ -72,10 +72,10 @@ function parse_line(vm, line_no, asm_buffer) {
 	}
 
 	var bits = [];
+	bits[0] = line;
+
 	// Handle data declaration
 	if (line[0] == '$' || line[0] == '>') {
-		bits[0] = line;
-
 		if (bits[0][0] == '$') { // Define a byte
 			var chunk = bits[0].slice(1);
 			return verify_value(chunk, 'D', "Byte declaration", line_no);
@@ -83,19 +83,6 @@ function parse_line(vm, line_no, asm_buffer) {
 			var chunk = bits[0].slice(1);
 			return verify_value(chunk, 'P', "Position Skip", line_no);
 		}
-	}
-
-	// Split into instruction and operand pieces
-	for (var i = 0; i < line.length; i++) {
-		if (is_digit(line[i]) || line[i] == '$') {
-			bits[0] = line.slice(0, i - 1);
-			bits[1] = line.slice(i);
-			break;
-		}
-	}
-
-	if (bits.length == 0) {
-		bits[0] = line;
 	}
 
 	// Check for label declaration
@@ -118,6 +105,14 @@ function parse_line(vm, line_no, asm_buffer) {
 			}
 		}
 
+		// Look for LDs
+		for (var i = 0; i < line.length; i++) {
+			if (line[i] == '$') {
+				bits[0] = line.slice(0, i - 1);
+				bits[1] = line.slice(i);
+				break;
+			}
+		}
 		if (bits.length > 1) {
 			if (bits[1][0] == '$') {
 				var type_pack = verify_value(bits[1].slice(1), 'LD', "Labelled Data", line_no);
@@ -129,6 +124,15 @@ function parse_line(vm, line_no, asm_buffer) {
 			}
 		} else {
 			return ['L', label_idx];
+		}
+	}
+
+	// Split into instruction and operand pieces
+	for (var i = 0; i < line.length; i++) {
+		if (is_digit(line[i])) {
+			bits[0] = line.slice(0, i - 1);
+			bits[1] = line.slice(i);
+			break;
 		}
 	}
 

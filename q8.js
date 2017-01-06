@@ -269,7 +269,7 @@ function hash_change(vm, evt) {
 }
 
 function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, persp, vm) {
-	if (vm.board_updated || vm.step_updated || vm.running) {
+	if (vm.rendered_pc != vm.pc || vm.board_updated) {
 		gl.clear(gl.COLOR_BUFFER_BIT);
 		gl.useProgram(shader);
 
@@ -367,6 +367,7 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
 		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+		vm.rendered_pc = vm.pc;
 
 		// Draw Edit Selector
 		if (vm.selected_tile >= 0) {
@@ -390,7 +391,9 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 			gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
 			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 		}
+	}
 
+	if (vm.board_updated) {
 		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
 		var scale = text_ctx.canvas.width / 17;
 		for (var x = 0; x < 16; x++) {
