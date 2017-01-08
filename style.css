@@ -54,10 +54,10 @@ tr.selected {
 #debug {
 	background-color: #bef6ea;
 	padding: 1em;
-	width: 512px;
-	height: 8em;
 	text-align: left;
-	margin-left: 2em;
+	max-width: 382px;
+	height: 9em;
+	margin-left: 6.5em;
 }
 
 .reg {

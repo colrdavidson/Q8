@@ -4,73 +4,8 @@ var mouse_x = 0;
 var mouse_y = 0;
 var high_opacity = 0.95;
 var debug_vm;
-
-
-var raw_str = `
-	; INIT
-	; Copy the starting indices and array length for later
-	start:
-	LOAD A 177 ; index: i
-	LOAD B 178 ; index + 1: j
-	STORE A 193 ; use as initial i
-	STORE B 194 ; use as initial j
-	LOAD A 176 ; len - 1
-	STORE A 192 ; use as initial j
-	JMP main_loop ; goto main loop
-
-	; 16 - IS SORTED?
-	is_sorted:
-	LOAD A 195 ; check if the swapped bool changed
-	ISZERO A
-	JZ exit ; goto exit
-	JMP restart_loop ; goto restart loop
-
-	; 32 - RESTART LOOP
-	restart_loop:
-	LOAD A 192 ; grab len - 1
-	STORE A 176 ; use as new remaining distance
-	LOAD A 193 ; grab initial i
-	LOAD B 194 ; grab initial j
-	STORE A 177 ; use as new i
-	STORE B 178 ; use as new j
-	SET A 0 ; swapped = false
-	STORE A 195 ; use as new swapped
-	JMP main_loop ; goto main loop
-
-	; 80 - MAIN LOOP
-	main_loop:
-	LOAD A 176 ; grab remaining distance to end of list
-	ISZERO A ; Are we all the way through the list?
-	JZ is_sorted ; goto is sorted?
-	DEC A ; remaining distance--
-	STORE A 176 ; store new distance
-	LOADI A 177 ; load i
-	LOADI B 178 ; load j
-	CMP A B ; compare i and j
-	JG swap_val ; goto swap values if necessary
-
-	; 95 - STORE REGISTERS
-	store_reg:
-	STOREI A 177 ; store A at grid[i]
-	STOREI B 178 ; store B at grid[j]
-	LOAD A 177 ; load i
-	LOAD B 178 ; load j
-	INC A ; i++
-	INC B ; j++
-	STORE A 177 ; update i
-	STORE B 178 ; update j
-	JMP main_loop ; goto main loop
-
-	; 112 - SWAP VALUES
-	swap_val:
-	STORE A 195 ; swapped = true
-	SWAP A B
-	JMP store_reg ; goto store registers
-
-	; 255 - EXIT
-	exit:
-	HALT
-`;
+var tile_size;
+var font_size;
 
 String.prototype.replaceAll = function (find, replace) {
 	var str = this;
@@ -151,8 +86,8 @@ function mouse_pressed(vm, canvas, event) {
 	if (tmp_x > canvas.width || tmp_x < 0 || tmp_y > canvas.height || tmp_y < 0) {
 		vm.selected_tile = -1;
 	} else {
-		var new_x = Math.floor(mouse_x / 32) - 1;
-		var new_y = Math.floor(mouse_y / 32) - 1;
+		var new_x = Math.floor(mouse_x / tile_size) - 1;
+		var new_y = Math.floor(mouse_y / tile_size) - 1;
 		vm.selected_tile = twod_to_oned(new_x, new_y, 16);
 		set_buffer(vm, vm.board[vm.selected_tile]);
 		vm.row_updated = true;
@@ -277,8 +212,8 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		gl.bindBuffer(gl.ARRAY_BUFFER, v_tile);
 		gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
 
-		var pos_scale = 30.118;
-		var sub_scale = 29;
+		var pos_scale = tile_size * 0.941;
+		var sub_scale = tile_size * 0.906;
 		var scale_off = (pos_scale - sub_scale) / 2;
 		var model;
 
@@ -396,6 +331,7 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	if (vm.board_updated) {
 		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
 		var scale = text_ctx.canvas.width / 17;
+		var tile_off = (tile_size / 2) + 1;
 		for (var x = 0; x < 16; x++) {
 			for (var y = 0; y < 16; y++) {
 				var pos = twod_to_oned(x, y, 16);
@@ -406,20 +342,20 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 					} else {
 						tmp_buffer = vm.entry_buffer;
 					}
-					text_ctx.fillText(tmp_buffer, ((x + 1) * scale) + 17, ((y + 1) * scale) + 17);
+					text_ctx.fillText(tmp_buffer, ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off);
 				} else {
-					text_ctx.fillText(fmt_base(vm, vm.board[pos]), ((x + 1) * scale) + 17, ((y + 1) * scale) + 17);
+					text_ctx.fillText(fmt_base(vm, vm.board[pos]), ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off + 1);
 				}
 			}
 		}
 
 		// TOP TEXT
 		for (var x = 0; x < 16; x++) {
-			text_ctx.fillText(fmt_base(vm, x), ((x + 1) * scale) + 16, 20);
+			text_ctx.fillText(fmt_base(vm, x), ((x + 1) * scale) + tile_off - 1, tile_size * 0.625);
 		}
 		// SIDE TEXT
 		for (var y = 0; y < 16; y++) {
-			text_ctx.fillText(fmt_base(vm, y * 16), 14, ((y + 1) * scale) + 17);
+			text_ctx.fillText(fmt_base(vm, y * 16), tile_size * 0.438, ((y + 1) * scale) + tile_off);
 		}
 
 		vm.board_updated = false;
@@ -586,12 +522,30 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 function vm_main() {
 	var canvas = document.getElementById("gl_canvas");
 	var text_canvas = document.getElementById("text_canvas");
+
+	if (window.innerWidth < 544) {
+		canvas.width = 272;
+		canvas.height = 272;
+		text_canvas.width = 272;
+		text_canvas.height = 272;
+	}
+
 	var gl = init_webgl(canvas);
 	var text_ctx = text_canvas.getContext('2d');
 
 	if (gl && text_ctx) {
 
-		text_ctx.font = "16px sans-serif";
+		tile_size = canvas.width / 17;
+		console.log(canvas.width);
+		if (canvas.width < 544) {
+			font_size = "10px";
+			document.getElementById("text_div").style.marginTop = "-51.5%";
+		} else {
+			font_size = "16px";
+			document.getElementById("text_div").style.marginTop = "-101%";
+		}
+
+		text_ctx.font = font_size + " sans-serif";
 		text_ctx.textBaseline = "middle";
 		text_ctx.textAlign = "center";
 
@@ -614,7 +568,7 @@ function vm_main() {
 		var u_persp = gl.getUniformLocation(shader, "persp");
 		var u_model = gl.getUniformLocation(shader, "model");
 
-		var persp = makeOrtho(0.0, 512.0, 512.0, 0.0, 0.0, 1.0);
+		var persp = makeOrtho(0.0, canvas.width - tile_size, canvas.height - tile_size, 0.0, 0.0, 1.0);
 		gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
 		var vm = new VM();
