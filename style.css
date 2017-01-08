@@ -1,9 +1,13 @@
-.container {
+.my_container {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
 	align-items: flex-start;
 	max-width: none;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 15px;
+	padding-right: 15px;
 	width: auto;
 }
 

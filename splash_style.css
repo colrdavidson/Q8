@@ -1,8 +1,10 @@
-.container {
+.my_container {
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	padding-left: 15px;
+	padding-right: 15px;
 	max-width: 40em;
 }
 
@@ -59,5 +61,5 @@ section {
 
 body {
 	font-family: sans-serif;
-    padding-top: 60px;
+    padding-top: 5em;
 }
