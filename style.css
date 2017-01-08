@@ -1,8 +1,8 @@
 .my_container {
 	display: flex;
-	flex-direction: row;
 	justify-content: space-around;
 	align-items: flex-start;
+	flex-flow: row wrap;
 	max-width: none;
 	margin-left: auto;
 	margin-right: auto;
