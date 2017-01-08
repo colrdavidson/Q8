@@ -49,61 +49,61 @@
 			position must be hardcoded. On top of that, assembly
 			uses mnemonics that are far easier to remember and quickly
 			interpret. rather than needing a instruction table,
-			most assembly instructions are intuitive. <code>ADD A B</code>
-			is far easier to read and manage mentally than a block containing the number <code>11</code>.</p>
+		most assembly instructions are intuitive. <code>ADD A B</code>
+		is far easier to read and manage mentally than a block containing the number <code>11</code>.</p>
 
-			<p>Comments are also quite
-			useful. With bytecode, there's only space for code and data,
-			as everything you write could be executed by the processor.
-			With assembly, you can select lines or parts of lines to ignore,
-			and use that space to store information to clarify program
-			specifics to the reader.</p>
+		<p>Comments are also quite
+		useful. With bytecode, there's only space for code and data,
+		as everything you write could be executed by the processor.
+		With assembly, you can select lines or parts of lines to ignore,
+		and use that space to store information to clarify program
+		specifics to the reader.</p>
 
-			<p>Bytecode maintains one advantage. Self-modification. A
-			clever programmer writing bytecode can take make use of far
-			more than the apparant usable space by storing new instructions
-			on top of the old ones, and then re-executing the block.</p>
+		<p>Bytecode maintains one advantage. Self-modification. A
+		clever programmer writing bytecode can take make use of far
+		more than the apparant usable space by storing new instructions
+		on top of the old ones, and then re-executing the block.</p>
 
-			<p>Unfortunately, it does have a few drawbacks.
-			While it's nice for space-saving, it's not great for the modern
-			processor's caching systems. When you modify the code at runtime,
-			the processor's cached bytecode becomes invalid, and it has to
-			stop and pull in the new code. Additionally, it's not great
-			for system security. If the program can modify itself, the
-			user may be able to coerce the program to make malicious self-modifications,
-			jumping into blocks of code that the program wasn't intended to run.</p>
+		<p>Unfortunately, it does have a few drawbacks.
+		While it's nice for space-saving, it's not great for the modern
+		processor's caching systems. When you modify the code at runtime,
+		the processor's cached bytecode becomes invalid, and it has to
+		stop and pull in the new code. Additionally, it's not great
+		for system security. If the program can modify itself, the
+		user may be able to coerce the program to make malicious self-modifications,
+		jumping into blocks of code that the program wasn't intended to run.</p>
 
-			<h2>Manual Bytecode Generation</h2>
-			<p>Written in bytecode manually, I had to first write the program out on paper,
-			and then translate the chunks into operations by consulting the instruction table.
-			This was slow to write, and annoying to debug.</p>
-			<div style="width: 40%; margin-left: auto; margin-right: auto;">
-				<h3>Bytecode Program</h3>
-				<ul style="margin-left: auto; margin-right: auto;">
-					<li>writing requires complex mental model</li>
-					<li>separation of code and output unclear</li>
-					<li>reading requires lookup table for ops</li>
+		<h2>Manual Bytecode Generation</h2>
+		<p>Written in bytecode manually, I had to first write the program out on paper,
+		and then translate the chunks into operations by consulting the instruction table.
+		This was slow to write, and annoying to debug.</p>
+		<div style="width: 40%; margin-left: auto; margin-right: auto;">
+			<h3>Bytecode Program</h3>
+			<ul style="margin-left: auto; margin-right: auto;">
+				<li>writing requires complex mental model</li>
+				<li>separation of code and output unclear</li>
+				<li>reading requires lookup table for ops</li>
+			</ul>
+			<a href="q8.html#AwRgrMwExikgNhAUypSYGQQdnSAQygBZ0zyLLKoAzQ4ATnyxAA4QBjGu0zUA4gGYqI0WPKI4UPMABGUBN2CYQhEuSylx2nbr36Dho8ZOmz5i5avlBHIA">
+				<div class="img_container">
+					<img class="img_link" style="width: 90%;" src="mult.gif">
+				</div>
+			</a>
+		</div>
+		<h2>Automatic Bytecode Generation</h2>
+		<p>Taking far less time to write, this was written in assembly and then
+		assembled using an assembler. The resulting program performs the same operations
+		in the same period of time, and the source is readable, and far more easily modified.
+		As an added legibility bonus, logical errors are far easier to spot.</p>
+		<div class="multi_code_container">
+			<div>
+				<h3>Assembly Program</h3>
+				<ul style="margin-left: auto; margin-right: auto; width: 60%;">
+					<li>requires knowledge of asm</li>
+					<li>fewer hardcoded positions</li>
+					<li>lots of space for comments</li>
 				</ul>
-				<a href="q8.html#AwRgrMwExikgNhAUypSYGQQdnSAQygBZ0zyLLKoAzQ4ATnyxAA4QBjGu0zUA4gGYqI0WPKI4UPMABGUBN2CYQhEuSylx2nbr36Dho8ZOmz5i5avlBHIA">
-					<div class="img_container">
-						<img class="img_link" style="width: 90%;" src="mult.gif">
-					</div>
-				</a>
-			</div>
-			<h2>Automatic Bytecode Generation</h2>
-			<p>Taking far less time to write, this was written in assembly and then
-			assembled using an assembler. The resulting program performs the same operations
-			in the same period of time, and the source is readable, and far more easily modified.
-			As an added legibility bonus, logical errors are far easier to spot.</p>
-			<div class="code_container">
-				<div>
-					<h3>Assembly Program</h3>
-					<ul style="margin-left: auto; margin-right: auto; width: 60%;">
-						<li>requires knowledge of asm</li>
-						<li>fewer hardcoded positions</li>
-						<li>lots of space for comments</li>
-					</ul>
-		<pre><code class="language-none; line-numbers">; INIT
+	<pre><code class="language-none; line-numbers">; INIT
 start:
 LOAD A 80 ; load x
 LOAD B 81 ; load y
@@ -146,7 +146,7 @@ HALT
 ; DATA
 $80 6 4 ; x, y</code></pre>
 			</div>
-			<div style="margin-top: -38.75em;">
+			<div>
 				<div>
 					<h3>Assembled Program</h3>
 					<ul>

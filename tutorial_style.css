@@ -76,6 +76,11 @@ section {
 	margin: 0 auto;
 }
 
+p {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 body {
 	color: #0F0F0F;
 	font-family: sans-serif;

@@ -59,6 +59,11 @@ section {
 	max-width: 40em;
 }
 
+p {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 body {
 	font-family: sans-serif;
     padding-top: 5em;
