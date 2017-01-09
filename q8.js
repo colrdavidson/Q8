@@ -158,7 +158,7 @@ function key_released(vm, event) {
 	switch (event.keyCode) {
 		case 37: case 38: case 39: case 40: {
 		} break;
-		case 8: { // Backspace
+		case 8: case 46: { // Backspace
 			if (vm.entry_buffer.length == 3 && vm.display_base == 16) {
 				vm.entry_buffer = "0x0";
 			} else if (vm.entry_buffer.length > 1) {
