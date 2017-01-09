@@ -83,8 +83,6 @@ function mouse_pressed(vm, canvas, event) {
 	var tmp_x = event.clientX - rect.left;
 	var tmp_y = event.clientY - rect.top;
 
-	canvas.focus();
-
 	if (tmp_x > canvas.width || tmp_x < 0 || tmp_y > canvas.height || tmp_y < 0) {
 		vm.selected_tile = -1;
 	} else {
@@ -526,10 +524,11 @@ function vm_main() {
 	var text_canvas = document.getElementById("text_canvas");
 
 	if (window.innerWidth < 544) {
-		canvas.width = 272;
-		canvas.height = 272;
-		text_canvas.width = 272;
-		text_canvas.height = 272;
+		var new_size = 391;
+		canvas.width = new_size;
+		canvas.height = new_size;
+		text_canvas.width = new_size;
+		text_canvas.height = new_size;
 	}
 
 	var gl = init_webgl(canvas);
@@ -540,8 +539,8 @@ function vm_main() {
 		tile_size = canvas.width / 17;
 		console.log(canvas.width);
 		if (canvas.width < 544) {
-			font_size = "10px";
-			document.getElementById("text_div").style.marginTop = "-51.5%";
+			font_size = "11px";
+			document.getElementById("text_div").style.marginTop = "-73%";
 		} else {
 			font_size = "16px";
 			document.getElementById("text_div").style.marginTop = "-101%";
