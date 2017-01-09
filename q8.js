@@ -212,7 +212,7 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		gl.bindBuffer(gl.ARRAY_BUFFER, v_tile);
 		gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
 
-		var pos_scale = tile_size * 0.941;
+		var pos_scale = tile_size * 0.942;
 		var sub_scale = tile_size * 0.906;
 		var scale_off = (pos_scale - sub_scale) / 2;
 		var model;
@@ -535,12 +535,13 @@ function vm_main() {
 	var text_ctx = text_canvas.getContext('2d');
 
 	if (gl && text_ctx) {
-
 		tile_size = canvas.width / 17;
 		console.log(canvas.width);
 		if (canvas.width < 544) {
 			font_size = "11px";
 			document.getElementById("text_div").style.marginTop = "-73%";
+			document.getElementById("text_div").style.marginLeft = "2em";
+			document.getElementById("gl_div").style.marginLeft = "2em";
 		} else {
 			font_size = "16px";
 			document.getElementById("text_div").style.marginTop = "-101%";
