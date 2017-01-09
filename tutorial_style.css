@@ -7,6 +7,14 @@
 	display: inline-block;
 }
 
+pre {
+	font-size: 12px;
+}
+
+code {
+	overflow: scroll;
+}
+
 .info-tag {
 	background-color: #bef6ea;
 	color: #28bb9c;
@@ -19,6 +27,14 @@
 	align-items: center;
 }
 
+.img_col_container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
 .img_link {
 	border: 2px solid #FFF;
 }
@@ -29,17 +45,20 @@
 
 .code_container {
 	display: flex;
+	flex-flow: row wrap;
 	justify-content: center;
 	align-items: center;
 }
 
 .multi_code_container {
 	display: flex;
+	flex-flow: row wrap;
 	justify-content: center;
 	align-items: flex-start;
 }
 
 .c_and_img {
+	flex: 1 2 40%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
