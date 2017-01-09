@@ -524,7 +524,7 @@ function vm_main() {
 	var text_canvas = document.getElementById("text_canvas");
 
 	if (window.innerWidth < 544) {
-		var new_size = 391;
+		var new_size = 272;
 		canvas.width = new_size;
 		canvas.height = new_size;
 		text_canvas.width = new_size;
@@ -538,10 +538,8 @@ function vm_main() {
 		tile_size = canvas.width / 17;
 		console.log(canvas.width);
 		if (canvas.width < 544) {
-			font_size = "11px";
-			document.getElementById("text_div").style.marginTop = "-73%";
-			document.getElementById("text_div").style.marginLeft = "2em";
-			document.getElementById("gl_div").style.marginLeft = "2em";
+			font_size = "10px";
+			document.getElementById("text_div").style.marginTop = "-51.3%";
 		} else {
 			font_size = "16px";
 			document.getElementById("text_div").style.marginTop = "-101%";
