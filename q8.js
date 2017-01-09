@@ -83,6 +83,8 @@ function mouse_pressed(vm, canvas, event) {
 	var tmp_x = event.clientX - rect.left;
 	var tmp_y = event.clientY - rect.top;
 
+	canvas.focus();
+
 	if (tmp_x > canvas.width || tmp_x < 0 || tmp_y > canvas.height || tmp_y < 0) {
 		vm.selected_tile = -1;
 	} else {
@@ -342,7 +344,7 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 					} else {
 						tmp_buffer = vm.entry_buffer;
 					}
-					text_ctx.fillText(tmp_buffer, ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off);
+					text_ctx.fillText(tmp_buffer, ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off + 1);
 				} else {
 					text_ctx.fillText(fmt_base(vm, vm.board[pos]), ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off + 1);
 				}
@@ -355,7 +357,7 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 		}
 		// SIDE TEXT
 		for (var y = 0; y < 16; y++) {
-			text_ctx.fillText(fmt_base(vm, y * 16), tile_size * 0.438, ((y + 1) * scale) + tile_off);
+			text_ctx.fillText(fmt_base(vm, y * 16), tile_size * 0.439, ((y + 1) * scale) + tile_off);
 		}
 
 		vm.board_updated = false;
