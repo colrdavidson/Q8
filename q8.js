@@ -109,7 +109,7 @@ function key_pressed(vm, event) {
 
 	switch (event.keyCode) {
 		case 32: case 37: case 38: case 39: case 40:
-		case 13: {
+		case 13: case 46: {
 			event.preventDefault();
 		} break;
 		default: break;
