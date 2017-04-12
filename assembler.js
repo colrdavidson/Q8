@@ -247,6 +247,6 @@ function parse_file(vm, asm_buffer) {
 function assemble_program(vm, program) {
 	labels = [];
 	var asm_buffer = clean_str(program);
-    var asm_ret = parse_file(vm, asm_buffer);
+	var asm_ret = parse_file(vm, asm_buffer);
 	return asm_ret;
 }

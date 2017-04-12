@@ -126,7 +126,7 @@ class VM {
 			new Instruction("JNEI", "JMP", "Move the program counter to address contained at operand value address if E flag is false", "If E flag = false, Move the pc to position @IV", function() { return op_jnei(self); }, 2, false, false),
 			new Instruction("JERR", "JMP", "Move the program counter to operand value address if Err flag is true", "If Err flag = true, Move the pc to position @V", function() { return op_jerr(self); }, 2, false, false),
 			new Instruction("JERRI", "JMP", "Move the program counter to address contained at operand value address if Err flag is true", "If Err flag = true, Move the pc to position @IV", function() { return op_jerri(self); }, 2, false, false),
-			new Instruction("RELJMP", "JMP", "Move the program counter to progra counter plus the operand value", "pc = @P + @V", function() { return op_reljmp(self); }, 2, false, false),
+			new Instruction("RELJMP", "JMP", "Move the program counter to program counter plus the operand value", "pc = @P + @V", function() { return op_reljmp(self); }, 2, false, false),
 			new Instruction("REGJMP A", "JMP", "Move the program counter to the value contained in register A", "pc = grid[Register A]", function() { return op_regjmp(self, 0); }, 1, false, false),
 			new Instruction("REGJMP B", "JMP", "Move the program counter to the value contained in register B", "pc = grid[Register B]", function() { return op_regjmp(self, 1); }, 1, false, false),
 			new Instruction("RET", "JMP", "Return to the last placed jumped from, decrement JSP", "pc = last jump position", function() { return op_ret(self); }, 1, false, true),

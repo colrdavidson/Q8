@@ -1,121 +1,143 @@
 .my_container {
-	display: flex;
-	justify-content: space-around;
-	align-items: flex-start;
-	flex-flow: row wrap;
-	max-width: none;
-	margin-left: auto;
-	margin-right: auto;
-	padding-left: 15px;
-	padding-right: 15px;
-	width: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-flow: row wrap;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: auto;
 }
 
 #canvas {
-	z-level: 1;
+    z-level: 1;
 }
 
 #text {
-	pointer-events: none;
-	z-level: 2;
+    pointer-events: none;
+    z-level: 2;
 }
 
 
 tr.selected {
-	background-color: #bef6ea;
+    background-color: #bef6ea;
 }
 
 #f_err {
-	padding-left: 0.5em;
-	text-align: center;
-	width: 4em;
+    padding-left: 0.5em;
+    text-align: center;
+    width: 4em;
 }
 
 #f_err.selected {
-	background-color: #FF0000;
-	color: #FFFFFF;
+    background-color: #FF0000;
+    color: #FFFFFF;
 }
 
 #f_stack_enabled {
-	padding-left: 0.5em;
-	width: 4em;
-	text-align: center;
+    padding-left: 0.5em;
+    width: 4em;
+    text-align: center;
 }
 
 #f_sp {
-	width: 2.25em;
-	text-align: center;
+    width: 2.25em;
+    text-align: center;
 }
 
 #f_stack_enabled.selected {
-	background-color: #00FF00;
+    background-color: #00FF00;
 }
 
 #debug {
-	background-color: #bef6ea;
-	padding: 1em;
-	text-align: left;
-	max-width: 382px;
-	height: 9em;
-	margin-left: 6.5em;
+    background-color: #bef6ea;
+    padding: 1em;
+    text-align: left;
+    max-width: 382px;
+    height: 9em;
+    margin-left: 6.5em;
+    border: 1px solid #ddd;
+    border-radius: 3px;
 }
 
 .reg {
     color: #FFFFFF;
-	background-color: #28bb9c;
-	font-size: 16pt;
-	padding: 0.25em;
-	border: 6px solid #28bb9c;
+    background-color: #28bb9c;
+    font-size: 16pt;
+    padding: 0.25em;
+    border: 6px solid #28bb9c;
 }
 
 .regs {
     color: #0F0F0F;
-	background-color: #808080;
-	width: 64px;
-	height: 64px;
-	text-align: center;
-	font-size: 16pt;
-	padding-left: 0.5em;
-	padding-left: 0.5em;
-	border: 6px solid #28bb9c;
+    background-color: #808080;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+    font-size: 16pt;
+    padding-left: 0.5em;
+    padding-left: 0.5em;
+    border: 6px solid #28bb9c;
+    border-radius: 3px;
 }
 
 .button_box {
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-	background-color: #bef6ea;
-	width: 382px;
-	margin-left: 6.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    background-color: #bef6ea;
+    width: 382px;
+    margin-left: 6.5em;
+    border: 1px solid #ddd;
+    border-radius: 3px;
 }
 
 .button_box > button {
-	margin-top: 0.125em;
-	margin-bottom: 0.125em;
-	margin-left: 0.125em;
-	margin-right: 0.125em;
+    margin-top: 0.125em;
+    margin-bottom: 0.125em;
+    margin-left: 0.125em;
+    margin-right: 0.125em;
 }
 
 .flag_box {
-	margin-bottom: 0.5em;
-	width: 512px;
-	margin-left: 2em;
+    margin-bottom: 0.5em;
+    width: 512px;
+    margin-left: 2em;
 }
 
 .challenge_box {
-	display: none;
+    display: none;
+}
+
+#asm_box {
+    padding-top: 0.25em;
+    padding-bottom: 0em;
+    padding-left: 1.0em;
+    padding-right: 1.0em;
+}
+
+#asm_box > h3 {
+    margin: 0em;
+}
+
+#asm_in {
+    margin: 0em;
+    background-color: #F0F0F0;
+    resize: none;
 }
 
 th, td {
-	padding-right: 0.5em;
+    padding-right: 0.5em;
 }
 
 table {
-	text-align: left;
-	margin-left: auto;
-	margin-right: auto;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 body {
     color: #0F0F0F;
-	font-family: sans-serif;
+    font-family: sans-serif;
 }
