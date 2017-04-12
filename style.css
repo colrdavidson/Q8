@@ -5,7 +5,7 @@ body {
 
 .my_container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: flex-start;
     flex-flow: row wrap;
     max-width: none;
@@ -165,12 +165,14 @@ body {
     border-radius: 3px;
 
     background-color: white;
+    overflow-x: auto;
 }
 
 .op_container > p {
     flex-grow: 1;
     flex-basis: 0;
     margin: 0;
+    margin-right: 0.5em;
     text-align: left;
 }
 
