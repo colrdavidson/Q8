@@ -30,7 +30,7 @@
         <script defer src="q8.js"></script>
     </head>
 	<body id="page-top" data-target=".navbar-fixed-top" onload="vm_main()">
-		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse" style="margin-left: -48em;">
+		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
 		  <div class="container">
 			<div class="navbar-header page-scroll">
 			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -45,14 +45,15 @@
 		<section>
         <div style="text-align: center; margin-top: 5em;">
 			<h1>Quine8</h1>
-			<h4 style="color: #B0B0B0; margin-bottom: 1em;">Your URL is your saved program. Keep it safe and share it with your friends!</h4>
+			<h4 style="color: #909090; margin-bottom: -0.5em;">Your URL is your saved program. Keep it safe and share it with your friends!</h4>
+			<h5 style="color: #B0B0B0; margin-bottom: 1.5em;">If you are looking for an instruction table, scroll down, or expand the browser window</h5>
 			<div id="challenge_box" hidden>
 				<h4 id="challenge_desc" style="margin-top: -0.5em;">This is a challenging challenge</h4>
 				<button type="button" id="prev_challenge" style="margin-bottom: 1em;">Prev Challenge</button>
 				<button type="button" id="reset_challenge" style="margin-bottom: 1em;">Reset Challenge</button>
 				<button type="button" id="next_challenge" style="margin-bottom: 1em;">Next Challenge</button>
 			</div>
-			<div class="container">
+			<div class="my_container">
 				<div style="padding-right: 2em;">
 					<div style="padding-bottom: 2em">
 						<div class="button_box">
@@ -70,10 +71,10 @@
 						</div>
 					</div>
 					<div style="margin-top: -2em;">
-						<div>
+						<div id="gl_div">
 							<canvas id="gl_canvas" width="544" height="544">NOT SUPPORT!</canvas>
 						</div>
-						<div style="margin-top: -548px; pointer-events: none;">
+						<div id="text_div" style="pointer-events: none;">
 							<canvas id="text_canvas" width="544" height="544">NOT SUPPORT!</canvas>
 						</div>
 					</div>
@@ -105,7 +106,7 @@
 						<tr><td>Arrows Keys / Left Click</td><td>move tile selection box</td></tr>
 					</table>
 				</div>
-				<div style="margin-top: 9em;">
+				<div style="margin-top: 8.5em;">
 					<textarea cols="80" rows="25" id="asm_in"></textarea>
 					<p id="asm_err" style="color: #F00;"><br></p>
 				</div>
