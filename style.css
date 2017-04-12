@@ -10,7 +10,6 @@ body {
     flex-flow: row wrap;
     max-width: none;
     margin-left: auto;
-    margin-right: auto;
     padding-left: 15px;
     padding-right: 15px;
     width: auto;
@@ -186,3 +185,6 @@ table {
     margin-right: auto;
 }
 
+#asm_err {
+	width: 20em;
+}
