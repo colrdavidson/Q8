@@ -109,6 +109,7 @@ body {
     padding-bottom: 0em;
     padding-left: 1.0em;
     padding-right: 1.0em;
+	margin-left: -2em;
 }
 
 #asm_box > h3 {
