@@ -151,19 +151,19 @@ class VM {
 			new Instruction("UNSETSP", "JMP", "Disable the JSP stack", "Disable the JSP", function() { return op_unsetsp(self); }, 1, false, true),
 		];
 
-		var rev_lookup = [];
-		for (var i = 0; i < this.op_table.length; i++) {
-			var op = this.op_table[i];
+		let rev_lookup = [];
+		for (let i = 0; i < this.op_table.length; i++) {
+			let op = this.op_table[i];
 			rev_lookup[op.name] = i;
 		}
 		this.rev_lookup = rev_lookup;
 
-		var table = document.getElementById("op_table_iso");
+		let table = document.getElementById("op_table_iso");
 		if (table != undefined) {
-			var head_id_cell = document.createElement('p');
-			var head_name_cell = document.createElement('p');
-			var head_desc_cell = document.createElement('p');
-			var head_operand_cell = document.createElement('p');
+			let head_id_cell = document.createElement('p');
+			let head_name_cell = document.createElement('p');
+			let head_desc_cell = document.createElement('p');
+			let head_operand_cell = document.createElement('p');
 			head_id_cell.innerHTML = "Value";
 			head_name_cell.innerHTML = "Instruction";
 			head_desc_cell.innerHTML = "Description";
@@ -173,7 +173,7 @@ class VM {
 			head_id_cell.style.textAlign = "center";
 			head_operand_cell.style.textAlign = "center";
 
-			var head_op_div = document.createElement('div');
+			let head_op_div = document.createElement('div');
 			head_op_div.className = "op_container";
 			head_op_div.append(head_id_cell);
 			head_op_div.append(head_name_cell);
@@ -181,11 +181,11 @@ class VM {
 			head_op_div.append(head_operand_cell);
 			table.append(head_op_div);
 
-			for (var i = 0; i < this.op_table.length; i++) {
-				var id_cell = document.createElement('p');
-				var name_cell = document.createElement('p');
-				var desc_cell = document.createElement('p');
-				var operand_cell = document.createElement('p');
+			for (let i = 0; i < this.op_table.length; i++) {
+				let id_cell = document.createElement('p');
+				let name_cell = document.createElement('p');
+				let desc_cell = document.createElement('p');
+				let operand_cell = document.createElement('p');
 
 				id_cell.innerHTML = (i).toString(this.display_base).toUpperCase();
 				name_cell.innerHTML = this.op_table[i].name;
@@ -196,7 +196,7 @@ class VM {
 				id_cell.style.textAlign = "center";
 				operand_cell.style.textAlign = "center";
 
-				var op_div = document.createElement('div');
+				let op_div = document.createElement('div');
 				op_div.className = "op_container";
 				op_div.append(id_cell);
 				op_div.append(name_cell);
@@ -211,9 +211,9 @@ class VM {
 	}
 
 	print_op_type(type) {
-		var typed_ops = [];
-		for (var i = 0; i < this.op_table.length; i++) {
-			var op = this.op_table[i];
+		let typed_ops = [];
+		for (let i = 0; i < this.op_table.length; i++) {
+			let op = this.op_table[i];
 			if (op.type == type) {
 				typed_ops.push(op);
 			}
@@ -233,9 +233,9 @@ class VM {
 		this.step_updated = true;
 		this.board_updated = true;
 
-		var table = this.page_op_table;
+		let table = this.page_op_table;
 		for (var i = 0; i < this.op_table.length; i++) {
-			var items = table[i + 1].getElementsByTagName("p");
+			let items = table[i + 1].getElementsByTagName("p");
 			items[0].innerHTML = (i).toString(this.display_base).toUpperCase();
 		}
 	}
@@ -245,9 +245,9 @@ class VM {
 			return;
 		}
 
-		var old_a_decay = this.read_table[256];
-		var old_b_decay = this.read_table[257];
-		for (var i = 0; i < this.read_table.length; i++) {
+		let old_a_decay = this.read_table[256];
+		let old_b_decay = this.read_table[257];
+		for (let i = 0; i < this.read_table.length; i++) {
 			if (this.read_table[i] > 0) {
 				this.read_table[i] -= this.decay_rate;
 			} else {
@@ -259,9 +259,9 @@ class VM {
 			this.reg_updated = true;
 		}
 
-		var old_a_decay = this.write_table[256];
-		var old_b_decay = this.write_table[257];
-		for (var i = -2; i < this.write_table.length; i++) {
+		old_a_decay = this.write_table[256];
+		old_b_decay = this.write_table[257];
+		for (let i = -2; i < this.write_table.length; i++) {
 			if (this.write_table[i] > 0) {
 				this.write_table[i] -= this.decay_rate;
 			} else {
@@ -377,7 +377,7 @@ class VM {
 	}
 
 	save_board() {
-		var str = "#" + array_to_hash(this.board);
+		let str = "#" + array_to_hash(this.board);
 		this.pre_run = str;
 		location.replace(str);
 	}
@@ -436,12 +436,12 @@ class VM {
 	}
 
 	load_asm(asm_str) {
-		var asm_ret = assemble_program(this, asm_str);
+		let asm_ret = assemble_program(this, asm_str);
 		this.board = asm_ret[0];
 
 		if (asm_ret[1].length > 0) {
 			document.getElementById("asm_err").innerHTML = "";
-			for (var i = 0; i < asm_ret[1].length; i++) {
+			for (let i = 0; i < asm_ret[1].length; i++) {
 				document.getElementById("asm_err").innerHTML += asm_ret[1][i] + "<br>";
 			}
 		} else {
@@ -497,7 +497,7 @@ function op_add(vm, a_idx, b_idx) {
 }
 
 function op_addi(vm, idx) {
-	var tmp = vm.reg[idx] + vm.board[vm.pc];
+	let tmp = vm.reg[idx] + vm.board[vm.pc];
 	if (tmp > 255) {
 		vm.error_flag = true;
 	}
@@ -505,7 +505,7 @@ function op_addi(vm, idx) {
 }
 
 function op_sub(vm, a_idx, b_idx) {
-	var tmp = vm.reg[a_idx] - vm.reg[b_idx];
+	let tmp = vm.reg[a_idx] - vm.reg[b_idx];
 	if (tmp < 0) {
 		vm.error_flag = true;
 	}
@@ -513,7 +513,7 @@ function op_sub(vm, a_idx, b_idx) {
 }
 
 function op_subi(vm, idx) {
-	var tmp = vm.reg[idx] - vm.board[vm.pc];
+	let tmp = vm.reg[idx] - vm.board[vm.pc];
 	if (tmp < 0) {
 		vm.error_flag = true;
 	}
@@ -521,7 +521,7 @@ function op_subi(vm, idx) {
 }
 
 function op_inc(vm, idx) {
-	var tmp = vm.reg[idx] + 1;
+	let tmp = vm.reg[idx] + 1;
 	if (tmp > 255) {
 		vm.error_flag = true;
 	}
@@ -529,7 +529,7 @@ function op_inc(vm, idx) {
 }
 
 function op_dec(vm, idx) {
-	var tmp = vm.reg[idx] - 1;
+	let tmp = vm.reg[idx] - 1;
 	if (tmp < 0) {
 		vm.error_flag = true;
 	}
@@ -685,7 +685,7 @@ function op_deref(vm, idx) {
 }
 
 function op_swap(vm, a_idx, b_idx) {
-	var tmp = vm.reg[a_idx];
+	let tmp = vm.reg[a_idx];
 	vm.reg[a_idx] = vm.reg[b_idx];
 	vm.reg[b_idx] = tmp;
 }
@@ -707,7 +707,7 @@ function op_xor(vm, idx) {
 }
 
 function op_shr(vm, idx) {
-	var tmp = vm.reg[idx] >>> vm.board[vm.pc];
+	let tmp = vm.reg[idx] >>> vm.board[vm.pc];
 	if (tmp < 0) {
 		vm.error_flag = true;
 	}
@@ -715,7 +715,7 @@ function op_shr(vm, idx) {
 }
 
 function op_shl(vm, idx) {
-	var tmp = vm.reg[idx] << vm.board[vm.pc];
+	let tmp = vm.reg[idx] << vm.board[vm.pc];
 	if (tmp > 255) {
 		vm.error_flag = true;
 	}

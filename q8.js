@@ -240,43 +240,44 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 
 	for (var x = 0; x < 16; x++) {
 	    for (var y = 0; y < 16; y++) {
-		model = loadIdentity();
-		model = modelTranslate(model, [((x + 1) * pos_scale) + scale_off, ((y + 1) * pos_scale) + scale_off, 0]);
-		model = modelScale(model, [sub_scale, sub_scale, 1]);
+			model = loadIdentity();
+			model = modelTranslate(model, [((x + 1) * pos_scale) + scale_off, ((y + 1) * pos_scale) + scale_off, 0]);
+			model = modelScale(model, [sub_scale, sub_scale, 1]);
 
-		var pos = twod_to_oned(x, y, 16);
+			let pos = twod_to_oned(x, y, 16);
 
-		var r_highlight = undefined;
-		var w_highlight = undefined;
-		var r_decay = 0;
-		var w_decay = 0;
-		if (vm.io_filter) {
-		    if (vm.read_table[pos] != 0) {
-			r_decay = vm.read_table[pos] / vm.effect_life;
-			r_highlight = [0.93, 0.57, 0.13];
-		    } else if (vm.write_table[pos] != 0) {
-			w_decay = vm.write_table[pos] / vm.effect_life;
-			w_highlight = [0.0, 0.8, 0.0];
-		    }
-		}
+			let r_highlight;
+			let w_highlight;
+			let r_decay = 0;
+			let w_decay = 0;
 
-		if (vm.board[pos] != 0) {
-		    var color = [0.8, 0.8, 0.8];
-		    var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
-		    var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
-		    var res = blend_colors(0.5, tmp1, tmp2);
-		    gl.uniform3f(u_color, res[0], res[1], res[2]);
-		} else {
-		    var color = [0.5, 0.5, 0.5];
-		    var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
-		    var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
-		    var res = blend_colors(0.5, tmp1, tmp2);
-		    gl.uniform3f(u_color, res[0], res[1], res[2]);
-		}
+			if (vm.io_filter) {
+				if (vm.read_table[pos] != 0) {
+					r_decay = vm.read_table[pos] / vm.effect_life;
+					r_highlight = [0.93, 0.57, 0.13];
+				} else if (vm.write_table[pos] != 0) {
+					w_decay = vm.write_table[pos] / vm.effect_life;
+					w_highlight = [0.0, 0.8, 0.0];
+				}
+			}
 
-		gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
-		gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
-		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+			if (vm.board[pos] != 0) {
+				var color = [0.8, 0.8, 0.8];
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
+				var res = blend_colors(0.5, tmp1, tmp2);
+				gl.uniform3f(u_color, res[0], res[1], res[2]);
+			} else {
+				var color = [0.5, 0.5, 0.5];
+				var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+				var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
+				var res = blend_colors(0.5, tmp1, tmp2);
+				gl.uniform3f(u_color, res[0], res[1], res[2]);
+			}
+
+			gl.uniformMatrix4fv(u_persp, false, new Float32Array(persp.flatten()));
+			gl.uniformMatrix4fv(u_model, false, new Float32Array(model.flatten()));
+			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 	    }
 	}
 
@@ -329,36 +330,36 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
     }
 
     if (vm.board_updated) {
-	text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
-	var scale = text_ctx.canvas.width / 17;
-	var tile_off = (tile_size / 2) + 1;
-	for (var x = 0; x < 16; x++) {
-	    for (var y = 0; y < 16; y++) {
-		var pos = twod_to_oned(x, y, 16);
-		if (pos == vm.selected_tile) {
-		    var tmp_buffer = "";
-		    if (vm.entry_buffer[0] == "0" && vm.entry_buffer[1] == "x") {
-			tmp_buffer = vm.entry_buffer.slice(2, vm.entry_buffer.length);
-		    } else {
-			tmp_buffer = vm.entry_buffer;
-		    }
-		    text_ctx.fillText(tmp_buffer, ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off + 1);
-		} else {
-		    text_ctx.fillText(fmt_base(vm, vm.board[pos]), ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off + 1);
+		text_ctx.clearRect(0, 0, text_ctx.canvas.width, text_ctx.canvas.height);
+		var scale = text_ctx.canvas.width / 17;
+		var tile_off = (tile_size / 2) + 1;
+		for (var x = 0; x < 16; x++) {
+			for (var y = 0; y < 16; y++) {
+				var pos = twod_to_oned(x, y, 16);
+				if (pos == vm.selected_tile) {
+					var tmp_buffer = "";
+					if (vm.entry_buffer[0] == "0" && vm.entry_buffer[1] == "x") {
+						tmp_buffer = vm.entry_buffer.slice(2, vm.entry_buffer.length);
+					} else {
+						tmp_buffer = vm.entry_buffer;
+					}
+					text_ctx.fillText(tmp_buffer, ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off + 1);
+				} else {
+					text_ctx.fillText(fmt_base(vm, vm.board[pos]), ((x + 1) * scale) + tile_off - 1, ((y + 1) * scale) + tile_off + 1);
+				}
+			}
 		}
-	    }
-	}
 
-	// TOP TEXT
-	for (var x = 0; x < 16; x++) {
-	    text_ctx.fillText(fmt_base(vm, x), ((x + 1) * scale) + tile_off - 1, tile_size * 0.625);
-	}
-	// SIDE TEXT
-	for (var y = 0; y < 16; y++) {
-	    text_ctx.fillText(fmt_base(vm, y * 16), tile_size * 0.439, ((y + 1) * scale) + tile_off);
-	}
+		// TOP TEXT
+		for (var x = 0; x < 16; x++) {
+			text_ctx.fillText(fmt_base(vm, x), ((x + 1) * scale) + tile_off - 1, tile_size * 0.625);
+		}
+		// SIDE TEXT
+		for (var y = 0; y < 16; y++) {
+			text_ctx.fillText(fmt_base(vm, y * 16), tile_size * 0.439, ((y + 1) * scale) + tile_off);
+		}
 
-	vm.board_updated = false;
+		vm.board_updated = false;
     }
 
     if (vm.reg_updated) {
@@ -369,27 +370,27 @@ function render(gl, text_ctx, shader, a_pos, v_tile, u_color, u_persp, u_model, 
 	    var w_decay = 0;
 
 	    if (vm.io_filter) {
-		if (vm.read_table[256] != 0) {
-		    r_decay = vm.read_table[256] / vm.effect_life;
-		    r_highlight = [0.93, 0.57, 0.13];
-		} else if (vm.write_table[256] != 0) {
-		    w_decay = vm.write_table[256] / vm.effect_life;
-		    w_highlight = [0.0, 0.8, 0.0];
-		}
+			if (vm.read_table[256] != 0) {
+				r_decay = vm.read_table[256] / vm.effect_life;
+				r_highlight = [0.93, 0.57, 0.13];
+			} else if (vm.write_table[256] != 0) {
+				w_decay = vm.write_table[256] / vm.effect_life;
+				w_highlight = [0.0, 0.8, 0.0];
+			}
 	    }
 
 	    if (vm.reg[0] != 0) {
-		var color = [0.8, 0.8, 0.8];
-		var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
-		var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
-		var res = blend_colors(0.5, tmp1, tmp2);
-		document.getElementById("reg_a").style.backgroundColor = color_to_hex(res);
+			var color = [0.8, 0.8, 0.8];
+			var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+			var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
+			var res = blend_colors(0.5, tmp1, tmp2);
+			document.getElementById("reg_a").style.backgroundColor = color_to_hex(res);
 	    } else {
-		var color = [0.5, 0.5, 0.5];
-		var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
-		var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
-		var res = blend_colors(0.5, tmp1, tmp2);
-		document.getElementById("reg_a").style.backgroundColor = color_to_hex(res);
+			var color = [0.5, 0.5, 0.5];
+			var tmp1 = blend_colors(high_opacity * r_decay, color, r_highlight);
+			var tmp2 = blend_colors(high_opacity * w_decay, color, w_highlight);
+			var res = blend_colors(0.5, tmp1, tmp2);
+			document.getElementById("reg_a").style.backgroundColor = color_to_hex(res);
 	    }
 	}
 	{
