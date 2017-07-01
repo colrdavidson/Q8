@@ -68,7 +68,6 @@ class VM {
 		this.reg_updated = true;
 		this.step_updated = true;
 
-		this.rendered_pc = -1;
 		this.display_base = 10;
 		this.pre_run = "";
 
@@ -233,7 +232,8 @@ class VM {
 		this.reg_updated = true;
 		this.step_updated = true;
 		this.board_updated = true;
-		this.has_decay = false;
+		this.base_updated = true;
+		this.redraw = true;
 
 		let table = this.page_op_table;
 		for (var i = 0; i < this.op_table.length; i++) {
@@ -243,8 +243,6 @@ class VM {
 	}
 
 	propogate_decay() {
-		this.has_decay = false;
-
 		let old_a_r_decay = this.read_table[256];
 		let old_b_r_decay = this.read_table[257];
 		let old_a_w_decay = this.write_table[256];
@@ -272,9 +270,6 @@ class VM {
 
 	tick() {
 		if (!this.running) {
-			if (this.has_decay) {
-				this.propogate_decay();
-			}
 			return;
 		}
 

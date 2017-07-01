@@ -207,6 +207,11 @@ function render_grid(dt, ctx, vm) {
 		return;
 	}
 
+	if (vm.base_updated) {
+        update_guide_text(ctx, vm);
+		vm.base_updated = false;
+	}
+
 	for (let x = 0; x < num_x_tiles; x++) {
 		for (let y = 0; y < num_y_tiles; y++) {
 			let real_x = tile_width * (x + 1);
@@ -245,17 +250,19 @@ function render_grid(dt, ctx, vm) {
 			let real_y = tile_height * (y + 1);
 			let idx = twod_to_oned(x, y, num_x_tiles);
 
-			let text_buffer = vm.board[idx];
 			if (vm.selected_tile == idx) {
+				let text_buffer;
 				if (vm.entry_buffer[0] == "0" && vm.entry_buffer[1] == "x") {
 					text_buffer = vm.entry_buffer.slice(2, vm.entry_buffer.length);
 				} else {
 					text_buffer = vm.entry_buffer;
 				}
+				ctx.fillText(text_buffer, real_x + (tile_width / 2), real_y + (tile_height / 2));
+			} else {
+				ctx.fillText(fmt_base(vm, vm.board[idx]), real_x + (tile_width / 2), real_y + (tile_height / 2));
 			}
 
 			ctx.strokeRect(real_x, real_y, tile_width, tile_height);
-			ctx.fillText(text_buffer, real_x + (tile_width / 2), real_y + (tile_height / 2));
 		}
 	}
 
@@ -267,6 +274,7 @@ function render_grid(dt, ctx, vm) {
 			base_color_a = "#888888";
 		}
 		document.getElementById("reg_a").style.backgroundColor = compute_blend_color(vm, 256, base_color_a);
+		document.getElementById("reg_a").innerHTML = fmt_base(vm, vm.reg[0]);
 
 		let base_color_b;
 		if (vm.reg[1] != 0) {
@@ -274,11 +282,9 @@ function render_grid(dt, ctx, vm) {
 		} else {
 			base_color_b = "#888888";
 		}
-
 		document.getElementById("reg_b").style.backgroundColor = compute_blend_color(vm, 257, base_color_b);
-
-		document.getElementById("reg_a").innerHTML = fmt_base(vm, vm.reg[0]);
 		document.getElementById("reg_b").innerHTML = fmt_base(vm, vm.reg[1]);
+
 		document.getElementById("f_zero").innerHTML = vm.zero_flag;
 		document.getElementById("f_eq").innerHTML = vm.equal_flag;
 		document.getElementById("f_less").innerHTML = vm.less_flag;
@@ -300,6 +306,7 @@ function render_grid(dt, ctx, vm) {
 
 		vm.reg_updated = false;
 	}
+
 
     if (vm.challenge_updated) {
 		document.getElementById('challenge_box').removeAttribute("hidden");
@@ -374,22 +381,26 @@ function render_grid(dt, ctx, vm) {
 	vm.redraw = false;
 }
 
-function update_guide_text(ctx) {
+function update_guide_text(ctx, vm) {
+	ctx.fillStyle = "white";
+	ctx.fillRect(0, 0, grid_width, grid_height);
+
+	ctx.fillStyle = "black";
 	ctx.textBaseline = 'middle';
 	for (let y = 0; y < num_y_tiles; y++) {
 		let real_y = tile_height * (y + 1);
-		ctx.fillText(y * num_x_tiles, (tile_width / 2), real_y + (tile_height / 2));
+		ctx.fillText(fmt_base(vm, y * num_x_tiles), (tile_width / 2), real_y + (tile_height / 2));
 	}
 
 	ctx.textBaseline = 'hanging';
 	for (let x = 0; x < num_x_tiles; x++) {
 		let real_x = tile_width * (x + 1);
-		ctx.fillText(x, real_x + (tile_width / 2), (tile_height / 3));
+		ctx.fillText(fmt_base(vm, x), real_x + (tile_width / 2), (tile_height / 3));
 	}
 	ctx.textBaseline = 'middle';
 }
 
-function prepare_canvas(canvas_id) {
+function prepare_canvas(canvas_id, vm) {
 	let canvas = document.getElementById(canvas_id);
 	let ctx = canvas.getContext("2d");
 
@@ -403,13 +414,13 @@ function prepare_canvas(canvas_id) {
 	tile_width = grid_width / (num_x_tiles + 2);
 	tile_height = grid_height / (num_y_tiles + 2);
 
-	update_guide_text(ctx);
+	update_guide_text(ctx, vm);
 	return ctx;
 }
 
 function start_q8() {
-	let ctx = prepare_canvas("canvas");
 	let vm = new VM();
+	let ctx = prepare_canvas("canvas", vm);
 
 	vm.load_board(window.location.hash);
 	set_buffer(vm, vm.board[vm.selected_tile]);
