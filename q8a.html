@@ -21,15 +21,13 @@
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
 
-		<script src="shader_pack.js"></script>
-		<script defer src="sylvester.js"></script>
-		<script defer src="gl_utils.js"></script>
+		<script defer src="pos.js"></script>
 		<script defer src="lz-string.js"></script>
 		<script defer src="vm.js"></script>
 		<script defer src="assembler.js"></script>
-		<script defer src="q8.js"></script>
+		<script defer src="q8_canvas.js"></script>
 	</head>
-	<body id="page-top" data-target=".navbar-fixed-top" onload="vm_main()">
+	<body id="page-top" data-target=".navbar-fixed-top" onload="start_q8()">
 		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
 			<div class="container">
 				<div class="navbar-header page-scroll">
@@ -55,7 +53,7 @@
 				</div>
 				<div class="my_container">
 					<div>
-						<div style="padding-bottom: 2em">
+						<div>
 							<div class="button_box">
 								<button type="button" id="step">Step</button>
 								<button type="button" id="start">Go/Stop</button>
@@ -70,15 +68,12 @@
 								<button type="button" id="io_filter">Toggle I/O Highlight</button>
 							</div>
 						</div>
-						<div style="margin-top: -2em;">
+						<div>
 							<div id="gl_div">
-								<canvas id="gl_canvas" width="544" height="544">NOT SUPPORT!</canvas>
-							</div>
-							<div id="text_div" style="pointer-events: none;">
-								<canvas id="text_canvas" width="544" height="544">NOT SUPPORT!</canvas>
+								<canvas id="canvas" width="576" height="576">NOT SUPPORT!</canvas>
 							</div>
 						</div>
-						<table style="margin-bottom: 5px; margin-left: 94.5px;">
+						<table style="margin-top: -2em; margin-bottom: 5px; margin-left: 94.5px;">
 							<tr>
 								<td class="reg">Register A:</td><td class="regs" id="reg_a">0</td>
 								<td></td>
