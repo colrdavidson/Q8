@@ -403,9 +403,9 @@ function prepare_canvas(canvas_id, vm) {
 	let canvas = document.getElementById(canvas_id);
 	let ctx = canvas.getContext("2d");
 
-    if (window.innerWidth < 572) {
-		let new_width = 391;
-		let new_height = 391;
+    if (window.innerWidth < 576) {
+		let new_width = 396;
+		let new_height = 396;
 		canvas.width = new_width;
 		canvas.height = new_height;
 		ctx.font = '10px sans-serif';
