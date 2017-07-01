@@ -152,7 +152,7 @@ function key_released(vm, event) {
     }
 
     if (vm.running) {
-	vm.reset();
+		vm.reset();
     }
 
     switch (event.keyCode) {
