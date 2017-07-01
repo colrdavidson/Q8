@@ -403,7 +403,16 @@ function prepare_canvas(canvas_id, vm) {
 	let canvas = document.getElementById(canvas_id);
 	let ctx = canvas.getContext("2d");
 
-	ctx.font = '14px sans-serif';
+    if (window.innerWidth < 572) {
+		let new_width = 391;
+		let new_height = 391;
+		canvas.width = new_width;
+		canvas.height = new_height;
+		ctx.font = '10px sans-serif';
+	} else {
+		ctx.font = '14px sans-serif';
+	}
+
 	ctx.textAlign = 'center';
 	ctx.lineWidth = 0.25;
 
