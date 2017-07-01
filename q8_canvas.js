@@ -382,8 +382,7 @@ function render_grid(dt, ctx, vm) {
 }
 
 function update_guide_text(ctx, vm) {
-	ctx.fillStyle = "white";
-	ctx.fillRect(0, 0, grid_width, grid_height);
+	ctx.clearRect(0, 0, grid_width, grid_height);
 
 	ctx.fillStyle = "black";
 	ctx.textBaseline = 'middle';
