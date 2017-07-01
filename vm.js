@@ -63,6 +63,7 @@ class VM {
 		this.tps = 20;
 		this.selected_tile = 0;
 		this.entry_buffer = "0";
+		this.has_decay = false;
 		this.board_updated = true;
 		this.reg_updated = true;
 		this.step_updated = true;
@@ -240,38 +241,43 @@ class VM {
 		}
 	}
 
-	tick() {
-		if (!this.running) {
-			return;
-		}
+	propogate_decay() {
+		this.has_decay = false;
 
-		let old_a_decay = this.read_table[256];
-		let old_b_decay = this.read_table[257];
+		let old_a_r_decay = this.read_table[256];
+		let old_b_r_decay = this.read_table[257];
+		let old_a_w_decay = this.write_table[256];
+		let old_b_w_decay = this.write_table[257];
+
 		for (let i = 0; i < this.read_table.length; i++) {
 			if (this.read_table[i] > 0) {
 				this.read_table[i] -= this.decay_rate;
-			} else {
-				this.read_table[i] = 0;
+				this.has_decay = true;
 			}
 		}
 
-		if ((old_a_decay != this.read_table[256]) || (old_b_decay != this.read_table[257])) {
-			this.reg_updated = true;
-		}
-
-		old_a_decay = this.write_table[256];
-		old_b_decay = this.write_table[257];
-		for (let i = -2; i < this.write_table.length; i++) {
+		for (let i = 0; i < this.write_table.length; i++) {
 			if (this.write_table[i] > 0) {
 				this.write_table[i] -= this.decay_rate;
-			} else {
-				this.write_table[i] = 0;
+				this.has_decay = true;
 			}
 		}
 
-		if ((old_a_decay != this.write_table[256]) || (old_b_decay != this.write_table[257])) {
+		if ((old_a_w_decay != this.write_table[256]) || (old_b_w_decay != this.write_table[257]) ||
+			(old_a_r_decay != this.read_table[256]) || (old_b_r_decay != this.read_table[257])) {
 			this.reg_updated = true;
 		}
+	}
+
+	tick() {
+		if (!this.running) {
+			if (this.has_decay) {
+				this.propogate_decay();
+			}
+			return;
+		}
+
+		this.propogate_decay();
 
 		if (this.cur_inst == null) {
 			this.cur_inst = this.op_table[this.board[this.pc]];
