@@ -63,8 +63,8 @@ class VM {
 		this.tps = 20;
 		this.selected_tile = 0;
 		this.entry_buffer = "0";
-		this.has_decay = false;
 		this.board_updated = true;
+		this.redraw = true;
 		this.reg_updated = true;
 		this.step_updated = true;
 
@@ -233,6 +233,7 @@ class VM {
 		this.reg_updated = true;
 		this.step_updated = true;
 		this.board_updated = true;
+		this.has_decay = false;
 
 		let table = this.page_op_table;
 		for (var i = 0; i < this.op_table.length; i++) {
@@ -252,14 +253,14 @@ class VM {
 		for (let i = 0; i < this.read_table.length; i++) {
 			if (this.read_table[i] > 0) {
 				this.read_table[i] -= this.decay_rate;
-				this.has_decay = true;
+				this.redraw = true;
 			}
 		}
 
 		for (let i = 0; i < this.write_table.length; i++) {
 			if (this.write_table[i] > 0) {
 				this.write_table[i] -= this.decay_rate;
-				this.has_decay = true;
+				this.redraw = true;
 			}
 		}
 
@@ -301,6 +302,7 @@ class VM {
 		}
 
 		this.pc = (this.pc + 1) % 256;
+		this.redraw = true;
 	}
 
 	load_board(hash_str) {
@@ -380,6 +382,7 @@ class VM {
 		}
 		this.pre_run = hash_str;
 		this.board_updated = true;
+		this.redraw = true;
 	}
 
 	save_board() {
@@ -416,6 +419,7 @@ class VM {
 		this.row_updated = true;
 		this.board_updated = true;
 		this.reg_updated = true;
+		this.redraw = true;
 	}
 
 	reset() {
