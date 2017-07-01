@@ -409,7 +409,9 @@ function prepare_canvas(canvas_id, vm) {
 		canvas.width = new_width;
 		canvas.height = new_height;
 		ctx.font = '10px sans-serif';
+		document.getElementById("reg_box").style.marginTop = "-22px";
 	} else {
+		document.getElementById("reg_box").style.marginTop = "-32px";
 		ctx.font = '14px sans-serif';
 	}
 
