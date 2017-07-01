@@ -199,17 +199,10 @@ function render_grid(dt, ctx, vm) {
 				base_color = "#888888";
 			}
 
-			let text_buffer = vm.board[idx];
 			let draw_color;
 			if (vm.selected_tile == idx) {
 				let mix_color = "#28bb9c";
 				draw_color = color_to_hex(blend_colors(opacity, hex_to_color(base_color), hex_to_color(mix_color)));
-
-				if (vm.entry_buffer[0] == "0" && vm.entry_buffer[1] == "x") {
-					text_buffer = vm.entry_buffer.slice(2, vm.entry_buffer.length);
-				} else {
-					text_buffer = vm.entry_buffer;
-				}
 			} else if (idx == vm.pc) {
 				let mix_color = "#bef6ea";
 				draw_color = color_to_hex(blend_colors(opacity, hex_to_color(base_color), hex_to_color(mix_color)));
@@ -221,10 +214,27 @@ function render_grid(dt, ctx, vm) {
 
 			ctx.fillStyle = draw_color;
 			ctx.fillRect(real_x, real_y, tile_width, tile_height);
+		}
+	}
 
-			ctx.fillStyle = "black";
+	// Draw outlines and numbers (split into its own block to reduce state changes on the expensive text render)
+	ctx.fillStyle = "black";
+	for (let x = 0; x < num_x_tiles; x++) {
+		for (let y = 0; y < num_y_tiles; y++) {
+			let real_x = tile_width * (x + 1);
+			let real_y = tile_height * (y + 1);
+			let idx = twod_to_oned(x, y, num_x_tiles);
+
+			let text_buffer = vm.board[idx];
+			if (vm.selected_tile == idx) {
+				if (vm.entry_buffer[0] == "0" && vm.entry_buffer[1] == "x") {
+					text_buffer = vm.entry_buffer.slice(2, vm.entry_buffer.length);
+				} else {
+					text_buffer = vm.entry_buffer;
+				}
+			}
+
 			ctx.strokeRect(real_x, real_y, tile_width, tile_height);
-
 			ctx.fillText(text_buffer, real_x + (tile_width / 2), real_y + (tile_height / 2));
 		}
 	}
