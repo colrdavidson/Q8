@@ -77,7 +77,7 @@ body {
     border-radius: 3px;
 }
 
-.button_box {
+#button_box {
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     background-color: #bef6ea;
@@ -87,20 +87,20 @@ body {
     border-radius: 3px;
 }
 
-.button_box > button {
+#button_box > button {
     margin-top: 0.125em;
     margin-bottom: 0.125em;
     margin-left: 0.125em;
     margin-right: 0.125em;
 }
 
-.flag_box {
+#flag_box {
     margin-bottom: 0.5em;
     width: 512px;
     margin-left: 2em;
 }
 
-.challenge_box {
+#challenge_box {
     display: none;
 }
 

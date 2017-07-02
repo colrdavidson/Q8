@@ -11,6 +11,7 @@ let tile_height;
 
 let mouse_x = 0;
 let mouse_y = 0;
+
 let opacity = 0.95;
 
 String.prototype.replaceAll = function (find, replace) {
@@ -50,13 +51,15 @@ function set_buffer(vm, value) {
     }
 }
 
-function mouse_moved(canvas, event) {
-    let rect = canvas.getBoundingClientRect();
+function mouse_moved(event) {
+    let rect = event.target.getBoundingClientRect();
     mouse_x = event.clientX - rect.left;
     mouse_y = event.clientY - rect.top;
 }
 
-function mouse_pressed(vm, canvas, event) {
+function mouse_pressed(vm, event) {
+	let canvas = event.target;
+
     let rect = canvas.getBoundingClientRect();
     let tmp_x = event.clientX - rect.left;
     let tmp_y = event.clientY - rect.top;
@@ -74,11 +77,18 @@ function mouse_pressed(vm, canvas, event) {
     vm.redraw = true;
 }
 
-function key_pressed(vm, event) {
-    if (document.activeElement.tagName != "BODY" || vm.selected_tile == -1 || event.defaultPrevented) {
+function key_pressed(vm1, vm2, event) {
+
+	let vm;
+    if (event.target.tabIndex == "1") {
+		vm = vm1;
+	} else {
+		vm = vm2;
+	}
+
+    if (vm.selected_tile == -1) {
 		return;
     }
-
 
     switch (event.key) {
 		case "ArrowUp":
@@ -125,8 +135,15 @@ function key_pressed(vm, event) {
     }
 }
 
-function key_released(vm, event) {
-    if (document.activeElement.tagName != "BODY" || vm.selected_tile == -1 || event.defaultPrevented) {
+function key_released(vm1, vm2, event) {
+	let vm;
+    if (event.target.tabIndex == "1") {
+		vm = vm1;
+	} else {
+		vm = vm2;
+	}
+
+    if (vm.selected_tile == -1) {
 		return;
     }
 
@@ -166,13 +183,11 @@ function key_released(vm, event) {
 				vm.save_board();
 			}
 		} break;
-		default: { console.log(event.key); }
+		default: {}
     }
 
     vm.row_updated = true;
 	vm.redraw = true;
-
-	event.preventDefault();
 }
 
 function hash_change(vm, evt) {
@@ -273,8 +288,6 @@ function render_grid(dt, ctx, vm) {
 		} else {
 			base_color_a = "#888888";
 		}
-		document.getElementById("reg_a").style.backgroundColor = compute_blend_color(vm, 256, base_color_a);
-		document.getElementById("reg_a").innerHTML = fmt_base(vm, vm.reg[0]);
 
 		let base_color_b;
 		if (vm.reg[1] != 0) {
@@ -282,38 +295,37 @@ function render_grid(dt, ctx, vm) {
 		} else {
 			base_color_b = "#888888";
 		}
-		document.getElementById("reg_b").style.backgroundColor = compute_blend_color(vm, 257, base_color_b);
-		document.getElementById("reg_b").innerHTML = fmt_base(vm, vm.reg[1]);
 
-		document.getElementById("f_zero").innerHTML = vm.zero_flag;
-		document.getElementById("f_eq").innerHTML = vm.equal_flag;
-		document.getElementById("f_less").innerHTML = vm.less_flag;
-		document.getElementById("f_great").innerHTML = vm.greater_flag;
-		document.getElementById("f_err").innerHTML = vm.error_flag;
-		document.getElementById("f_stack_enabled").innerHTML = vm.jsp_enabled;
-		document.getElementById("f_jsp").innerHTML = fmt_base(vm, vm.jsp);
-
-		if (vm.jsp_enabled == true) {
-			document.getElementById("f_stack_enabled").className = "selected";
-		} else {
-			document.getElementById("f_stack_enabled").classList.remove('selected');
+		if (document.getElementById("reg_box") != null) {
+			document.getElementById("reg_a").style.backgroundColor = compute_blend_color(vm, 256, base_color_a);
+			document.getElementById("reg_a").innerHTML = fmt_base(vm, vm.reg[0]);
+			document.getElementById("reg_b").style.backgroundColor = compute_blend_color(vm, 257, base_color_b);
+			document.getElementById("reg_b").innerHTML = fmt_base(vm, vm.reg[1]);
 		}
-		if (vm.error_flag == true) {
-			document.getElementById("f_err").className = "selected";
-		} else {
-			document.getElementById("f_err").classList.remove('selected');
+
+		if (document.getElementById("flag_box")) {
+			document.getElementById("f_zero").innerHTML = vm.zero_flag;
+			document.getElementById("f_eq").innerHTML = vm.equal_flag;
+			document.getElementById("f_less").innerHTML = vm.less_flag;
+			document.getElementById("f_great").innerHTML = vm.greater_flag;
+			document.getElementById("f_err").innerHTML = vm.error_flag;
+			document.getElementById("f_stack_enabled").innerHTML = vm.jsp_enabled;
+			document.getElementById("f_jsp").innerHTML = fmt_base(vm, vm.jsp);
+
+			if (vm.jsp_enabled == true) {
+				document.getElementById("f_stack_enabled").className = "selected";
+			} else {
+				document.getElementById("f_stack_enabled").classList.remove('selected');
+			}
+			if (vm.error_flag == true) {
+				document.getElementById("f_err").className = "selected";
+			} else {
+				document.getElementById("f_err").classList.remove('selected');
+			}
 		}
 
 		vm.reg_updated = false;
 	}
-
-
-    if (vm.challenge_updated) {
-		document.getElementById('challenge_box').removeAttribute("hidden");
-		document.getElementById('back').href = "basics.html";
-		document.getElementById('next').href = "mult.html";
-		vm.challenge_updated = false;
-    }
 
     if (vm.row_updated) {
 		if (vm.page_op_table != undefined) {
@@ -373,7 +385,9 @@ function render_grid(dt, ctx, vm) {
 			step_string += simple_desc;
 		}
 
-		document.getElementById("debug").innerHTML = step_string;
+	   	if (document.getElementById("debug") != null) {
+			document.getElementById("debug").innerHTML = step_string;
+		}
 
 		vm.step_updated = false;
     }
@@ -403,16 +417,20 @@ function prepare_canvas(canvas_id, vm) {
 	let canvas = document.getElementById(canvas_id);
 	let ctx = canvas.getContext("2d");
 
+	let reg_height = "-32px";
     if (window.innerWidth < 576) {
 		let new_width = 396;
 		let new_height = 396;
 		canvas.width = new_width;
 		canvas.height = new_height;
 		ctx.font = '10px sans-serif';
-		document.getElementById("reg_box").style.marginTop = "-22px";
+		reg_height = "-22px";
 	} else {
-		document.getElementById("reg_box").style.marginTop = "-32px";
 		ctx.font = '14px sans-serif';
+	}
+
+	if (document.getElementById("reg_box") != null) {
+		document.getElementById("reg_box").style.marginTop = "-32px";
 	}
 
 	ctx.textAlign = 'center';
@@ -425,54 +443,57 @@ function prepare_canvas(canvas_id, vm) {
 	tile_height = grid_height / (num_y_tiles + 2);
 
 	update_guide_text(ctx, vm);
-	return ctx;
+	return {ctx, canvas};
 }
 
 function start_q8() {
-	let vm = new VM();
-	let ctx = prepare_canvas("canvas", vm);
+	let vm1 = new VM();
+	let vm2 = new VM();
 
-	vm.load_board(window.location.hash);
-	set_buffer(vm, vm.board[vm.selected_tile]);
+	let ret1 = prepare_canvas("canvas1", vm1);
+	let ret2 = prepare_canvas("canvas2", vm2);
+	let canvas1 = ret1.canvas;
+	let canvas2 = ret2.canvas;
+	let ctx1 = ret1.ctx;
+	let ctx2 = ret2.ctx;
 
-	canvas.addEventListener("mousemove", function(evt) { mouse_moved(canvas, evt); }, false);
-	document.addEventListener("mousedown", function(evt) { mouse_pressed(vm, canvas, evt); }, false);
-	document.addEventListener("keydown", function(evt) { key_pressed(vm, evt); }, false);
-	document.addEventListener("keyup", function(evt) { key_released(vm, evt); }, false);
-	window.addEventListener("hashchange", function(evt) { hash_change(vm, evt); }, false);
+	canvas1.addEventListener("mousemove", function(evt) { mouse_moved(evt); }, false);
+	canvas2.addEventListener("mousemove", function(evt) { mouse_moved(evt); }, false);
 
-	document.getElementById("step").addEventListener("click", function(evt) { vm.running = true; vm.tick(); vm.running = false; vm.step_updated = true; }, false);
-	document.getElementById("start").addEventListener("click", function(evt) { vm.running = !vm.running; if (vm.running == false) { vm.step_updated = true; } }, false);
-	document.getElementById("reset").addEventListener("click", function(evt) { vm.reset(); }, false);
-	document.getElementById("clear").addEventListener("click", function(evt) { vm.board = new Uint8Array(16 * 16); vm.clear_state(); vm.save_board(); }, false);
-	document.getElementById("tps_slow").addEventListener("click", function(evt) { vm.tps = 3; }, false);
-	document.getElementById("tps_norm").addEventListener("click", function(evt) { vm.tps = 21; }, false);
-	document.getElementById("tps_full").addEventListener("click", function(evt) { vm.tps = 240; }, false);
-	document.getElementById("switch_base").addEventListener("click", function(evt) { vm.switch_base(); }, false);
-	document.getElementById("io_filter").addEventListener("click", function(evt) { vm.io_filter = !vm.io_filter; }, false);
+	canvas1.addEventListener("mousedown", function(evt) { mouse_pressed(vm1, evt); }, false);
+	canvas2.addEventListener("mousedown", function(evt) { mouse_pressed(vm2, evt); }, false);
 
-	if (document.getElementById("asm_in") != null) {
-	    document.getElementById("asm_in").addEventListener("input", function(evt) { var asm = document.getElementById("asm_in").value; vm.load_asm(asm); }, false);
-	}
+	document.addEventListener("keydown", function(evt) { key_pressed(vm1, vm2, evt); }, false);
+	document.addEventListener("keyup", function(evt) { key_released(vm1, vm2, evt); }, false);
 
-	document.getElementById("prev_challenge").addEventListener("click", function(evt) { vm.prev_challenge(); }, false);
-	document.getElementById("reset_challenge").addEventListener("click", function(evt) { vm.reset_challenge(); }, false);
-	document.getElementById("next_challenge").addEventListener("click", function(evt) { vm.next_challenge(); }, false);
+	vm1.running = true;
+	vm2.running = true;
 
-	let ticks = 0;
+	let vm1_ticks = 0;
+	let vm2_ticks = 0;
+
 	let last_time = Date.now();
 	function update(step) {
 	    let time_now = Date.now();
 	    let dt = time_now - last_time;
 	    last_time = time_now;
 
-	    ticks += dt;
-	    while (ticks > (1000 / vm.tps)) {
-			vm.tick();
-			ticks -= (1000 / vm.tps);
+	    vm1_ticks += dt;
+	    vm2_ticks += dt;
+
+	    while (vm1_ticks > (1000 / vm1.tps)) {
+			vm1.tick();
+			vm1_ticks -= (1000 / vm1.tps);
 	    }
 
-		render_grid(dt, ctx, vm);
+	    while (vm2_ticks > (1000 / vm2.tps)) {
+			vm2.tick();
+			vm2_ticks -= (1000 / vm2.tps);
+	    }
+
+		render_grid(dt, ctx1, vm1);
+		render_grid(dt, ctx2, vm2);
+
 	    window.requestAnimationFrame(update);
 	}
 
