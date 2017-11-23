@@ -100,10 +100,6 @@ body {
     margin-left: 2em;
 }
 
-#challenge_box {
-    display: none;
-}
-
 #asm_box {
     padding-top: 0.25em;
     padding-bottom: 0em;

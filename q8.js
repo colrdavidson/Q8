@@ -166,7 +166,7 @@ function key_released(vm, event) {
 				vm.save_board();
 			}
 		} break;
-		default: { console.log(event.key); }
+		default: {}
     }
 
     vm.row_updated = true;
@@ -446,11 +446,11 @@ function start_q8() {
 	vm.load_board(window.location.hash);
 	set_buffer(vm, vm.board[vm.selected_tile]);
 
+	window.addEventListener("hashchange", function(new_url, old_url) { hash_change(vm, new_url); }, false);
 	canvas.addEventListener("mousemove", function(evt) { mouse_moved(canvas, evt); }, false);
 	document.addEventListener("mousedown", function(evt) { mouse_pressed(vm, canvas, evt); }, false);
 	document.addEventListener("keydown", function(evt) { key_pressed(vm, evt); }, false);
 	document.addEventListener("keyup", function(evt) { key_released(vm, evt); }, false);
-	window.addEventListener("hashchange", function(evt) { hash_change(vm, evt); }, false);
 
  	if (document.getElementById("button_box") != null) {
 		document.getElementById("step").addEventListener("click", function(evt) { vm.running = true; vm.tick(); vm.running = false; vm.step_updated = true; }, false);
