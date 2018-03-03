@@ -104,3 +104,31 @@ body {
 	color: #0F0F0F;
 	font-family: sans-serif;
 }
+
+.asm-footer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	width: 35em;
+	margin-right: auto;
+	margin-left: auto;
+
+	padding-bottom: 1.0em;
+	padding-top: 1.0em;
+
+	background-color: #18bc9c;
+	color: white;
+}
+
+.asm-footer-banner {
+	background-color: #bef6ea;
+	width: 100%;
+	text-align: center;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+.asm-footer > h3 {
+	margin-top: 0em;
+}

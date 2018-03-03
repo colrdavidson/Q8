@@ -63,6 +63,42 @@
 			of instructions that help to make that interaction as painless as possible.</p>
 		</section>
 		<section style="max-width: 50em;">
+			<h1>Q8 Assembly Primer</h1>
+			<p>To improve legibility, I've provided a little asssembly block next to each grid image
+			Q8's assembly is simple, but it's still best to describe the notation ahead of time.</p>
+			<h3>Instruction Layout</h3>
+			<h4>Instructions <code>LOAD A 9</code></h4>
+			<p>Instructions are positioned op and then argument. An instruction like <code>SET A 9</code>
+			can be read as "set register A to the value 9"</p>
+			<h3>Labels and Data</h3>
+			<h4>Labels <code>exit:</code></h4>
+			<p>To tell the assembler that you want to use a name to refer to a spot in assembly, all you need to
+			do is plop your name where you want it, and then append a <code>:</code> to the end, like <code>loop:</code></p>
+			<h4>Data Definition <code>y: $55</code></h4>
+			<p>To define some data that'll live in the grid, you can use a label, and then prefix the value you want to
+			use with a <code>$</code>. For example, to define a variable, x, and to set it to 1 initially, you'd
+			write this: <code>x: $1</code></p>
+			<h3>Position Shifters</h3>
+			<h4>Shifters <code>> 25</code></h4>
+			<p>To place the next piece of code at a particular position, position shifters can be used. These are mostly useful
+			for asthetic reasons, allowing the user to neatly separate op blocks from data. Another possible use, putting a
+			catchall halt at the end of the grid so that the program counter doesn't wrap around from 255 to 0 on an unforseen
+			failure state </p>
+			<h3>Code Comments</h3>
+			<h4>Comments <code>; Hello</code></h4>
+			<p> Comments are quite useful for program legibility. Assembly can be hard to follow, comments are there to help
+				<code>ADD A x ; Adds the value at labelled position x to A</code>
+			</p>
+			<h3>Assembly Example</h3>
+			<p>This program sets <code>A</code> to 1, <code>B</code> to the value at label x, 1, and then adds them. The result, 2, is left in <code>A</code>.
+			<pre>
+SET A 1
+LOAD B x
+ADD A B
+> 32
+x: $1</pre>
+		</section>
+		<section style="max-width: 50em;">
 		<h2>I/O</h2>
 		<h3>The Direct</h3>
 		<p>A great little debugging buddy, the <code>SET</code> instruction.
@@ -74,15 +110,12 @@
 				<img src="basics_constant.png">
 			</div>
 			<div>
-				<table>
-					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-					<tr><td>0</td><td>26</td><td>JMP</td></tr>
-					<tr><td>1</td><td>34</td><td>Operand</td></tr>
-					<tr><td>33</td><td>9</td><td>SET A</td></tr>
-					<tr><td>34</td><td>1</td><td>Operand</td></tr>
-					<tr><td>35</td><td>10</td><td>SET B</td></tr>
-					<tr><td>36</td><td>2</td><td>Operand</td></tr>
-				</table>
+				<h4>Assembly</h4>
+				<pre>
+JMP 33
+> 33
+SET A 9
+SET B 2</pre>
 			</div>
 		</div>
 		<h3>The Indirect</h3>
@@ -93,19 +126,17 @@
 				<img src="basics_direct.png">
 			</div>
 			<div>
-				<table>
-					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-					<tr><td>0</td><td>26</td><td>JMP</td></tr>
-					<tr><td>1</td><td>33</td><td>Operand</td></tr>
-					<tr><td>33</td><td>1</td><td>LOAD A</td></tr>
-					<tr><td>34</td><td>64</td><td>Operand</td></tr>
-					<tr><td>35</td><td>2</td><td>LOAD B</td></tr>
-					<tr><td>36</td><td>65</td><td>Operand</td></tr>
-					<tr><td>37</td><td>5</td><td>STORE A</td></tr>
-					<tr><td>38</td><td>64</td><td>Operand</td></tr>
-					<tr><td>39</td><td>6</td><td>STORE B</td></tr>
-					<tr><td>40</td><td>65</td><td>Operand</td></tr>
-				</table>
+				<h4>Assembly</h4>
+				<pre>
+JMP 26
+> 33
+LOAD A x
+LOAD B y
+STORE A x
+STORE B y
+> 64
+x: $1
+y: $2</pre>
 			</div>
 		</div>
 		<h3>The Double Indirect</h3>
@@ -120,19 +151,20 @@
 				<img src="basics_indirect.png">
 			</div>
 			<div>
-				<table>
-					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-					<tr><td>0</td><td>26</td><td>JMP</td></tr>
-					<tr><td>1</td><td>33</td><td>Operand</td></tr>
-					<tr><td>33</td><td>3</td><td>LOADI A</td></tr>
-					<tr><td>34</td><td>64</td><td>Operand</td></tr>
-					<tr><td>35</td><td>4</td><td>LOADI B</td></tr>
-					<tr><td>36</td><td>65</td><td>Operand</td></tr>
-					<tr><td>37</td><td>7</td><td>STOREI A</td></tr>
-					<tr><td>38</td><td>64</td><td>Operand</td></tr>
-					<tr><td>39</td><td>8</td><td>STOREI B</td></tr>
-					<tr><td>40</td><td>65</td><td>Operand</td></tr>
-				</table>
+				<h4>Assembly</h4>
+				<pre>
+JMP 26
+> 33
+LOADI A x_loc
+LOADI B y_loc
+STOREI A x_loc
+STOREI B y_loc
+> 64
+x_loc: $80
+y_loc: $81
+> 80
+x: $1
+y: $2</pre>
 			</div>
 		</div>
 		</section>
@@ -148,20 +180,18 @@
 				<img src="basics_register_loop.png">
 			</div>
 			<div>
-				<table>
-					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-					<tr><td>0</td><td>9</td><td>SET A</td></tr>
-					<tr><td>1</td><td>5</td><td>Operand</td></tr>
-					<tr><td>2</td><td>26</td><td>JMP</td></tr>
-					<tr><td>3</td><td>34</td><td>Operand</td></tr>
-					<tr><td>34</td><td>24</td><td>ISZERO A</td></tr>
-					<tr><td>35</td><td>28</td><td>JZ</td></tr>
-					<tr><td>36</td><td>255</td><td>Operand</td></tr>
-					<tr><td>37</td><td>20</td><td>DEC A</td></tr>
-					<tr><td>38</td><td>26</td><td>JMP</td></tr>
-					<tr><td>39</td><td>34</td><td>Operand</td></tr>
-					<tr><td>255</td><td>60</td><td>HALT</td></tr>
-				</table>
+				<h4>Assembly</h4>
+				<pre>
+SET A 5
+JMP loop_start
+> 34
+loop_start:
+ISZERO A
+JZ 255
+DEC A
+JMP loop_start
+> 255
+HALT</pre>
 			</div>
 		</div>
 		<h3>The Memory Tile Loop</h3>
@@ -174,22 +204,21 @@
 				<img src="basics_tile_loop.png">
 			</div>
 			<div>
-				<table>
-					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-					<tr><td>0</td><td>26</td><td>JMP</td></tr>
-					<tr><td>1</td><td>34</td><td>Operand</td></tr>
-					<tr><td>34</td><td>1</td><td>LOAD A</td></tr>
-					<tr><td>35</td><td>80</td><td>Operand</td></tr>
-					<tr><td>36</td><td>24</td><td>ISZERO A</td></tr>
-					<tr><td>37</td><td>28</td><td>JZ</td></tr>
-					<tr><td>38</td><td>255</td><td>Operand</td></tr>
-					<tr><td>39</td><td>20</td><td>DEC A</td></tr>
-					<tr><td>40</td><td>5</td><td>STORE A</td></tr>
-					<tr><td>41</td><td>80</td><td>Operand</td></tr>
-					<tr><td>42</td><td>26</td><td>JMP</td></tr>
-					<tr><td>43</td><td>34</td><td>Operand</td></tr>
-					<tr><td>255</td><td>60</td><td>HALT</td></tr>
-				</table>
+				<h4>Assembly</h4>
+				<pre>
+JMP loop_start
+> 34
+loop_start:
+LOAD A idx
+ISZERO A
+JZ 255
+DEC A
+STORE A idx
+JMP loop_start
+> 255
+HALT
+> 80
+idx: $5</pre>
 			</div>
 		</div>
 		</section>
