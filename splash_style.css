@@ -68,3 +68,30 @@ body {
 	font-family: sans-serif;
     padding-top: 5em;
 }
+
+.more-footer {
+	background-color: #18bc9c;
+	color: white;
+	text-align: center;
+
+	margin-top: 1em;
+	margin-left: 4em;
+	margin-right: 4em;
+
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-bottom: 3em;
+	padding-top: 0.5em;
+}
+
+.more-footer-banner {
+	background-color: #bef6ea;
+
+	margin-left: -1em;
+	margin-right: -1em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
