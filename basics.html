@@ -65,7 +65,28 @@
 		<section style="max-width: 50em;">
 		<h2>I/O</h2>
 		<h3>The Direct</h3>
-		<p>The direct accessors, <code>LOAD</code> and <code>STORE</code> are the meat and potatoes of the Q8 I/O family.
+		<p>A great little debugging buddy, the <code>SET</code> instruction.
+		<code>SET</code> is excellent for debugging and cramming single-use constants into registers.
+		This mechanism proves remarkably useful in some of the example programs for tracking boolean
+		data, and drawing specific block values to the screen.</p>
+		<div class="img_container">
+			<div>
+				<img src="basics_constant.png">
+			</div>
+			<div>
+				<table>
+					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
+					<tr><td>0</td><td>26</td><td>JMP</td></tr>
+					<tr><td>1</td><td>34</td><td>Operand</td></tr>
+					<tr><td>33</td><td>9</td><td>SET A</td></tr>
+					<tr><td>34</td><td>1</td><td>Operand</td></tr>
+					<tr><td>35</td><td>10</td><td>SET B</td></tr>
+					<tr><td>36</td><td>2</td><td>Operand</td></tr>
+				</table>
+			</div>
+		</div>
+		<h3>The Indirect</h3>
+		<p>The indirect accessors, <code>LOAD</code> and <code>STORE</code> are the meat and potatoes of the Q8 I/O family.
 		Most of the time to keep the limited register space available for ops, you'll wind up using these.</p>
 		<div class="img_container">
 			<div>
@@ -87,8 +108,8 @@
 				</table>
 			</div>
 		</div>
-		<h3>The Indirect</h3>
-		<p>Indirect accessors are used a little less frequently, but when you need them, you need them. They've proved Very useful
+		<h3>The Double Indirect</h3>
+		<p>Double indirect accessors are used a little less frequently, but when you need them, you need them. They've proved Very useful
 		for tracking indices into an array, or setting up jump tables. You can <code>LOADI</code> to get the value,
 		and <code>LOAD</code> to get the index. When you want to change your index, you <code>LOAD</code> the index,
 		make your modification, and then <code>STORE</code> it back again. Changing the value at the tile pointed to by the index
@@ -111,27 +132,6 @@
 					<tr><td>38</td><td>64</td><td>Operand</td></tr>
 					<tr><td>39</td><td>8</td><td>STOREI B</td></tr>
 					<tr><td>40</td><td>65</td><td>Operand</td></tr>
-				</table>
-			</div>
-		</div>
-		<h3>The Direct</h3>
-		<p>A great little debugging buddy, the <code>SET</code> instruction.
-		<code>SET</code> is excellent for debugging and cramming single-use constants into registers.
-		This mechanism proves remarkably useful in some of the example programs for tracking boolean
-		data, and drawing specific block values to the screen.</p>
-		<div class="img_container">
-			<div>
-				<img src="basics_constant.png">
-			</div>
-			<div>
-				<table>
-					<tr><th>Position</th><th>Value</th><th>Description</th></tr>
-					<tr><td>0</td><td>26</td><td>JMP</td></tr>
-					<tr><td>1</td><td>34</td><td>Operand</td></tr>
-					<tr><td>33</td><td>9</td><td>SET A</td></tr>
-					<tr><td>34</td><td>1</td><td>Operand</td></tr>
-					<tr><td>35</td><td>10</td><td>SET B</td></tr>
-					<tr><td>36</td><td>2</td><td>Operand</td></tr>
 				</table>
 			</div>
 		</div>
