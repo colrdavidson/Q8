@@ -190,7 +190,7 @@ class VM {
 				id_cell.innerHTML = (i).toString(this.display_base).toUpperCase();
 				name_cell.innerHTML = this.op_table[i].name;
 				desc_cell.innerHTML = this.op_table[i].long_desc;
-				operand_cell.innerHTML = this.op_table[i].length > 1 ? "true" : "false";
+				operand_cell.innerHTML = this.op_table[i].length > 1 ? '<i class="fas fa-check"></i>' : "";
 
 				desc_cell.style.cssText = "flex-grow: 6";
 				id_cell.style.textAlign = "center";
