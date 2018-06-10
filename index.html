@@ -1,111 +1,119 @@
 <html prefix="og: http://ogp.me/ns#">
-	<head>
-		<title>Quine8</title>
+    <head>
+        <title>Quine8</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<!-- Bootstrap core CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-		<link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-		<!-- Custom styles for this template -->
-		<link href="scrolling-nav.css" rel="stylesheet">
-		<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="scrolling-nav.css" rel="stylesheet">
+        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
 
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
-		<meta property="og:title" content="Quine8"/>
-		<meta property="og:type" content="website"/>
-		<meta property="og:url" content="https://anchovieshat.github.io/Q8/index.html"/>
-		<meta property="og:description" content="Interactive Bytecode VM"/>
-		<meta property="og:image" content="https://anchovieshat.github.io/Q8/tile.png"/>
-	</head>
-	<body id="page-top" data-target=".navbar-fixed-top">
-		<nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
-		  <div class="container">
-			<div class="navbar-header page-scroll">
-			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-			  </button>
-			  <a class="navbar-brand page-scroll" href="index.html">Quine8</a>
-			  <a class="navbar-brand page-scroll" href="index.html">Previous</a>
-			  <a class="navbar-brand page-scroll" href="basics.html">Next</a>
-			</div>
-		  </div>
-		</nav>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <meta property="og:title" content="Quine8"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="https://anchovieshat.github.io/Q8/index.html"/>
+        <meta property="og:description" content="Interactive Bytecode VM"/>
+        <meta property="og:image" content="https://anchovieshat.github.io/Q8/tile.png"/>
+    </head>
+    <body id="page-top" data-target=".navbar-fixed-top">
+        <nav class="navbar navbar-inverse navbar-fixed-top top-nav-collapse">
+            <div class="container">
+                <div class="navbar-header page-scroll">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                    </button>
+                    <a class="navbar-brand page-scroll" href="index.html">Quine8</a>
+                    <a class="navbar-brand page-scroll" href="index.html">Previous</a>
+                    <a class="navbar-brand page-scroll" href="basics.html">Next</a>
+                </div>
+            </div>
+        </nav>
 
-		<section>
-			<h2>Q8 - Experiment with low level machine code programming in your browser</h2>
-			<p>Have you ever wondered what really goes on when your computer
-			takes a higher-level language, like Javascript or C, and turns it
-			into something it can read? Quine8 (Q8) is a simple virtual machine that
-			takes the most basic building block a computer can operate on,
-			bytecode and runs it at a fraction of the speed of a real CPU,
-			allowing you to watch it run each step of the way.</p>
-			<div class="basics">
-				<h3>Getting Started</h3>
-				<a href="basics.html">Get an introduction to Q8 concepts</a><br>
-				<a href="q8.html#challenge0">Try some puzzles</a><br>
-			</div>
-			<div class="my_container">
-				<div class="img_block">
-					<div style="margin-right: -1em;">
-						<h3>Multiplication</h3>
-						<p>Writing an x * y multiplication function</p>
-						<a href="mult.html"><img class="img_link" src="mult.gif"></a>
-					</div>
-					<div>
-						<h3>Graphics Fun</h3>
-						<p>Bouncing a ball back and forth on the grid</p>
-						<a href="pong.html"><img class="img_link" src="pong.gif"></a>
-					</div>
-				</div>
-				<div class="img_block" style="padding-top: 0em; padding-bottom: 3em;">
-					<div style="margin-right: -1em;">
-						<h3>Bubble Sort</h3>
-						<p>Sorting a list from least to greatest</p>
-						<a href="bubble.html"><img class="img_link" src="bubble.gif"></a>
-					</div>
-					<div>
-						<h3>Finding Divisors</h3>
-						<p>Finding all the divisors for a value</p>
-						<a href="divisor.html"><img class="img_link" src="divisor.gif"></a>
-					</div>
-				</div>
-			</div>
+        <section>
+            <h2>Q8 - Experiment with low level machine code programming in your browser</h2>
+            <p>Have you ever wondered what really goes on when your computer
+            takes a higher-level language, like Javascript or C, and turns it
+            into something it can read? Quine8 (Q8) is a simple virtual machine that
+            takes the most basic building block a computer can operate on,
+            bytecode and runs it at a fraction of the speed of a real CPU,
+            allowing you to watch it run each step of the way.</p>
+            <div class="basics">
+                <h3>Getting Started</h3>
+                <a href="basics.html">Get an introduction to Q8 concepts</a><br>
+                <a href="q8.html#challenge0">Try some puzzles</a><br>
+            </div>
+            <div class="my_container">
+                <div class="img_block">
+                    <a href="mult.html" class="grid_image_link">
+                        <div style="margin-right: -1em;">
+                            <h3>Multiplication</h3>
+                            <p>Writing an x * y multiplication function</p>
+                            <img class="img_link" src="mult.gif">
+                        </div>
+                    </a>
+                    <a href="pong.html" class="grid_image_link">
+                        <div>
+                            <h3>Graphics Fun</h3>
+                            <p>Bouncing a ball back and forth on the grid</p>
+                            <img class="img_link" src="pong.gif">
+                        </div>
+                    </a>
+                </div>
+                <div class="img_block" style="padding-top: 0em; padding-bottom: 3em;">
+                    <a href="bubble.html" class="grid_image_link">
+                        <div style="margin-right: -1em;">
+                            <h3>Bubble Sort</h3>
+                            <p>Sorting a list from least to greatest</p>
+                            <img class="img_link" src="bubble.gif">
+                        </div>
+                    </a>
+                    <a href="divisor.html" class="grid_image_link">
+                        <div>
+                            <h3>Finding Divisors</h3>
+                            <p>Finding all the divisors for a value</p>
+                            <img class="img_link" src="divisor.gif">
+                        </div>
+                    </a>
+                </div>
+            </div>
 
-			<div class="quine8">
-				<h3>Quine8</h3>
-				<a href="q8.html">Start from a clean board</a><br>
-				<a href="next.html">What's next?</a>
-			</div>
+            <div class="quine8">
+                <h3>Quine8</h3>
+                <a href="q8.html">Start from a clean board</a><br>
+                <a href="next.html">What's next?</a>
+            </div>
 
-			<div class="more-footer">
-				<h1>Want More?</h1>
-				<p>If you liked Q8, check out some of my other stuff at</p>
-				<div class="more-footer-banner">
-					<a href="http://pentaquine.com">Pentaquine</a>
-				</div>
-			</div>
-		</section>
+            <div class="more-footer">
+                <h1>Want More?</h1>
+                <p>If you liked Q8, check out some of my other stuff at</p>
+                <div class="more-footer-banner">
+                    <a href="http://pentaquine.com">Pentaquine</a>
+                </div>
+            </div>
+        </section>
 
-		<!-- Bootstrap core JavaScript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		<link href="splash_style.css" rel="stylesheet">
-		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-		<script src="ie10-viewport-bug-workaround.js"></script>
-		<script src="jquery.easing.min.js"></script>
-		<script src="scrolling-nav.js"></script>
-	</body>
-	<footer style="margin-top: 4em; padding-bottom: 4em; background-color: #555"></footer>
+        <!-- Bootstrap core JavaScript
+            ================================================== -->
+            <!-- Placed at the end of the document so the pages load faster -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+            <link href="splash_style.css" rel="stylesheet">
+            <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+            <script src="ie10-viewport-bug-workaround.js"></script>
+            <script src="jquery.easing.min.js"></script>
+            <script src="scrolling-nav.js"></script>
+    </body>
+    <footer style="margin-top: 4em; padding-bottom: 4em; background-color: #555"></footer>
 </html>

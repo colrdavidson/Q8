@@ -1,3 +1,7 @@
+.grid_image_link > div > h3 {
+    color: #333;
+}
+
 .my_container {
 	text-align: center;
 	display: flex;
@@ -16,14 +20,6 @@
 	margin-right: -1em;
 	margin-left: -1em;
 	background-color: #bef6ea;
-}
-
-.img_link {
-	border: 2px solid #bef6ea;
-}
-
-.img_link:hover {
-	border: 2px solid #d0d0d0;
 }
 
 .basics {
